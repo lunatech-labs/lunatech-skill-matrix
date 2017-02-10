@@ -1,4 +1,4 @@
-package models.dao
+package services
 
 import javax.inject.Inject
 
@@ -6,11 +6,10 @@ import models.MyTable
 import slick.driver.JdbcProfile
 import slick.driver.PostgresDriver.api._
 import play.api.db.slick.DatabaseConfigProvider
-
 /**
-  * Created by tatianamoldovan on 02/02/2017.
+  * Created by tatianamoldovan on 10/02/2017.
   */
-class UserDAO @Inject() (dbConfigProvider: DatabaseConfigProvider) {
+class UserDAOService @Inject() (dbConfigProvider: DatabaseConfigProvider) {
 
   val dbConfig = dbConfigProvider.get[JdbcProfile]
   val userTable = TableQuery[MyTable.Users]
@@ -18,6 +17,5 @@ class UserDAO @Inject() (dbConfigProvider: DatabaseConfigProvider) {
   def getUserById(userId: Int) = {
     val query = userTable.filter(x => x.id === userId)
     dbConfig.db.run(query.result)
- }
-
+  }
 }
