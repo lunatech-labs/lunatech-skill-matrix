@@ -124,7 +124,7 @@ paths:
         500:
           $ref: '#/responses/Standard500ErrorMessage'
 
-  /user/me/skillmatrix/{skillMatrixId}:
+  /users/me/skillmatrix/{skillMatrixId}:
     put:
       summary: Update an existing skill of the logged in user
       operationId: updateSkill
