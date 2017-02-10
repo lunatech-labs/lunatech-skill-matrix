@@ -68,20 +68,24 @@ class SkillMatrixDAOService @Inject() (dbConfigProvider: DatabaseConfigProvider,
     dbConfig.db.run(r)
   }*/
 
-  def updateSkill(skillMId: Int, userId: Int, skill: Skill, skillLevel: SkillLevel) = {
-    val skillId: Future[Int] = skillDAOService.getSkillIdByNameAndType(skill).flatMap {
-      case None => skillDAOService.addSkill(skill)
-      case id => Future(id.get)
-    }
+  def updateSkill(skillMId: Int, userId: Int, skill: Skill, skillLevel: SkillLevel): Future[Option[SkillMatrix]] = {
+    val skillId: Future[Option[Int]] = skillDAOService.getSkillIdByNameAndType(skill)
+     /* val skillId: Future[Option[Int]] = skillDAOService.getSkillIdByNameAndType(skill).flatMap {
+      //case None => skillDAOService.addSkill(skill)
+      case None => Future(None)
+      case id => Future(id)
+    }*/
 
-    skillId.flatMap { id =>
-      val userSkillObject = SkillMatrix(
-        id = Some(skillMId),
-        userId = userId,
-        skillId = id,
-        skillLevel = skillLevel)
-      val r = (skillMatrixTable returning skillMatrixTable).insertOrUpdate(userSkillObject)
-      dbConfig.db.run(r)
+    skillId.flatMap {
+      case None => Future(None)
+      case id =>
+        val userSkillObject = SkillMatrix(
+          id = Some(skillMId),
+          userId = userId,
+          skillId = id.get,
+          skillLevel = skillLevel)
+        val r = (skillMatrixTable returning skillMatrixTable).insertOrUpdate(userSkillObject)
+        dbConfig.db.run(r)
     }
   }
 
