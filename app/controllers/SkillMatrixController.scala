@@ -2,47 +2,46 @@ package controllers
 
 import javax.inject.Inject
 
-import models.EnumTypes.SkillLevel.SkillLevel
-import models.Skill
-import play.api.libs.json.{JsError, Json}
+import models.SkillMatrixItem
+import play.api.libs.json._
 import play.api.mvc._
 import services.SkillMatrixDAOService
 
-import scala.concurrent._
-import ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
   * Created by tatianamoldovan on 06/02/2017.
   */
-class SkillMatrixController @Inject()(skillMatrixDAOService: SkillMatrixDAOService) extends Controller {
 
+
+class SkillMatrixController @Inject()(skillMatrixDAOService: SkillMatrixDAOService) extends Controller {
   def addSkillByUserId(userId: Int) = Action.async(BodyParsers.parse.json) { request =>
-    val skill = (request.body \ "skill").validate[Skill]
-    val skillLevel = (request.body \ "skillLevel").validate[SkillLevel]
-    skill.fold(
+    request.body.validate[SkillMatrixItem].map {
+      case (skillMatrixItem: SkillMatrixItem) =>
+        skillMatrixDAOService.addSkillByUserIdToSkillMatrix(userId, skillMatrixItem.skill, skillMatrixItem.skillLevel).map(m =>
+          Created(Json.obj("status" -> "Success", "skillAdded" -> Json.toJson(m))))
+    }.recoverTotal {
       errors => Future(BadRequest(Json.obj(
         "status" -> "Parsing message failed",
         "error" -> JsError.toJson(errors)
-      ))),
-      _ =>
-        skillMatrixDAOService.addSkillByUserIdToSkillMatrix(userId, skill.get, skillLevel.get).map(m =>
-          Ok(Json.obj("status" -> "Success", "skillAdded" -> Json.toJson(m))))
-    )
+      )))
+    }
   }
 
   def updateSkillByUserId(userId: Int, userSkillId: Int) = Action.async(BodyParsers.parse.json) { request =>
-    val skill = (request.body \ "skill").validate[Skill]
-    val skillLevel = (request.body \ "skillLevel").validate[SkillLevel]
-    skill.fold(
+    request.body.validate[SkillMatrixItem].map {
+      case (skillMatrixItem: SkillMatrixItem) =>
+        skillMatrixDAOService.updateSkill(userSkillId, userId, skillMatrixItem.skill, skillMatrixItem.skillLevel).map {
+          case Some(t) => Ok(Json.obj("status" -> "Success", "updatedSkill" -> Json.toJson(t)))
+          case None => NotFound(Json.obj("status" -> "skill could not be found"))
+        }
+    }.recoverTotal {
       errors => Future(BadRequest(Json.obj(
         "status" -> "Parsing message failed",
         "error" -> JsError.toJson(errors)
-      ))),
-      _ =>
-        skillMatrixDAOService.updateSkill(userSkillId, userId, skill.get, skillLevel.get).map(_ =>
-          Ok(Json.obj("status" -> "Success")))
-    )
+      )))
+    }
   }
 
   def deleteSkillByUserId(userId: Int, userSkillId: Int) = Action.async(BodyParsers.parse.empty) { _ =>
