@@ -4,10 +4,6 @@ import models.EnumTypes.SkillType.SkillType
 import play.api.libs.json.{JsPath, Reads, Writes}
 import play.api.libs.functional.syntax._
 
-/**
-  * Created by tatianamoldovan on 02/02/2017.
-  */
-
 case class Skill(id: Option[Int], name: String, skillType: SkillType)
 
 object Skill {

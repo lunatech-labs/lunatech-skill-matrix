@@ -10,7 +10,7 @@ import scala.concurrent._
 import ExecutionContext.Implicits.global
 
 /**
-  * Created by tatianamoldovan on 07/02/2017.
+  * Skill Controller.
   */
 class SkillController @Inject() (skillDAOService: SkillDAOService) extends Controller {
 

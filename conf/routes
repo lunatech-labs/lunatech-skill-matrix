@@ -23,7 +23,7 @@ POST    /users/:userId/skills        controllers.SkillMatrixController.addSkillB
 PUT     /users/:userId/skill/:userSkillId    controllers.SkillMatrixController.updateSkillByUserId(userId: Int, userSkillId: Int)
 
 # Deletes a skill from the list
-DELETE /users/:userId/skill/:userSkillId     controllers.SkillMatrixController.deleteSkillByUserId(userId: Int, userSkillId: Int)
+DELETE /users/:userId/skill/:userSkillId     controllers.SkillMatrixController.deleteSkillByUserSkillId(userId: Int, userSkillId: Int)
 
 # gets all skills entered by users
 GET     /skills                     controllers.SkillController.getSkills

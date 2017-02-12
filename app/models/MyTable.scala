@@ -4,12 +4,6 @@ import models.EnumTypes.SkillLevel.SkillLevel
 import models.EnumTypes.SkillType.SkillType
 import slick.driver.PostgresDriver.api._
 
-
-// need to interact with postgres
-
-/**
-  * Created by tatianamoldovan on 03/02/2017.
-  */
 object MyTable {
   class Users(tag: Tag) extends Table[User](tag, "users") {
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
