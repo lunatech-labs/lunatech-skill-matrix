@@ -13,6 +13,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-slick" % "1.1.0",
   "com.typesafe.play" %% "play-slick-evolutions" % "1.1.0",
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
-  "org.postgresql" % "postgresql" % "9.3-1102-jdbc41"
+  "org.postgresql" % "postgresql" % "9.3-1102-jdbc41",
+  "org.scalaz" %% "scalaz-core" % "7.2.8",
+  "io.kanaka" %% "play-monadic-actions" % "2.0.0"
 )
 

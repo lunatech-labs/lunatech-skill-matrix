@@ -161,7 +161,7 @@ paths:
       parameters:
         - $ref: '#/parameters/skillMatrixId'
       responses:
-        200:
+        204:
           description: ok
         401:
           $ref: '#/responses/Standard401ErrorMessage'

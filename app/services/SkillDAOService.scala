@@ -10,9 +10,6 @@ import slick.driver.PostgresDriver.api._
 
 import scala.concurrent._
 
-/**
-  * Created by tatianamoldovan on 10/02/2017.
-  */
 class SkillDAOService @Inject() (dbConfigProvider: DatabaseConfigProvider) {
 
   val dbConfig = dbConfigProvider.get[JdbcProfile]

@@ -5,9 +5,6 @@ import play.api.libs.functional.syntax.unlift
 import play.api.libs.json.{JsPath, Reads, Writes}
 import play.api.libs.functional.syntax._
 
-/**
-  * Created by tatianamoldovan on 05/02/2017.
-  */
 case class SkillMatrix(id: Option[Int] = None, userId: Int, skillId: Int, skillLevel: SkillLevel)
 
 object SkillMatrix {

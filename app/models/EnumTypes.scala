@@ -3,9 +3,7 @@ package models
 import play.api.libs.json.{Format, JsString, JsSuccess, JsValue}
 import slick.driver.PostgresDriver.api._
 
-/**
-  * Created by tatianamoldovan on 03/02/2017.
-  */
+
 object EnumTypes {
 
   object SkillLevel extends Enumeration {

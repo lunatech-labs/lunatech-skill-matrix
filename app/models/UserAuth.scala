@@ -4,9 +4,6 @@ import play.api.libs.functional.syntax.unlift
 import play.api.libs.json.{JsPath, Reads, Writes}
 import play.api.libs.functional.syntax._
 
-/**
-  * Created by tatianamoldovan on 05/02/2017.
-  */
 case class UserAuth(id: Option[Int] = None, userId: Int, key: String, secret: String)
 
 object UserAuth {
