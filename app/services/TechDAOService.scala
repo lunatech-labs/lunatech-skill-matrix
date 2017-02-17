@@ -43,7 +43,8 @@ class TechDAOService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   }
 
   def updateTech(techId: Int, tech: Tech) = {
-
+    val r = (techTable returning techTable).insertOrUpdate(tech)
+    dbConfig.db.run(r)
   }
 
 }

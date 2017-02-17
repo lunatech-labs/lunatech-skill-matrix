@@ -17,13 +17,16 @@ class UserDAOService @Inject() (dbConfigProvider: DatabaseConfigProvider) {
   val userTable = TableQuery[MyTable.Users]
 
   def getUserById(userId: Int): Future[Option[User]] = {
-    val userExists = exists(userId)
-    userExists.flatMap {
+    exists(userId).flatMap {
       case true =>
         val query = userTable.filter(x => x.id === userId)
         dbConfig.db.run(query.result.headOption)
       case false => Future(None)
     }
+  }
+
+  def getAllUsers() = {
+    dbConfig.db.run(userTable.result)
   }
 
   def exists(id: Int): Future[Boolean] = {
