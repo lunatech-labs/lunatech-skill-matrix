@@ -1,7 +1,7 @@
 package models
 
 import models.EnumTypes.SkillLevel.SkillLevel
-import models.EnumTypes.SkillType.SkillType
+import models.EnumTypes.TechType.TechType
 import slick.driver.PostgresDriver.api._
 
 object MyTable {
@@ -23,21 +23,21 @@ object MyTable {
     def user = foreignKey("USER_FK", userId, TableQuery[Users])(_.id)
   }
 
-  class Skills(tag: Tag) extends Table[Skill](tag, "skills") {
+  class Tech(tag: Tag) extends Table[models.Tech](tag, "tech") {
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
-    def name = column[String]("skill_name")
-    def skillType = column[SkillType]("skill_type")
-    def * =  (id.?, name, skillType) <> ((Skill.apply _).tupled, Skill.unapply _)
+    def name = column[String]("tech_name")
+    def techType = column[TechType]("tech_type")
+    def * =  (id.?, name, techType) <> ((models.Tech.apply _).tupled, models.Tech.unapply _)
   }
 
-  class SkillMatrix(tag: Tag) extends Table[models.SkillMatrix](tag, "skill_matrix") {
+  class SkillMatrix(tag: Tag) extends Table[models.SkillMatrix](tag, "user_skills") {
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
     def userId = column[Int]("user_id")
-    def skillId = column[Int]("skill_id")
+    def techId = column[Int]("tech_id")
     def skillLevel = column[SkillLevel]("skill_level")
-    def * = (id.?, userId, skillId, skillLevel) <> ((models.SkillMatrix.apply _).tupled, models.SkillMatrix.unapply _)
+    def * = (id.?, userId, techId, skillLevel) <> ((models.SkillMatrix.apply _).tupled, models.SkillMatrix.unapply _)
 
     def user = foreignKey("USER_FK", userId, TableQuery[Users])(_.id)
-    def skill = foreignKey("SKILL_FK", skillId, TableQuery[Skills])(_.id)
+    def skill = foreignKey("TECH_FK", techId, TableQuery[MyTable.Tech])(_.id)
   }
 }

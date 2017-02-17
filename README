@@ -1,4 +1,42 @@
 This is your new Play application
 =================================
 
+POSTMAN collection: https://www.getpostman.com/collections/706a41a2f031e0217331
+the link will be updated when there's a change in the collection
+
 TO BE DEFINED
+
+
+
+TO DO:
+
+Current API modification:
+- get user skill - modify return type
+- name of users in result
+- case sensitive check of tech name (introduce lower name)
+- finish the skill and tech API operations
+    DONE: get the skill matrix
+    get info about one tech (user and level info)
+    return the correct resource for the create skill operation
+    return the correct resource for the update operation
+- add info in read me
+- update swagger
+
+
+New stuff:
+- generate db schema
+- replace enumerations with sealed traits
+- tests (unit/integration/acceptance/one of them)
+
+******** REALLY IMPORTANT ***********
+- not having local database anymore
+- user authentication
+- front end : polymer application
+https://www.polymer-project.org
+*************************************
+
+Good to have:
+- logging ???
+- jenkins builds ? talk to Erik
+- if you have ideas on how to improve the code, feel free to do it!
+- new features

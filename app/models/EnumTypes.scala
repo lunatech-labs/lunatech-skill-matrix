@@ -25,22 +25,22 @@ object EnumTypes {
     )
   }
 
-  object SkillType extends Enumeration {
-    type SkillType = Value
+  object TechType extends Enumeration {
+    type TechType = Value
     val LANGUAGE = Value("LANGUAGE")
     val LIBRARY = Value("LIBRARY")
     val FRAMEWORK = Value("FRAMEWORK")
     val CONCEPTUAL = Value("CONCEPTUAL")
 
-    implicit val skillTypeFormat = new Format[SkillType] {
-      def reads(json: JsValue) = JsSuccess(SkillType.withName(json.as[String].value))
-      def writes(skillType: SkillType) = JsString(skillType.toString)
+    implicit val techTypeFormat = new Format[TechType] {
+      def reads(json: JsValue) = JsSuccess(TechType.withName(json.as[String].value))
+      def writes(techType: TechType) = JsString(techType.toString)
 
     }
 
-    implicit val skillType = MappedColumnType.base[SkillType, String](
+    implicit val techType = MappedColumnType.base[TechType, String](
       e => e.toString,
-      s => SkillType.withName(s)
+      s => TechType.withName(s)
     )
   }
 }

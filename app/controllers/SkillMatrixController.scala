@@ -3,11 +3,13 @@ package controllers
 import javax.inject.Inject
 
 import io.kanaka.monadic.dsl._
-import models.SkillMatrixItem
+import models.{SkillMatrix, SkillMatrixItem, Tech}
+import org.omg.CosNaming.NamingContextPackage.NotFound
 import play.api.libs.json._
 import play.api.mvc._
-import services.SkillMatrixDAOService
+import services.{SkillMatrixDAOService, TechDAOService}
 
+import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
@@ -16,27 +18,31 @@ import scala.concurrent.ExecutionContext.Implicits.global
   */
 
 
-class SkillMatrixController @Inject()(skillMatrixDAOService: SkillMatrixDAOService) extends Controller {
+class SkillMatrixController @Inject()(skillMatrixDAOService: SkillMatrixDAOService,
+                                      techDAOService: TechDAOService) extends Controller {
 
   def addSkillByUserId(userId: Int) = Action.async(BodyParsers.parse.json) {
     request =>
       for {
         skillMatrixItem: SkillMatrixItem <- request.body.validate[SkillMatrixItem] ?|
           (err => BadRequest(Json.obj("message" -> JsError.toJson(err))))
-        createdSkill <- skillMatrixDAOService.addSkillByUserIdToSkillMatrix(userId, skillMatrixItem.skill, skillMatrixItem.skillLevel) ?|
-          InternalServerError(Json.obj("message" -> "unknown error"))
+        createdSkill <- skillMatrixDAOService.addSkillByUserIdToSkillMatrix(userId, skillMatrixItem.tech, skillMatrixItem.skillLevel) ?|
+          (err => InternalServerError(Json.obj("message" -> err.getMessage)))
       } yield Created(Json.obj("skillAdded" -> Json.toJson(createdSkill)))
 
   }
 
-  def updateSkillByUserId(userId: Int, userSkillId: Int) = Action.async(BodyParsers.parse.json) {
+  def updateSkillByUserId(userId: Int, skillId: Int) = Action.async(BodyParsers.parse.json) {
     request =>
       for {
         skillMatrixItem: SkillMatrixItem <- request.body.validate[SkillMatrixItem] ?|
           (err => BadRequest(Json.obj("message" -> JsError.toJson(err))))
-        updatedSkill <- skillMatrixDAOService.updateSkill(userSkillId, userId, skillMatrixItem.skill, skillMatrixItem.skillLevel) ?|
+
+        updatedSkill <- skillMatrixDAOService.updateSkill(skillId, userId, skillMatrixItem.tech, skillMatrixItem.skillLevel) ?|
           NotFound(Json.obj("message" -> "skill could not be found"))
-      } yield Ok(Json.obj("updatedSkill" -> Json.toJson(updatedSkill)))
+
+        skillMatrixItem <- getSkillMatrixItem(updatedSkill) ?| InternalServerError
+      } yield Ok(Json.obj("updatedSkill" -> Json.toJson(skillMatrixItem)))
   }
 
   def deleteSkillByUserSkillId(userId: Int, userSkillId: Int) = Action.async(BodyParsers.parse.empty) { _ =>
@@ -53,14 +59,22 @@ class SkillMatrixController @Inject()(skillMatrixDAOService: SkillMatrixDAOServi
     }
   }
 
-  /* TO BE DEFINED
   def getSkills() = Action.async(BodyParsers.parse.empty) { _ =>
-    skillMatrixService.getAllSkillsFromSkillMatrix().map(m =>
-      Ok(Json.obj("status" -> "Success", "skills" -> Json.toJson(m))))
-  }*/
+    skillMatrixDAOService.getAllSkills().map ( result =>
+      Ok(Json.obj("skills" -> Json.toJson(result)))
+    )
+  }
 
   def getSkillById(skillId: Int) = Action.async(BodyParsers.parse.empty) { _ =>
     skillMatrixDAOService.getSkillById(skillId).map( m =>
       Ok(Json.obj("skills" -> Json.toJson(m))))
+  }
+
+
+
+  private def getSkillMatrixItem(skill: SkillMatrix): Future[SkillMatrixItem] = {
+    for {
+      tech <- techDAOService.getTechById(skill.techId)
+    } yield SkillMatrixItem(tech = tech.get, skillLevel = skill.skillLevel)
   }
 }

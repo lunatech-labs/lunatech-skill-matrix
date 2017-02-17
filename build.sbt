@@ -1,4 +1,4 @@
-name := """lunatech-skill-matrix"""
+name := """lunatech-tech-matrix"""
 
 version := "1.0-SNAPSHOT"
 

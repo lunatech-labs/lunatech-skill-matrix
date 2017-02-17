@@ -173,7 +173,7 @@ paths:
             $ref: '#/definitions/Error'
         500:
           $ref: '#/responses/Standard500ErrorMessage'
-  /skills:
+  /alltech:
     get:
       summary: get all skills entered by users
       operationId: searchSkills

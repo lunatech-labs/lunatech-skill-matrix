@@ -3,16 +3,18 @@ package services
 import javax.inject.Inject
 
 import models.EnumTypes.SkillLevel.SkillLevel
-import models.{MyTable, Skill, SkillMatrix}
+import models._
 import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 import slick.driver.PostgresDriver.api._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 
 class SkillMatrixDAOService @Inject() (dbConfigProvider: DatabaseConfigProvider,
-                                       skillDAOService: SkillDAOService,
+                                       techDAOService: TechDAOService,
                                        userDAOService: UserDAOService
                                       ){
 
@@ -23,16 +25,16 @@ class SkillMatrixDAOService @Inject() (dbConfigProvider: DatabaseConfigProvider,
       Adds a skill entered by user to skill matrix table.
       It checks if the skill exists in the skill table, and if not, adds it to the database
    */
-  def addSkillByUserIdToSkillMatrix(userId: Int, skill: Skill, skillLevel: SkillLevel): Future[SkillMatrix] = {
-    val skillId: Future[Int] = skillDAOService.getSkillIdByNameAndType(skill).flatMap {
-      case None => skillDAOService.addSkill(skill)
+  def addSkillByUserIdToSkillMatrix(userId: Int, tech: Tech, skillLevel: SkillLevel): Future[SkillMatrix] = {
+    val techId: Future[Int] = techDAOService.getTechIdByNameAndType(tech).flatMap {
+      case None => techDAOService.addTech(tech)
       case id => Future(id.get)
     }
 
-    skillId.flatMap { id =>
+    techId.flatMap { id =>
       val userSkillObject = SkillMatrix(
         userId = userId,
-        skillId = id,
+        techId = id,
         skillLevel = skillLevel)
       val addSkillToSkillMatrixQuery = skillMatrixTable returning skillMatrixTable += userSkillObject
       dbConfig.db.run(addSkillToSkillMatrixQuery)
@@ -40,13 +42,12 @@ class SkillMatrixDAOService @Inject() (dbConfigProvider: DatabaseConfigProvider,
   }
 
   def getSkillId(userId: Int, skillId: Int): Future[Option[Int]] = {
-    val query = skillMatrixTable.filter(x => x.userId === userId && x.skillId === skillId).map(_.id).take(1)
+    val query = skillMatrixTable.filter(x => x.userId === userId && x.techId === skillId).map(_.id).take(1)
     dbConfig.db.run(query.result.headOption)
   }
 
   def getAllSkillsByUserId(userId: Int): Future[Seq[SkillMatrix]] = {
-    val userExists = userDAOService.exists(userId)
-    userExists.flatMap {
+    userDAOService.exists(userId)flatMap {
       case true =>
         val query = skillMatrixTable.filter(x => x.userId === userId)
         dbConfig.db.run(query.result)
@@ -57,49 +58,87 @@ class SkillMatrixDAOService @Inject() (dbConfigProvider: DatabaseConfigProvider,
   def createSkill(userId: Int, skillId: Int, skillLevel: SkillLevel) = {
     val userSkillObject = SkillMatrix(
       userId = userId,
-      skillId = skillId,
+      techId = skillId,
       skillLevel = skillLevel)
     dbConfig.db.run(skillMatrixTable returning skillMatrixTable += userSkillObject)
   }
 
-  def updateSkill(skillMId: Int, userId: Int, skill: Skill, skillLevel: SkillLevel): Future[Option[SkillMatrix]] = {
-    val skillId: Future[Option[Int]] = skillDAOService.getSkillIdByNameAndType(skill)
-
-    skillId.flatMap {
-      case None => Future(None)
-      case id =>
-        val userSkillObject = SkillMatrix(
-          id = Some(skillMId),
-          userId = userId,
-          skillId = id.get,
-          skillLevel = skillLevel)
-        val r = (skillMatrixTable returning skillMatrixTable).insertOrUpdate(userSkillObject)
-        dbConfig.db.run(r)
-    }
-  }
-
-  def deleteSkillByUserId(userId: Int, userSkillId: Int) = {
-    val skillExists: Future[Boolean] = existsForSpecificUSer(userSkillId, userId)
-    skillExists.flatMap {
+  def updateSkill(skillId: Int, userId: Int, tech: Tech, skillLevel: SkillLevel): Future[Option[SkillMatrix]] = {
+    //this is very ugly :(
+    skillExists(skillId, userId).flatMap {
+      case true =>
+        val oldSkill = getSkillById(skillId)
+        oldSkill.flatMap {
+          case Some(skill) =>
+            val skillObject = SkillMatrix(
+              id = Some(skillId),
+              userId = userId,
+              techId = skill.techId,
+              skillLevel = skillLevel
+            )
+            techDAOService.updateTech(skill.techId, tech)
+            val r = (skillMatrixTable returning skillMatrixTable).insertOrUpdate(skillObject)
+            dbConfig.db.run(r)
+          case _ => Future(None)
+        }
       case false => Future(None)
-      case true => dbConfig.db.run(skillMatrixTable.filter(_.id === userSkillId).delete)
+    }
+
+    //WIP: not working
+    /*for {
+      oldSkill: Option[SkillMatrix] <- getSkillById(skillId) if Await.result(skillExists(skillId, userId), Duration.Inf)
+     // _ <- techDAOService.updateTech(oldSkill.get.techId, tech)
+      skillObject: SkillMatrix = SkillMatrix(
+        id = Some(skillId),
+        userId = userId,
+        techId = oldSkill.get.techId,
+        skillLevel = skillLevel
+      )
+      result <- dbConfig.db.run((skillMatrixTable returning skillMatrixTable).insertOrUpdate(skillObject))
+    } yield result*/
+  }
+
+  def deleteSkillByUserId(userId: Int, skillId: Int) = {
+    skillExists(skillId, userId).flatMap {
+      case false => Future(None)
+      case true => dbConfig.db.run(skillMatrixTable.filter(_.id === skillId).delete)
     }
   }
 
-  /* THE FUNCTIONALY OF THIS METHOD NEEDS TO BE DEFINED
-  def getAllSkillsFromSkillMatrix() = {
-    val query = skillMatrixTable.groupBy(_.skillId)
-    dbConfig.db.run(query.result)
+  def getAllSkills(): Future[Seq[SkillMatrixResult]] = {
+    for {
+      techList <- techDAOService.getAllTech()
+      skillList <- getAll()
+      result <- computeSkillMatrix(techList, skillList)
+    } yield result
+  }
 
-  }*/
-
-  def getSkillById(skillId: Int) = {
-    val query = skillMatrixTable.filter(x => x.skillId === skillId)
+  def getSkillByTechId(techId: Int) = {
+    val query = skillMatrixTable.filter(x => x.techId === techId)
     dbConfig.db.run(query.result)
   }
 
-  private def existsForSpecificUSer(skillId: Int, userId: Int): Future[Boolean] = {
+  def getSkillById(skillId: Int): Future[Option[SkillMatrix]] = {
+    val query = skillMatrixTable.filter(x => x.id === skillId)
+    dbConfig.db.run(query.result.headOption)
+  }
+
+  private def skillExists(skillId: Int, userId: Int): Future[Boolean] = {
     dbConfig.db.run(skillMatrixTable.filter(x => x.id === skillId && x.userId === userId).exists.result)
+  }
+
+  private def getAll() = {
+    dbConfig.db.run(skillMatrixTable.result)
+  }
+
+  //  not sure if this is the right thing to do
+  private def computeSkillMatrix(techList: Seq[Tech], skillList: Seq[SkillMatrix]) = {
+    Future(techList.map(tech => SkillMatrixResult(tech.id.get, tech.name, tech.techType, getAllUsersAndLevelInfo(tech.id.get, skillList))))
+
+  }
+
+  private def getAllUsersAndLevelInfo(techId: Int, skillList: Seq[SkillMatrix]) = {
+    skillList.filter(skill => skill.techId == techId).map(skill => SkillMatrixUsersAndLevel(skill.userId, skill.skillLevel))
   }
 
 

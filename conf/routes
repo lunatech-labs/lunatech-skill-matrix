@@ -26,10 +26,10 @@ PUT     /users/:userId/skill/:userSkillId    controllers.SkillMatrixController.u
 DELETE /users/:userId/skill/:userSkillId     controllers.SkillMatrixController.deleteSkillByUserSkillId(userId: Int, userSkillId: Int)
 
 # gets all skills entered by users
-GET     /skills                     controllers.SkillController.getSkills
+GET     /alltech                     controllers.TechController.getAllTech
 
 # Gets all skills entered by users together with info about users
-#GET     /skillmatrix                controllers.SkillMatrixController.getSkills
+GET     /skillmatrix                controllers.SkillMatrixController.getSkills
 
 # Gets all info related to a skill
 GET     /skillmatrix/:skillId       controllers.SkillMatrixController.getSkillById(skillId: Int)
