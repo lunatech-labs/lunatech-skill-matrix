@@ -28,8 +28,11 @@ class SkillMatrixController @Inject()(skillMatrixDAOService: SkillMatrixDAOServi
           (err => BadRequest(Json.obj("message" -> JsError.toJson(err))))
         createdSkill <- skillMatrixDAOService.addSkillByUserIdToSkillMatrix(userId, skillMatrixItem.tech, skillMatrixItem.skillLevel) ?|
           (err => InternalServerError(Json.obj("message" -> err.getMessage)))
-      } yield Created(Json.obj("skillAdded" -> Json.toJson(createdSkill)))
-
+      } yield Created(Json.obj(
+        "skillAdded" -> Json.toJson(
+          SkillMatrixItem(
+            tech = Tech(Some(createdSkill.techId), skillMatrixItem.tech.name, skillMatrixItem.tech.techType),
+            skillLevel = createdSkill.skillLevel))))
   }
 
   def updateSkillByUserId(userId: Int, skillId: Int) = Action.async(BodyParsers.parse.json) {
@@ -53,9 +56,9 @@ class SkillMatrixController @Inject()(skillMatrixDAOService: SkillMatrixDAOServi
   }
 
   def getSkillsByUserId(userId: Int) = Action.async(BodyParsers.parse.empty) { _ =>
-    skillMatrixDAOService.getAllSkillsByUserId(userId).map {
-      case List() => NotFound(Json.obj("message" -> "User not found"))
-      case m => Ok(Json.obj("skills" -> Json.toJson(m)))
+    skillMatrixDAOService.getAllSkillMatrixByUserId(userId).map {
+      case None=> NotFound(Json.obj("message" -> "User not found"))
+      case m => Ok(Json.obj("user" -> Json.toJson(m)))
     }
   }
 
@@ -65,8 +68,8 @@ class SkillMatrixController @Inject()(skillMatrixDAOService: SkillMatrixDAOServi
     )
   }
 
-  def getSkillById(skillId: Int) = Action.async(BodyParsers.parse.empty) { _ =>
-    skillMatrixDAOService.getSkillById(skillId).map( m =>
+  def getSkillByTechId(techId: Int) = Action.async(BodyParsers.parse.empty) { _ =>
+    skillMatrixDAOService.getSkillMatrixByTechId(techId).map(m =>
       Ok(Json.obj("skills" -> Json.toJson(m))))
   }
 

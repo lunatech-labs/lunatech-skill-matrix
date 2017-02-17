@@ -32,4 +32,4 @@ GET     /alltech                     controllers.TechController.getAllTech
 GET     /skillmatrix                controllers.SkillMatrixController.getSkills
 
 # Gets all info related to a skill
-GET     /skillmatrix/:skillId       controllers.SkillMatrixController.getSkillById(skillId: Int)
+GET     /skillmatrix/:techId       controllers.SkillMatrixController.getSkillByTechId(techId: Int)

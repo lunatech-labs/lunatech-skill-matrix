@@ -19,11 +19,11 @@ object SkillMatrixItem {
 }
 
 case class SkillMatrixResult(techId: Int, techName: String, techType: TechType, users: Seq[SkillMatrixUsersAndLevel])
-case class SkillMatrixUsersAndLevel(userId: Int, level: SkillLevel)
+case class SkillMatrixUsersAndLevel(userName: String, level: SkillLevel)
 
 object SkillMatrixUsersAndLevel {
   implicit val SkillMatrixUsersAndLevelWrites: Writes[SkillMatrixUsersAndLevel] = (
-    (JsPath \ "userId").write[Int] and
+    (JsPath \ "userName").write[String] and
       (JsPath \ "level").write[SkillLevel]
     )(unlift(SkillMatrixUsersAndLevel.unapply _))
 }
@@ -35,5 +35,16 @@ object SkillMatrixResult {
       (JsPath \ "techType").write[TechType] and
       (JsPath \ "users").write[Seq[SkillMatrixUsersAndLevel]]
     )(unlift(SkillMatrixResult.unapply _))
+}
+
+case class SkillMatrixForUserResult(userId: Int, firstName: String, lastName: String, skills: Seq[SkillMatrixItem])
+
+object SkillMatrixForUserResult {
+  implicit val skillMatrixForUserResultWrites: Writes[SkillMatrixForUserResult] = (
+    (JsPath \ "userId").write[Int] and
+      (JsPath \ "firstName").write[String] and
+      (JsPath \ "lastName").write[String] and
+      (JsPath \ "skill").write[Seq[SkillMatrixItem]]
+  )(unlift(SkillMatrixForUserResult.unapply _))
 }
 
