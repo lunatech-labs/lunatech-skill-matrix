@@ -30,12 +30,12 @@ object MyTable {
     def * =  (id.?, name, techType) <> ((models.Tech.apply _).tupled, models.Tech.unapply _)
   }
 
-  class SkillMatrix(tag: Tag) extends Table[models.SkillMatrix](tag, "user_skills") {
+  class Skills(tag: Tag) extends Table[models.Skill](tag, "user_skills") {
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
     def userId = column[Int]("user_id")
     def techId = column[Int]("tech_id")
     def skillLevel = column[SkillLevel]("skill_level")
-    def * = (id.?, userId, techId, skillLevel) <> ((models.SkillMatrix.apply _).tupled, models.SkillMatrix.unapply _)
+    def * = (id.?, userId, techId, skillLevel) <> ((models.Skill.apply _).tupled, models.Skill.unapply _)
 
     def user = foreignKey("USER_FK", userId, TableQuery[Users])(_.id)
     def skill = foreignKey("TECH_FK", techId, TableQuery[MyTable.Tech])(_.id)

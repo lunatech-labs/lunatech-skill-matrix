@@ -73,8 +73,8 @@ paths:
 
   /users/{userId}/skills:
     get:
-      summary: get all skills entered by users
-      operationId: searchUserSkills
+      summary: get all skills entered by user
+      operationId: getUserSkills
       produces:
         - application/json
       parameters:
@@ -176,7 +176,7 @@ paths:
   /alltech:
     get:
       summary: get all skills entered by users
-      operationId: searchSkills
+      operationId: getAllTech
       produces:
         - application/json
       security:
@@ -203,7 +203,7 @@ paths:
   /skillmatrix:
     get:
       summary: get all skills entered by users together with info about users
-      operationId: searchMatrix
+      operationId: getSkillMatrix
       produces:
         - application/json
       security:
@@ -219,7 +219,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/GetSkillMatrixResponse'
+              $ref: '#/definitions/rGetSkillMatrixResponse'
         401:
           $ref: '#/responses/Standard401ErrorMessage'
         403:
@@ -228,8 +228,9 @@ paths:
           $ref: '#/responses/Standard500ErrorMessage'
 
 
-  /skillmatrix/{skillId}:
+  /skillmatrix/{techId}:
     get:
+      operationId: getSkillMatrixByTechId
       summary: get all info related to a skill
       description: get info such as the number of users who posses the skill, the level, etc
       security:
@@ -245,7 +246,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/GetInfoForSkillResponse'
+              $ref: '#/definitions/GetSkillMatrixByTechIdResponse'
         401:
           $ref: '#/responses/Standard401ErrorMessage'
         403:
