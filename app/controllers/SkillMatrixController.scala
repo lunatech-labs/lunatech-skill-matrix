@@ -35,13 +35,13 @@ class SkillMatrixController @Inject()(skillMatrixDAOService: SkillMatrixDAOServi
   def updateSkill(userId: Int, skillId: Int) = Action.async(BodyParsers.parse.json) {
     request =>
       for {
-        skillMatrixItem: SkillMatrixItem <- request.body.validate[SkillMatrixItem] ?|
+        skillMatrixItem: SkillMatrixItem <- validateRequestBodyForUpdateOperation(request) ?|
           (err => BadRequest(Json.obj("message" -> JsError.toJson(err))))
 
         updatedSkill <- skillMatrixDAOService.updateSkill(skillId, userId, skillMatrixItem.tech, skillMatrixItem.skillLevel) ?|
           NotFound(Json.obj("message" -> "skill could not be found"))
 
-        skillMatrixItem <- getSkillMatrixItem(updatedSkill) ?| InternalServerError
+        skillMatrixItem <- getResponseForUpdateOperation(updatedSkill) ?| InternalServerError
       } yield Ok(Json.obj("updatedSkill" -> Json.toJson(skillMatrixItem)))
   }
 
@@ -70,9 +70,13 @@ class SkillMatrixController @Inject()(skillMatrixDAOService: SkillMatrixDAOServi
       Ok(Json.obj("skills" -> Json.toJson(m))))
   }
 
+  private def validateRequestBodyForUpdateOperation(request: Request[JsValue]): JsResult[SkillMatrixItem] = {
+    // TO DO: VALIDATE THAT TECH HAS ID PRESENT !!!!
+    request.body.validate[SkillMatrixItem]
+  }
 
 
-  private def getSkillMatrixItem(skill: Skill): Future[SkillMatrixItem] = {
+  private def getResponseForUpdateOperation(skill: Skill): Future[SkillMatrixItem] = {
     for {
       tech <- techDAOService.getTechById(skill.techId)
     } yield SkillMatrixItem(tech = tech.get, skillLevel = skill.skillLevel)

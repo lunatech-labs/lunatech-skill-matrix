@@ -102,7 +102,7 @@ class SkillMatrixDAOService @Inject() (dbConfigProvider: DatabaseConfigProvider,
   def updateSkill(skillId: Int, userId: Int, tech: Tech, skillLevel: SkillLevel): Future[Option[Skill]] = {
     val nrOfUpdatedRows: Future[Int] = dbConfig.db.run(
       skillTable
-      .filter(x => x.id === skillId && x.userId === userId)
+      .filter(x => x.id === skillId && x.userId === userId && x.techId === tech.id.get) // VALIDATE IN THE CONTROLLER THAT ID IS PRESENT
       .map(x => x.skillLevel)
       .update(skillLevel))
 
