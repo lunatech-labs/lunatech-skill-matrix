@@ -22,14 +22,14 @@ class TechDAOService @Inject()(dbConfigProvider: DatabaseConfigProvider) {
   def createTech(name: String, techType: TechType): Future[Int] = {
     val tech = Tech(
       id = None,
-      name = name,
+      name = name.toLowerCase(),
       techType = techType
     )
     dbConfig.db.run((techTable returning techTable.map(_.id)) += tech)
   }
 
   def getTechIdByNameAndType(tech: Tech) : Future[Option[Int]] = {
-    val getTechIdQuery = techTable.filter(x => x.name === tech.name && x.techType === tech.techType).map(_.id).take(1)
+    val getTechIdQuery = techTable.filter(x => x.name.toLowerCase === tech.name.toLowerCase() && x.techType === tech.techType).map(_.id).take(1)
     dbConfig.db.run(getTechIdQuery.result.headOption)
   }
 

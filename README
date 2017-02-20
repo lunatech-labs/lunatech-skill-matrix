@@ -175,27 +175,13 @@ UserSkillResponse:
 TO DO:
 
 Current API modification:
-- UPDATE SWAGGER - now it's a mess
 - Slick Evolutions are not working :(
-- add documentation (comments)
-- case sensitive check of tech name (introduce lower name)
-- finish the skill and tech API operations
-    DONE: FIX THE UPDATE IN SKILLMATRIX AND TECHDAO SERVICE
-    DONE: name of users in result
-    DONE: get user skill - modify return type
-    DONE: get the skill matrix
-    DONE: get info about one tech (user and level info)
-    DONE: return the correct resource for the create skill operation
-    DONE: implement the techDAOService.updateTech method
-    return the correct resource for the update operation
-    rethink the way we now handle the return types of the endpoint.
-- add info in read me
+- add documentation (comments)s
+- prettify README
 
 
 New stuff:
 - generate db schema
-- replace enumerations with sealed traits
-- tests (unit/integration/acceptance/one of them)
 
 ******** REALLY IMPORTANT ***********
 - not having local database anymore

@@ -4,6 +4,7 @@ import javax.inject.Inject
 
 import io.kanaka.monadic.dsl._
 import models.{Skill, SkillMatrixItem, Tech}
+import play.api.libs.json.Json.JsValueWrapper
 import play.api.libs.json._
 import play.api.mvc._
 import services.{SkillMatrixDAOService, TechDAOService}
@@ -35,8 +36,11 @@ class SkillMatrixController @Inject()(skillMatrixDAOService: SkillMatrixDAOServi
   def updateSkill(userId: Int, skillId: Int) = Action.async(BodyParsers.parse.json) {
     request =>
       for {
-        skillMatrixItem: SkillMatrixItem <- validateRequestBodyForUpdateOperation(request) ?|
+        skillMatrixItem: SkillMatrixItem <- request.body.validate[SkillMatrixItem] ?|
           (err => BadRequest(Json.obj("message" -> JsError.toJson(err))))
+
+         _techID <- validateTechIdPresentForUpdateOperation(skillMatrixItem) ?|
+            BadRequest(Json.obj("message" -> getBadRequestResponseForUpdateOperation()))
 
         updatedSkill <- skillMatrixDAOService.updateSkill(skillId, userId, skillMatrixItem.tech, skillMatrixItem.skillLevel) ?|
           NotFound(Json.obj("message" -> "skill could not be found"))
@@ -65,17 +69,29 @@ class SkillMatrixController @Inject()(skillMatrixDAOService: SkillMatrixDAOServi
     )
   }
 
-  // TO DO: add the case when tech id is not in the database
   def getSkillMatrixByTechId(techId: Int) = Action.async(BodyParsers.parse.empty) { _ =>
-    skillMatrixDAOService.getSkillMatrixByTechId(techId).map(m =>
-      Ok(Json.obj("skills" -> Json.toJson(m))))
+    skillMatrixDAOService.getSkillMatrixByTechId(techId).map{
+      case None => NotFound(Json.obj("message" -> "Tech not found"))
+      case m => Ok(Json.obj("skills" -> Json.toJson(m)))}
   }
 
-  private def validateRequestBodyForUpdateOperation(request: Request[JsValue]): JsResult[SkillMatrixItem] = {
-    // TO DO: VALIDATE THAT TECH HAS ID PRESENT !!!!
-    request.body.validate[SkillMatrixItem]
+  private def validateTechIdPresentForUpdateOperation(skillMatrixItem: SkillMatrixItem): Future[Option[Int]] = skillMatrixItem.tech.id match {
+    case None => Future(None)
+    case id => Future(id)
   }
 
+  private def getBadRequestResponseForUpdateOperation(): JsValueWrapper = {
+    Json.parse("""{
+        "obj.tech.id": [
+      {
+        "msg": [
+        "error.path.missing"
+        ],
+        "args": []
+      }
+        ]
+      }""".stripMargin)
+  }
 
   private def getResponseForUpdateOperation(skill: Skill): Future[SkillMatrixItem] = {
     for {
