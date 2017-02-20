@@ -1,6 +1,6 @@
 package models
 
-import models.EnumTypes.TechType.TechType
+import models._
 import play.api.libs.json.{JsPath, Reads, Writes}
 import play.api.libs.functional.syntax._
 

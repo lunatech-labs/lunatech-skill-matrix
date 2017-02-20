@@ -2,7 +2,7 @@ package services
 
 import javax.inject.Inject
 
-import models.EnumTypes.TechType.TechType
+import models._
 import models.{MyTable, Tech}
 import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile

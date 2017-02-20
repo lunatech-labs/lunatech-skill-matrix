@@ -1,7 +1,6 @@
 package models.responses
 
-import models.EnumTypes.SkillLevel.SkillLevel
-import models.EnumTypes.TechType.TechType
+import models._
 import play.api.libs.functional.syntax._
 import play.api.libs.functional.syntax.unlift
 import play.api.libs.json.{JsPath, Writes}
