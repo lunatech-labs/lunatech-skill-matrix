@@ -27,15 +27,16 @@ object SkillLevel {
     e => e.toString,
     s => SkillLevel(s)
   )
+
+  case object CAN_TEACH extends SkillLevel
+
+  case object COMFORTABLE extends SkillLevel
+
+  case object DABBED extends SkillLevel
+
+  case object FOSSIL extends SkillLevel
+
 }
-
-case object CAN_TEACH extends SkillLevel
-
-case object COMFORTABLE extends SkillLevel
-
-case object DABBED extends SkillLevel
-
-case object FOSSIL extends SkillLevel
 
 
 sealed trait TechType
@@ -63,15 +64,15 @@ object TechType {
     s => TechType(s)
   )
 
+  case object LANGUAGE extends TechType
+
+  case object LIBRARY extends TechType
+
+  case object FRAMEWORK extends TechType
+
+  case object CONCEPTUAL extends TechType
+
 }
-
-case object LANGUAGE extends TechType
-
-case object LIBRARY extends TechType
-
-case object FRAMEWORK extends TechType
-
-case object CONCEPTUAL extends TechType
 
 
 //object EnumTypes {
