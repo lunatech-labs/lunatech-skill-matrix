@@ -2,7 +2,6 @@ package services
 
 import javax.inject.Inject
 
-import models.EnumTypes.SkillLevel.SkillLevel
 import models._
 import models.responses.{SkillMatrixResponse, SkillMatrixUsersAndLevel, UserSkillResponse}
 import play.api.db.slick.DatabaseConfigProvider

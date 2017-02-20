@@ -4,7 +4,6 @@ import models.MyTable
 import slick.driver.JdbcProfile
 import javax.inject.Inject
 
-import models.EnumTypes.SkillLevel.SkillLevel
 import models._
 import models.responses.{SkillMatrixResponse, SkillMatrixUsersAndLevel, UserSkillResponse}
 import play.api.db.slick.DatabaseConfigProvider
@@ -15,7 +14,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 import scala.concurrent.duration.Duration
 import acceptance.TestData._
-import models.EnumTypes.SkillLevel
 import play.libs.F.Tuple
 
 

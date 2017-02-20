@@ -1,7 +1,6 @@
 package models
 
-import models.EnumTypes.SkillLevel.SkillLevel
-import models.EnumTypes.TechType.TechType
+import models._
 import slick.driver.PostgresDriver.api._
 
 object MyTable {

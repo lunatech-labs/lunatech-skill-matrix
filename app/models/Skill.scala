@@ -1,6 +1,6 @@
 package models
 
-import models.EnumTypes.SkillLevel.SkillLevel
+import models._
 import play.api.libs.functional.syntax.unlift
 import play.api.libs.json.{JsPath, Reads, Writes}
 import play.api.libs.functional.syntax._
