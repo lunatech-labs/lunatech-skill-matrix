@@ -79,16 +79,13 @@ paths:
         - application/json
       parameters:
         - $ref: '#/parameters/userId'
-        - $ref: '#/parameters/searchString'
-        - $ref: '#/parameters/skip'
-        - $ref: '#/parameters/limit'
       responses:
         200:
-          description: search results matching criteria
+          description: An array of products
           schema:
             type: array
             items:
-              $ref: '#/definitions/SkillForUser'
+              $ref: '#/definitions/UserSkillResponse'
         401:
           $ref: '#/responses/Standard401ErrorMessage'
         403:
@@ -109,12 +106,12 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/skillForUserItem'
+        - $ref: '#/parameters/skillMatrixItem'
       responses:
         201:
           description: created
           schema:
-            $ref: '#/definitions/SkillForUser'
+            $ref: '#/definitions/SkillMatrixItem'
         400:
           $ref: '#/responses/Standard400ErrorMessage'
         401:
@@ -124,7 +121,7 @@ paths:
         500:
           $ref: '#/responses/Standard500ErrorMessage'
 
-  /users/me/skillmatrix/{skillMatrixId}:
+  /users/me/skillmatrix/{skillId}:
     put:
       summary: Update an existing skill of the logged in user
       operationId: updateSkill
@@ -133,13 +130,13 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/skillMatrixId'
-        - $ref: '#/parameters/skillForUserItem'
+        - $ref: '#/parameters/skillId'
+        - $ref: '#/parameters/skillMatrixItem'
       responses:
         200:
           description: updated
           schema:
-            $ref: '#/definitions/SkillForUser'
+            $ref: '#/definitions/SkillMatrixItem'
         400:
           $ref: '#/responses/Standard400ErrorMessage'
         401:
@@ -159,7 +156,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/skillMatrixId'
+        - $ref: '#/parameters/skillId'
       responses:
         204:
           description: ok
@@ -188,11 +185,11 @@ paths:
         - $ref: '#/parameters/limit'
       responses:
         200:
-          description: search results matching criteria
+          description: An array of tech
           schema:
             type: array
             items:
-              $ref: '#/definitions/Skill'
+              $ref: '#/definitions/Tech'
         401:
           $ref: '#/responses/Standard401ErrorMessage'
         403:
@@ -219,7 +216,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/rGetSkillMatrixResponse'
+              $ref: '#/definitions/SkillMatrixResponse'
         401:
           $ref: '#/responses/Standard401ErrorMessage'
         403:
@@ -239,23 +236,23 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/skillId'
+        - $ref: '#/parameters/techId'
       responses:
         200:
           description: search results matching criteria
           schema:
             type: array
             items:
-              $ref: '#/definitions/GetSkillMatrixByTechIdResponse'
+              $ref: '#/definitions/SkillMatrixResponse'
         401:
           $ref: '#/responses/Standard401ErrorMessage'
         403:
           $ref: '#/responses/Standard403ErrorMessage'
         500:
           $ref: '#/responses/Standard500ErrorMessage'
- 
+
 definitions:
-  Skill:
+  Tech:
     type: object
     required:
       - name
@@ -268,22 +265,24 @@ definitions:
         type: string
         example: Erlang
       type:
-        $ref: '#/definitions/SkillType'
+        $ref: '#/definitions/TechType'
 
-  SkillType:
+  TechType:
     type: string
     enum:
       - language
       - library
       - framework
-      - conceptual
 
-  SkillForUser:
+  SkillMatrixItem:
     type: object
+    required:
+      - tech
+      - skillLevel
     properties:
-      skill:
-        $ref: '#/definitions/Skill'
-      level:
+      tech:
+        $ref: '#/definitions/Tech'
+      skillLevel:
         $ref: '#/definitions/SkillLevel'
 
   SkillLevel:
@@ -294,26 +293,41 @@ definitions:
       - dabbed
       - fossil
 
-  GetSkillMatrixResponse:
+  SkillMatrixResponse:
     type: object
     properties:
-      skillId:
+      techId:
         type: string
         format: int64
-      skillName:
+      techName:
         type: string
-      countUsers:
-        type: string
+      techType:
+        $ref: '#/definitions/TechType'
+      users:
+        $ref: '#/definitions/SkillMatrixUsersAndLevel'
 
-  GetInfoForSkillResponse:
+  SkillMatrixUsersAndLevel:
     type: object
     properties:
-      skillName:
+      userName:
+        description: the first and last name of the user
         type: string
-      users:
-        type: array
-        items:
-          $ref: '#/definitions/User'
+        example: Severus Snape
+      level:
+        $ref: '#/definitions/SkillLevel'
+
+  UserSkillResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        format: int64
+      firstName:
+        type: string
+      lastName:
+        type: string
+      skill:
+        $ref: '#/definitions/SkillMatrixItem'
 
   User:
     type: object
@@ -357,15 +371,15 @@ responses:
       $ref: '#/definitions/Error'
 
 parameters:
-  skillId:
+  techId:
     in: path
-    name: skillId
+    name: techId
     description: The id of the desired skill
     type: string
     required: true
-  skillMatrixId:
+  skillId:
     in: path
-    name: skillMatrixId
+    name: skillId
     description: The id of the skill from the user's skill matrix
     type: string
     required: true
@@ -395,11 +409,10 @@ parameters:
     format: int32
     minimum: 0
     maximum: 50
-  skillForUserItem:
+  skillMatrixItem:
     in: body
-    name: skillForUserItem
+    name: skillMatrixItem
     description: Skill that needs to be added or updated
     required: true
     schema:
-      $ref: '#/definitions/SkillForUser'
-
+      $ref: '#/definitions/SkillMatrixItem'
