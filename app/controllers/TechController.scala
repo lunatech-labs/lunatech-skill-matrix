@@ -16,7 +16,7 @@ class TechController @Inject()(techDAOService: TechDAOService) extends Controlle
 
   def getAllTech() = Action.async(BodyParsers.parse.empty) { _ =>
     techDAOService.getAllTech().map(m =>
-      Ok(Json.obj("status" -> "Success", "tech" -> Json.toJson(m))))
+      Ok(Json.obj("tech" -> Json.toJson(m))))
   }
 
 }
