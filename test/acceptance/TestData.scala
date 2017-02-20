@@ -1,20 +1,21 @@
 package acceptance
 
-import models._
 import play.api.libs.json.{JsValue, _}
-
-
 
 object TestData {
 
-  val userTanya = User(None, "Tanya", "Moldovan", "tanya.moldovan@gmail.com")
-  val userSeverus = User(None, "Severus", "Snape", "severus.snape@hogwarts.com")
+  val ID_USER_ODERSKY = "idUserOdersky"
+  val ID_USER_SNAPE = "idUserSnape"
 
+  val ID_TECH_SCALA = "idTechScala"
+  val ID_TECH_FUNCTIONAL = "idTechFunctional"
+  val ID_TECH_DEFENSE = "idTechDefense"
+  val ID_TECH_DARK_ARTS = "idTechDarkArts"
 
-  val techScala = Tech(None, "Scala", TechType.LANGUAGE)
-  val techFunctional = Tech(None, "Functional Programming", TechType.CONCEPTUAL)
-  val techDefense = Tech(None, "Defense against the Dark Arts", TechType.CONCEPTUAL)
-  val techDarkArts= Tech(None, "Dark Arts", TechType.CONCEPTUAL)
+  val SKILL_ODERSKY_SCALA = "skillOderskyScala"
+  val SKILL_ODERSKY_FUNCTIONAL = "skillOderskyFunctional"
+  val SKILL_SEVERUS_DEFENSE = "skillSeverusDefense"
+  val SKILL_SEVERUS_DARK_ARTS = "skillSeverusDarkArts"
 
   val errorUserNotFound = "User not found"
   val skillNotFound = "Skill for this user could not be found"
@@ -156,8 +157,8 @@ object TestData {
       |      "techType": "LANGUAGE",
       |      "users": [
       |        {
-      |          "userName": "Tanya Moldovan",
-      |          "level": "COMFORTABLE"
+      |          "userName": "Martin Odersky",
+      |          "level": "CAN_TEACH"
       |        }
       |      ]
       |    }
@@ -171,8 +172,8 @@ object TestData {
       |      "techType": "CONCEPTUAL",
       |      "users": [
       |        {
-      |          "userName": "Tanya Moldovan",
-      |          "level": "COMFORTABLE"
+      |          "userName": "Martin Odersky",
+      |          "level": "CAN_TEACH"
       |        }
       |      ]
       |    }
