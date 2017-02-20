@@ -1,7 +1,6 @@
 package acceptance
 
-import models.EnumTypes.TechType
-import models.{Tech, User}
+import models._
 import play.api.libs.json.{JsValue, _}
 
 
