@@ -4,13 +4,47 @@ This is your new Play application
 POSTMAN collection: https://www.getpostman.com/collections/706a41a2f031e0217331
 the link will be updated when there's a change in the collection
 
+
+/********************
+
+Added feature tests for controller.
+Basically it's an end-to-end test of the backend, because the DAO layer is not mocked.
+
+However, THERE IS A PROBLEM.
+
+The test run, but the database is not configured properly.
+In order to run the tests, you HAVE to create the database and the tables YOURSELF.
+This has to be fixed, I do not know how yet. An in-memory db should be a solution,
+but I did not manage to configure it :(
+
+Also I cannot split the tests in different files, because I get an error:
+java.util.concurrent.RejectedExecutionException: Task slick.backend.DatabaseComponent$DatabaseDef$$anon$2@684106dd
+rejected from java.util.concurrent.ThreadPoolExecutor@3d2cfb81
+[Terminated, pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 13]
+
+The tests will be merged, but the configuration MUST be fixed !!!
+
+
+Also, two tests are failing because the controllers must be changed.
+
+RUNNING FROM CONSOLE
+You can use `sbt acc:test` command to run from console only the acceptance tests,
+or `sbt test` to run all the tests
+
+**********************/
+
+
+
+
 TO DO:
 
 Current API modification:
+- UPDATE SWAGGER - now it's a mess
+- Slick Evolutions are not working :(
 - add documentation (comments)
 - case sensitive check of tech name (introduce lower name)
 - finish the skill and tech API operations
-    FIX THE UPDATE IN SKILLMATRIX AND TECHDAO SERVICE
+    DONE: FIX THE UPDATE IN SKILLMATRIX AND TECHDAO SERVICE
     DONE: name of users in result
     DONE: get user skill - modify return type
     DONE: get the skill matrix
@@ -20,7 +54,6 @@ Current API modification:
     return the correct resource for the update operation
     rethink the way we now handle the return types of the endpoint.
 - add info in read me
-- update swagger
 
 
 New stuff:

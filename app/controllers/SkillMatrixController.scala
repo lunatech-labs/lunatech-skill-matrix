@@ -65,6 +65,7 @@ class SkillMatrixController @Inject()(skillMatrixDAOService: SkillMatrixDAOServi
     )
   }
 
+  // TO DO: add the case when tech id is not in the database
   def getSkillMatrixByTechId(techId: Int) = Action.async(BodyParsers.parse.empty) { _ =>
     skillMatrixDAOService.getSkillMatrixByTechId(techId).map(m =>
       Ok(Json.obj("skills" -> Json.toJson(m))))
