@@ -36,7 +36,8 @@ object Techs{
   val techTable = TableQuery[Techs]
 
   def add(tech: Tech): Future[Int] = {
-    Connection.db.run((techTable returning techTable.map(_.id)) += tech)
+    val normalizedTech = tech.copy(name = tech.name.toLowerCase)
+    Connection.db.run((techTable returning techTable.map(_.id)) += normalizedTech)
   }
 
   def add(name: String, techType: TechType): Future[Int] = {
