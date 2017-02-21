@@ -5,11 +5,11 @@ import play.api.test.Helpers._
 import acceptance.TestData._
 import play.api.libs.json._
 
-class SkillMatrixControllerSpec  extends AcceptanceSpec {
+class SkillMatrixControllerSpec extends AcceptanceSpec {
 
   var dataMap: Map[String, Int] = _
 
-  override def beforeAll  {
+  override def beforeAll {
     TestDatabaseProvider.setupDatabase()
   }
 
@@ -21,8 +21,8 @@ class SkillMatrixControllerSpec  extends AcceptanceSpec {
     TestDatabaseProvider.cleanSkillData()
   }
 
- override def afterAll {
-   TestDatabaseProvider.dropDatabase()
+  override def afterAll {
+    TestDatabaseProvider.dropDatabase()
   }
 
   info("The POST /users/:userId/skills for adding a skill to a user")
@@ -40,7 +40,7 @@ class SkillMatrixControllerSpec  extends AcceptanceSpec {
       contentAsString(response) must include ("techType")
       contentAsString(response) must include ("LANGUAGE")
       contentAsString(response) must include ("name")
-      contentAsString(response) must include ("Brainfuck")
+      contentAsString(response) must include ("brainfuck")
       contentAsString(response) must include ("tech")
       contentAsString(response) must include ("id")
     }
@@ -75,12 +75,12 @@ class SkillMatrixControllerSpec  extends AcceptanceSpec {
       contentAsString(response) must include(objTechTypeMissing)
       contentAsString(response) must include(genericPathMissing)
     }
-    scenario("It should return a InternalServerError when something goes wrong") (pending)
+    scenario("It should return a InternalServerError when something goes wrong")(pending)
   }
 
 
   info("The PUT /users/:userId/skill/:skillId for updating a skill of a user")
-  feature("It should return a successful response containing the updated skill when everything is fine"){
+  feature("It should return a successful response containing the updated skill when everything is fine") {
     scenario("Everything is fine") {
       val putSkillRequestJsonWithId = putSkillRequestJson
         .transform(__.json.update((__ \ 'tech \ 'id).json.put(JsNumber(dataMap(ID_TECH_SCALA))))).get
@@ -97,7 +97,7 @@ class SkillMatrixControllerSpec  extends AcceptanceSpec {
       contentAsString(response) must include ("techType")
       contentAsString(response) must include ("LANGUAGE")
       contentAsString(response) must include ("name")
-      contentAsString(response) must include ("Scala")
+      contentAsString(response) must include ("scala")
       contentAsString(response) must include ("tech")
       contentAsString(response) must include ("id")
       contentAsString(response) must include (dataMap(ID_TECH_SCALA).toString)
@@ -167,7 +167,7 @@ class SkillMatrixControllerSpec  extends AcceptanceSpec {
       status(response) mustEqual 204
     }
   }
-  feature("It should return a 404 when skill is not found"){
+  feature("It should return a 404 when skill is not found") {
     scenario("Skill not found") {
       val request = FakeRequest("DELETE", s"/users/${dataMap(ID_USER_ODERSKY)}/skill/1234")
       val response = route(app, request).get
@@ -182,10 +182,10 @@ class SkillMatrixControllerSpec  extends AcceptanceSpec {
       val request = FakeRequest("GET", s"/users/${dataMap(ID_USER_SNAPE)}/skills")
       val response = route(app, request).get
       status(response) mustEqual 200
-      contentAsString(response) must include("Defense against the Dark Arts")
+      contentAsString(response) must include("defense against the dark arts")
     }
   }
-  feature("it should return an error"){
+  feature("it should return an error") {
     scenario("It should return 404 Not Found when the user is not found in the system") {
       val request = FakeRequest("GET", "/users/1090/skills")
       val response = route(app, request).get
@@ -195,7 +195,7 @@ class SkillMatrixControllerSpec  extends AcceptanceSpec {
   }
 
   info("The GET /skillmatrix for getting the info about all tech introduced by users")
-  feature("It should return a list of SkillMatrixResponse object"){
+  feature("It should return a list of SkillMatrixResponse object") {
     scenario("Everything is fine") {
       val request = FakeRequest("GET", "/skillmatrix")
       val response = route(app, request).get
@@ -219,7 +219,7 @@ class SkillMatrixControllerSpec  extends AcceptanceSpec {
   }
 
   info("The GET /skillmatrix/:techId for getting all info about one tech")
-  feature("It should return a successful response"){
+  feature("It should return a successful response") {
     scenario("It should return a SkillMatrixResponse object when everything is fine") {
       val request = FakeRequest("GET", s"/skillmatrix/${dataMap(ID_TECH_DARK_ARTS)}")
       val response = route(app, request).get
@@ -230,7 +230,7 @@ class SkillMatrixControllerSpec  extends AcceptanceSpec {
     }
   }
   // The test will fail because the controller is missing the functionality
-  feature("It should return an error2"){
+  feature("It should return an error2") {
     scenario("It should return 404 NotFound when the techId is not present in the database") {
       val request = FakeRequest("GET", "/skillmatrix/76548")
       val response = route(app, request).get

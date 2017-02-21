@@ -7,7 +7,7 @@ import models.{Skill, SkillMatrixItem, Tech}
 import play.api.libs.json.Json.JsValueWrapper
 import play.api.libs.json._
 import play.api.mvc._
-import services.{SkillMatrixDAOService, TechDAOService}
+import services.{SkillMatrixService, TechService}
 
 import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -16,15 +16,15 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * Skill Matrix Controller.
   * The controller is responsible for the operations related to a users's skills.
   */
-class SkillMatrixController @Inject()(skillMatrixDAOService: SkillMatrixDAOService,
-                                      techDAOService: TechDAOService) extends Controller {
+class SkillMatrixController @Inject()(skillMatrixService: SkillMatrixService,
+                                      techService: TechService) extends Controller {
 
   def addSkill(userId: Int) = Action.async(BodyParsers.parse.json) {
     request =>
       for {
         skillMatrixItem: SkillMatrixItem <- request.body.validate[SkillMatrixItem] ?|
           (err => BadRequest(Json.obj("message" -> JsError.toJson(err))))
-        createdSkill <- skillMatrixDAOService.addSkillByUserIdToSkillMatrix(userId, skillMatrixItem.tech, skillMatrixItem.skillLevel) ?|
+        createdSkill <- skillMatrixService.addUserSkill(userId, skillMatrixItem.tech, skillMatrixItem.skillLevel) ?|
           (err => InternalServerError(Json.obj("message" -> err.getMessage)))
       } yield Created(Json.obj(
         "skillAdded" -> Json.toJson(
@@ -42,7 +42,7 @@ class SkillMatrixController @Inject()(skillMatrixDAOService: SkillMatrixDAOServi
          _techID <- validateTechIdPresentForUpdateOperation(skillMatrixItem) ?|
             BadRequest(Json.obj("message" -> getBadRequestResponseForUpdateOperation()))
 
-        updatedSkill <- skillMatrixDAOService.updateSkill(skillId, userId, skillMatrixItem.tech, skillMatrixItem.skillLevel) ?|
+        updatedSkill <- skillMatrixService.updateUserSkill(skillId, userId, skillMatrixItem.tech, skillMatrixItem.skillLevel) ?|
           NotFound(Json.obj("message" -> "skill could not be found"))
 
         skillMatrixItem <- getResponseForUpdateOperation(updatedSkill) ?| InternalServerError
@@ -50,27 +50,27 @@ class SkillMatrixController @Inject()(skillMatrixDAOService: SkillMatrixDAOServi
   }
 
   def deleteSkill(userId: Int, userSkillId: Int) = Action.async(BodyParsers.parse.empty) { _ =>
-    skillMatrixDAOService.deleteSkillByUserId(userId, userSkillId).map {
+    skillMatrixService.deleteUserSkill(userId, userSkillId).map {
       case None => NotFound(Json.obj("message" -> "Skill for this user could not be found"))
       case _ => NoContent
-   }
+    }
   }
 
   def getUserSkills(userId: Int) = Action.async(BodyParsers.parse.empty) { _ =>
-    skillMatrixDAOService.getAllSkillMatrixByUserId(userId).map {
-      case None=> NotFound(Json.obj("message" -> "User not found"))
+    skillMatrixService.getUserSkills(userId).map {
+      case None => NotFound(Json.obj("message" -> "User not found"))
       case m => Ok(Json.obj("userSkills" -> Json.toJson(m)))
     }
   }
 
   def getSkillMatrix() = Action.async(BodyParsers.parse.empty) { _ =>
-    skillMatrixDAOService.getAllSkills().map ( result =>
+    skillMatrixService.getAllSkills.map(result =>
       Ok(Json.obj("skills" -> Json.toJson(result)))
     )
   }
 
   def getSkillMatrixByTechId(techId: Int) = Action.async(BodyParsers.parse.empty) { _ =>
-    skillMatrixDAOService.getSkillMatrixByTechId(techId).map{
+    skillMatrixService.getSkillMatrixByTechId(techId).map{
       case None => NotFound(Json.obj("message" -> "Tech not found"))
       case m => Ok(Json.obj("skills" -> Json.toJson(m)))}
   }
@@ -95,7 +95,7 @@ class SkillMatrixController @Inject()(skillMatrixDAOService: SkillMatrixDAOServi
 
   private def getResponseForUpdateOperation(skill: Skill): Future[SkillMatrixItem] = {
     for {
-      tech <- techDAOService.getTechById(skill.techId)
+      tech <- techService.getById(skill.techId)
     } yield SkillMatrixItem(tech = tech.get, skillLevel = skill.skillLevel)
   }
 }

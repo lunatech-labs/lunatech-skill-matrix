@@ -24,7 +24,7 @@ object TestData {
     """
       |{
       |	"tech": {
-      |		"name": "Brainfuck",
+      |		"name": "brainfuck",
       |		"techType": "LANGUAGE"
       |	},
       |	"skillLevel": "DABBED"
@@ -42,7 +42,7 @@ object TestData {
     """
       |{
       |	"tech": {
-      |		"name": "Brainfuck",
+      |		"name": "brainfuck",
       |		"techType": "LANGUAGE"
       |	}
       |}
@@ -62,7 +62,7 @@ object TestData {
     """
       |{
       |	"tech": {
-      |		"name": "Brainfuck"
+      |		"name": "brainfuck"
       |	},
       |	"skillLevel": "DABBED"
       |}
@@ -73,7 +73,7 @@ object TestData {
       |{
       |	"tech": {
       |		"id": 5,
-      |		"name": "Scala",
+      |		"name": "scala",
       |		"techType": "LANGUAGE"
       |		},
       |	"skillLevel": "DABBED"
@@ -92,7 +92,7 @@ object TestData {
       |{
       |	"tech": {
       |		"id": 5,
-      |		"name": "Scala",
+      |		"name": "scala",
       |		"techType": "LANGUAGE"
       |		}
       |}
@@ -114,7 +114,7 @@ object TestData {
       |{
       |	"tech": {
       |		"id": 5,
-      |		"name": "Scala"
+      |		"name": "scala"
       |		},
       |	"skillLevel": "DABBED"
       |}
@@ -124,7 +124,7 @@ object TestData {
     """
       |{
       |	"tech": {
-      |		"name": "Scala",
+      |		"name": "scala",
       |		"techType": "LANGUAGE"
       |		},
       |	"skillLevel": "DABBED"
@@ -136,7 +136,7 @@ object TestData {
       |{
       |  "skills": {
       |    "techId": 1,
-      |    "techName": "Dark Arts",
+      |    "techName": "dark arts",
       |    "techType": "CONCEPTUAL",
       |    "users": [
       |      {
@@ -153,7 +153,7 @@ object TestData {
     """
       |{
       |      "techId": 7,
-      |      "techName": "Scala",
+      |      "techName": "scala",
       |      "techType": "LANGUAGE",
       |      "users": [
       |        {
@@ -168,7 +168,7 @@ object TestData {
     """
       |{
       |      "techId": 1,
-      |      "techName": "Functional Programming",
+      |      "techName": "functional programming",
       |      "techType": "CONCEPTUAL",
       |      "users": [
       |        {
@@ -183,7 +183,7 @@ object TestData {
     """
       |{
       |      "techId": 1,
-      |      "techName": "Defense against the Dark Arts",
+      |      "techName": "defense against the dark arts",
       |      "techType": "CONCEPTUAL",
       |      "users": [
       |        {
@@ -198,7 +198,7 @@ object TestData {
     """
       |{
       |      "techId": 1,
-      |      "techName": "Dark Arts",
+      |      "techName": "dark arts",
       |      "techType": "CONCEPTUAL",
       |      "users": [
       |        {
@@ -213,7 +213,7 @@ object TestData {
     """
       |{
       |      "id": 4,
-      |      "name": "Scala",
+      |      "name": "scala",
       |      "techType": "LANGUAGE"
       |}
     """.stripMargin)
@@ -222,7 +222,7 @@ object TestData {
     """
       |{
       |      "id": 4,
-      |      "name": "Functional Programming",
+      |      "name": "functional programming",
       |      "techType": "CONCEPTUAL"
       |}
     """.stripMargin)
@@ -231,7 +231,7 @@ object TestData {
     """
       |{
       |      "id": 4,
-      |      "name": "Defense against the Dark Arts",
+      |      "name": "defense against the dark arts",
       |      "techType": "CONCEPTUAL"
       |}
     """.stripMargin)
@@ -240,7 +240,7 @@ object TestData {
     """
       |{
       |      "id": 4,
-      |      "name": "Dark Arts",
+      |      "name": "dark arts",
       |      "techType": "CONCEPTUAL"
       |}
     """.stripMargin)

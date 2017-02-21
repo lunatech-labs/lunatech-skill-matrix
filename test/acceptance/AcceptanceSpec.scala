@@ -15,10 +15,10 @@ class AcceptanceSpec extends FeatureSpec
   with OneServerPerSuite {
 
   implicit override lazy val app = FakeApplication(additionalConfiguration = Map(
-    //"slick.dbs.test.driver" -> "slick.driver.H2Driver$",
-    //"slick.dbs.test.db.driver" -> "org.h2.Driver",
-    //"slick.dbs.test.db.url" -> "jdbc:h2:mem:test;MODE=PostgreSQL;DATABASE_TO_UPPER=false;DB_CLOSE_DELAY=-1"
-    "slick.dbs.default.db.url" -> "jdbc:postgresql://localhost:5432/test"
+//    "slick.dbs.test.driver" -> "slick.driver.H2Driver$",
+//    "slick.dbs.test.db.driver" -> "org.h2.Driver",
+//    "slick.dbs.test.db.url" -> "jdbc:h2:mem:test;MODE=PostgreSQL;DATABASE_TO_UPPER=false;DB_CLOSE_DELAY=-1"
+    "slick.dbs.default.db.url" -> "jdbc:postgresql://localhost:5432/test?user=postgres&password=root"
   ))
 
   implicit lazy val portL = 9000

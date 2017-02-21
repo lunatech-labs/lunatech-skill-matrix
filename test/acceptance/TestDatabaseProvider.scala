@@ -1,6 +1,5 @@
 package acceptance
 
-import models.MyTable
 import slick.driver.JdbcProfile
 import javax.inject.Inject
 
@@ -17,15 +16,16 @@ import acceptance.TestData._
 import play.libs.F.Tuple
 
 
-object TestDatabaseProvider  {
+object TestDatabaseProvider {
 
   implicit val app = play.api.Play.current
 
 
-  val dbConfig =  DatabaseConfigProvider.get[JdbcProfile]
-  val skillTable = TableQuery[MyTable.Skills]
-  val techTable = TableQuery[MyTable.Tech]
-  val userTable = TableQuery[MyTable.Users]
+  val dbConfig = DatabaseConfigProvider.get[JdbcProfile]
+
+  val skillTable = TableQuery[Skills]
+  val techTable = TableQuery[Techs]
+  val userTable = TableQuery[Users]
 
 
   /*val database = Databases(
@@ -41,13 +41,14 @@ object TestDatabaseProvider  {
   ))*/
 
 
- // val database  = Database.forURL("jdbc:h2:mem:test1", driver = "org.h2.Driver")
+  // val database  = Database.forURL("jdbc:h2:mem:test1", driver = "org.h2.Driver")
 
   def setupDatabase() = {
-   // println("creating database")
-   // import play.api.db.evolutions._
-   // Evolutions.applyEvolutions(database)
-
+    // println("creating database")
+    // import play.api.db.evolutions._
+    // Evolutions.applyEvolutions(database)
+    val setup = DBIO.seq((skillTable.schema ++ techTable.schema ++ userTable.schema).create)
+    Await.result(dbConfig.db.run(setup), Duration.Inf)
   }
 
   def insertUserData(): Map[String, Int] = {
@@ -61,15 +62,15 @@ object TestDatabaseProvider  {
   }
 
   def insertTechData(): Map[String, Int] = {
-    val techScala = Tech(None, "Scala", TechType.LANGUAGE)
-    val techFunctional = Tech(None, "Functional Programming", TechType.CONCEPTUAL)
-    val techDefense = Tech(None, "Defense against the Dark Arts", TechType.CONCEPTUAL)
-    val techDarkArts= Tech(None, "Dark Arts", TechType.CONCEPTUAL)
+    val techScala = Tech(None, "scala", TechType.LANGUAGE)
+    val techFunctional = Tech(None, "functional programming", TechType.CONCEPTUAL)
+    val techDefense = Tech(None, "defense against the dark arts", TechType.CONCEPTUAL)
+    val techDarkArts= Tech(None, "dark arts", TechType.CONCEPTUAL)
 
     val idTechScala: Int = Await.result(dbConfig.db.run(techTable returning techTable.map(_.id) += techScala), Duration.Inf)
-    val idTechFunctional: Int = Await.result(dbConfig.db.run(techTable returning techTable.map(_.id)  += techFunctional), Duration.Inf)
-    val idTechDefense: Int = Await.result(dbConfig.db.run(techTable returning techTable.map(_.id)  += techDefense), Duration.Inf)
-    val idTechDarkArts: Int = Await.result(dbConfig.db.run(techTable returning techTable.map(_.id)  += techDarkArts), Duration.Inf)
+    val idTechFunctional: Int = Await.result(dbConfig.db.run(techTable returning techTable.map(_.id) += techFunctional), Duration.Inf)
+    val idTechDefense: Int = Await.result(dbConfig.db.run(techTable returning techTable.map(_.id) += techDefense), Duration.Inf)
+    val idTechDarkArts: Int = Await.result(dbConfig.db.run(techTable returning techTable.map(_.id) += techDarkArts), Duration.Inf)
 
     Map(ID_TECH_SCALA -> idTechScala, ID_TECH_FUNCTIONAL -> idTechFunctional, ID_TECH_DEFENSE -> idTechDefense, ID_TECH_DARK_ARTS -> idTechDarkArts)
   }
@@ -95,7 +96,7 @@ object TestDatabaseProvider  {
   }
 
   def cleanUserData() = {
-    Await.result(dbConfig.db.run(skillTable.delete), Duration.Inf)
+    Await.result(dbConfig.db.run(userTable.delete), Duration.Inf)
   }
 
   def cleanTechData() = {
@@ -103,15 +104,16 @@ object TestDatabaseProvider  {
   }
 
   def cleanSkillData() = {
+    Await.result(dbConfig.db.run(skillTable.delete), Duration.Inf)
     cleanUserData()
     cleanTechData()
-    Await.result(dbConfig.db.run(userTable.delete), Duration.Inf)
   }
 
   def dropDatabase() = {
-   // import play.api.db.evolutions._
-   // Evolutions.cleanupEvolutions(database)
-
+    // import play.api.db.evolutions._
+    // Evolutions.cleanupEvolutions(database)
+    val setup = DBIO.seq((skillTable.schema ++ techTable.schema ++ userTable.schema).drop)
+    Await.result(dbConfig.db.run(setup), Duration.Inf)
   }
 
 }
