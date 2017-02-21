@@ -40,7 +40,7 @@ class SkillMatrixControllerSpec extends AcceptanceSpec {
       contentAsString(response) must include ("techType")
       contentAsString(response) must include ("LANGUAGE")
       contentAsString(response) must include ("name")
-      contentAsString(response) must include ("Brainfuck")
+      contentAsString(response) must include ("brainfuck")
       contentAsString(response) must include ("tech")
       contentAsString(response) must include ("id")
     }
@@ -97,7 +97,7 @@ class SkillMatrixControllerSpec extends AcceptanceSpec {
       contentAsString(response) must include ("techType")
       contentAsString(response) must include ("LANGUAGE")
       contentAsString(response) must include ("name")
-      contentAsString(response) must include ("Scala")
+      contentAsString(response) must include ("scala")
       contentAsString(response) must include ("tech")
       contentAsString(response) must include ("id")
       contentAsString(response) must include (dataMap(ID_TECH_SCALA).toString)
@@ -182,7 +182,7 @@ class SkillMatrixControllerSpec extends AcceptanceSpec {
       val request = FakeRequest("GET", s"/users/${dataMap(ID_USER_SNAPE)}/skills")
       val response = route(app, request).get
       status(response) mustEqual 200
-      contentAsString(response) must include("Defense against the Dark Arts")
+      contentAsString(response) must include("defense against the dark arts")
     }
   }
   feature("it should return an error") {

@@ -48,7 +48,7 @@ object TestDatabaseProvider {
     // import play.api.db.evolutions._
     // Evolutions.applyEvolutions(database)
     val setup = DBIO.seq((skillTable.schema ++ techTable.schema ++ userTable.schema).create)
-    dbConfig.db.run(setup)
+    Await.result(dbConfig.db.run(setup), Duration.Inf)
   }
 
   def insertUserData(): Map[String, Int] = {
@@ -62,10 +62,10 @@ object TestDatabaseProvider {
   }
 
   def insertTechData(): Map[String, Int] = {
-    val techScala = Tech(None, "Scala", TechType.LANGUAGE)
-    val techFunctional = Tech(None, "Functional Programming", TechType.CONCEPTUAL)
-    val techDefense = Tech(None, "Defense against the Dark Arts", TechType.CONCEPTUAL)
-    val techDarkArts= Tech(None, "Dark Arts", TechType.CONCEPTUAL)
+    val techScala = Tech(None, "scala", TechType.LANGUAGE)
+    val techFunctional = Tech(None, "functional programming", TechType.CONCEPTUAL)
+    val techDefense = Tech(None, "defense against the dark arts", TechType.CONCEPTUAL)
+    val techDarkArts= Tech(None, "dark arts", TechType.CONCEPTUAL)
 
     val idTechScala: Int = Await.result(dbConfig.db.run(techTable returning techTable.map(_.id) += techScala), Duration.Inf)
     val idTechFunctional: Int = Await.result(dbConfig.db.run(techTable returning techTable.map(_.id) += techFunctional), Duration.Inf)
@@ -96,7 +96,7 @@ object TestDatabaseProvider {
   }
 
   def cleanUserData() = {
-    Await.result(dbConfig.db.run(skillTable.delete), Duration.Inf)
+    Await.result(dbConfig.db.run(userTable.delete), Duration.Inf)
   }
 
   def cleanTechData() = {
@@ -104,16 +104,16 @@ object TestDatabaseProvider {
   }
 
   def cleanSkillData() = {
+    Await.result(dbConfig.db.run(skillTable.delete), Duration.Inf)
     cleanUserData()
     cleanTechData()
-    Await.result(dbConfig.db.run(userTable.delete), Duration.Inf)
   }
 
   def dropDatabase() = {
     // import play.api.db.evolutions._
     // Evolutions.cleanupEvolutions(database)
     val setup = DBIO.seq((skillTable.schema ++ techTable.schema ++ userTable.schema).drop)
-    dbConfig.db.run(setup)
+    Await.result(dbConfig.db.run(setup), Duration.Inf)
   }
 
 }
