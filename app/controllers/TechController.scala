@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 import play.api.libs.json.Json
 import play.api.mvc.{Action, BodyParsers, Controller}
-import services.TechDAOService
+import services.TechService
 
 import scala.concurrent._
 import ExecutionContext.Implicits.global
@@ -12,11 +12,10 @@ import ExecutionContext.Implicits.global
 /**
   * Skill Controller.
   */
-class TechController @Inject()(techDAOService: TechDAOService) extends Controller {
+class TechController @Inject()(techService: TechService) extends Controller {
 
   def getAllTech() = Action.async(BodyParsers.parse.empty) { _ =>
-    techDAOService.getAllTech().map(m =>
+    techService.getAllTech.map(m =>
       Ok(Json.obj("tech" -> Json.toJson(m))))
   }
-
 }
