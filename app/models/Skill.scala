@@ -75,17 +75,18 @@ object Skills {
 
   def getAllSkillMatrixByUser(user: User): Future[Seq[(Skill, Tech)]] = {
     val join = for {
-      (skill, tech) <- skillTable join Techs.techTable on (_.techId === _.id)
+      skill <- skillTable.filter(_.userId === user.id)
+      tech <- Techs.techTable if (skill.techId === tech.id)
     } yield {
       (skill, tech)
     }
     Connection.db.run(join.result)
   }
 
-  def update(skillId: Int, userId: Int, tech: Tech, skillLevel: SkillLevel): Future[Option[Skill]] = {
+  def update(skillId: Int, userId: Int, techId: Int, skillLevel: SkillLevel): Future[Option[Skill]] = {
     val nrOfUpdatedRows: Future[Int] = Connection.db.run(
       skillTable
-        .filter(skill => skill.id === skillId && skill.userId === userId && skill.techId === tech.id.get)
+        .filter(skill => skill.id === skillId && skill.userId === userId && skill.techId === techId)
         .map(skill => skill.skillLevel)
         .update(skillLevel))
 
@@ -106,7 +107,9 @@ object Skills {
 
   def getAllSkills: Future[Seq[(Skill, User, Tech)]] = {
     val join = for {
-      ((skill, user), tech) <- skillTable join Users.userTable on (_.userId === _.id) join Techs.techTable on (_._1.techId === _.id)
+      skill <- skillTable
+      user <- Users.userTable if (skill.userId === user.id)
+      tech <- Techs.techTable if (skill.techId === tech.id)
     } yield {
       (skill, user, tech)
     }

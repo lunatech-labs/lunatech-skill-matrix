@@ -23,7 +23,7 @@ class SkillMatrixService @Inject()(techService: TechService,
     val techId: Future[Int] = techService.getTechIdOrInsert(tech)
 
     techId.flatMap { tId =>
-      Skills.update(skillId, userId, tech.copy(id = Some(tId)), skillLevel)
+      Skills.update(skillId, userId, tId, skillLevel)
     }
   }
 
