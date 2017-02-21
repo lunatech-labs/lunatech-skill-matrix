@@ -51,33 +51,61 @@ object TestDatabaseProvider {
     dbConfig.db.run(setup)
   }
 
-  def insertTestData(): (Int, Int, Int, Int, Int, Int, Int, Int) = {
-    val idUserTanya: Int = Await.result(dbConfig.db.run(userTable returning userTable.map(_.id) += userTanya), Duration.Inf)
+  def insertUserData(): Map[String, Int] = {
+    val userOdersky = User(None, "Martin", "Odersky", "martin.odersky@scala.com")
+    val userSeverus = User(None, "Severus", "Snape", "severus.snape@hogwarts.com")
+
+    val idUserOdersky: Int = Await.result(dbConfig.db.run(userTable returning userTable.map(_.id) += userOdersky), Duration.Inf)
     val idUserSeverus: Int = Await.result(dbConfig.db.run(userTable returning userTable.map(_.id) += userSeverus), Duration.Inf)
+    Map(ID_USER_ODERSKY -> idUserOdersky, ID_USER_SNAPE -> idUserSeverus)
+
+  }
+
+  def insertTechData(): Map[String, Int] = {
+    val techScala = Tech(None, "Scala", TechType.LANGUAGE)
+    val techFunctional = Tech(None, "Functional Programming", TechType.CONCEPTUAL)
+    val techDefense = Tech(None, "Defense against the Dark Arts", TechType.CONCEPTUAL)
+    val techDarkArts= Tech(None, "Dark Arts", TechType.CONCEPTUAL)
 
     val idTechScala: Int = Await.result(dbConfig.db.run(techTable returning techTable.map(_.id) += techScala), Duration.Inf)
     val idTechFunctional: Int = Await.result(dbConfig.db.run(techTable returning techTable.map(_.id) += techFunctional), Duration.Inf)
     val idTechDefense: Int = Await.result(dbConfig.db.run(techTable returning techTable.map(_.id) += techDefense), Duration.Inf)
     val idTechDarkArts: Int = Await.result(dbConfig.db.run(techTable returning techTable.map(_.id) += techDarkArts), Duration.Inf)
 
+    Map(ID_TECH_SCALA -> idTechScala, ID_TECH_FUNCTIONAL -> idTechFunctional, ID_TECH_DEFENSE -> idTechDefense, ID_TECH_DARK_ARTS -> idTechDarkArts)
+  }
 
-    val skillTanyaScala = Skill(None, idUserTanya, idTechScala, SkillLevel.COMFORTABLE)
-    val skillTanyaFunctional = Skill(None, idUserTanya, idTechFunctional, SkillLevel.COMFORTABLE)
-    val skillSeverusDefense = Skill(None, idUserSeverus, idTechDefense, SkillLevel.CAN_TEACH)
-    val skillSeverusDarkArts = Skill(None, idUserSeverus, idTechDarkArts, SkillLevel.CAN_TEACH)
+  def insertSkillData(): Map[String, Int] = {
+    val userMap = insertUserData()
+    val techMap = insertTechData()
 
-    val idSkillTanyaScala: Int = Await.result(dbConfig.db.run(skillTable returning skillTable.map(_.id) += skillTanyaScala), Duration.Inf)
-    Await.result(dbConfig.db.run(skillTable += skillTanyaFunctional), Duration.Inf)
+    val skillOderskyScala = Skill(None, userMap(ID_USER_ODERSKY), techMap(ID_TECH_SCALA), SkillLevel.CAN_TEACH)
+    val skillOderskyFunctional = Skill(None, userMap(ID_USER_ODERSKY), techMap(ID_TECH_FUNCTIONAL), SkillLevel.CAN_TEACH)
+    val skillSeverusDefense = Skill(None, userMap(ID_USER_SNAPE), techMap(ID_TECH_DEFENSE), SkillLevel.CAN_TEACH)
+    val skillSeverusDarkArts = Skill(None, userMap(ID_USER_SNAPE), techMap(ID_TECH_DARK_ARTS), SkillLevel.CAN_TEACH)
+
+    val idSkillOderskyScala: Int = Await.result(dbConfig.db.run(skillTable returning skillTable.map(_.id) += skillOderskyScala), Duration.Inf)
+    Await.result(dbConfig.db.run(skillTable += skillOderskyFunctional), Duration.Inf)
     val idSkillSeverusDefense: Int = Await.result(dbConfig.db.run(skillTable returning skillTable.map(_.id) += skillSeverusDefense), Duration.Inf)
     Await.result(dbConfig.db.run(skillTable += skillSeverusDarkArts), Duration.Inf)
 
-    (idUserTanya, idUserSeverus, idTechScala, idTechDefense, idSkillTanyaScala, idTechFunctional, idSkillSeverusDefense, idTechDarkArts)
-
+    userMap ++ techMap ++ Map(
+      SKILL_ODERSKY_SCALA -> idSkillOderskyScala,
+      SKILL_SEVERUS_DEFENSE ->  idSkillSeverusDefense
+    )
   }
 
-  def cleanTestData() = {
+  def cleanUserData() = {
     Await.result(dbConfig.db.run(skillTable.delete), Duration.Inf)
+  }
+
+  def cleanTechData() = {
     Await.result(dbConfig.db.run(techTable.delete), Duration.Inf)
+  }
+
+  def cleanSkillData() = {
+    cleanUserData()
+    cleanTechData()
     Await.result(dbConfig.db.run(userTable.delete), Duration.Inf)
   }
 

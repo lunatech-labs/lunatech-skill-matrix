@@ -42,14 +42,14 @@ object Techs{
   def add(name: String, techType: TechType): Future[Int] = {
     val tech = Tech(
       id = None,
-      name = name,
+      name = name.toLowerCase,
       techType = techType
     )
     add(tech)
   }
 
   def getTechIdByNameAndType(tech: Tech) : Future[Option[Int]] = {
-    val getTechIdQuery = techTable.filter(x => x.name === tech.name && x.techType === tech.techType).map(_.id).take(1)
+    val getTechIdQuery = techTable.filter(t => t.name === tech.name.toLowerCase && t.techType === tech.techType).map(_.id).take(1)
     Connection.db.run(getTechIdQuery.result.headOption)
   }
 
