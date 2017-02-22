@@ -1,0 +1,24 @@
+<div>
+    <div class="text-align-right">
+        <div class="icon-input">
+            <input type="text" data-ng-model="data.skillFilter" placeholder="Filter Tech">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+        </div>
+    </div>
+    <div data-ng-repeat="skill in data.skills | filter:{searchFilter:data.skillFilter}">
+        <div class="page-header">
+            <h1>{{skill.techName}} <small>{{data.techType[skill.techType].text}}</small></h1>
+        </div>
+
+        <div>
+            <table class="table">
+                <tbody>
+                    <tr data-ng-repeat="user in skill.users">
+                        <td data-ng-class="$first ? 'border-none':''"><span class="display-block">{{user.userName}}</span></td>
+                        <td data-ng-class="$first ? 'border-none':''"><span class="display-block text-transform-capitalize">{{data.level[user.level].text}}</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

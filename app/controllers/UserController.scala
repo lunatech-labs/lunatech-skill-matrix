@@ -1,6 +1,6 @@
 package controllers
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
 import play.api.libs.json.Json
 import play.api.mvc.{Action, BodyParsers, Controller}
@@ -8,10 +8,12 @@ import services.UserService
 
 import scala.concurrent._
 import ExecutionContext.Implicits.global
+
 /**
   * User Controller
   */
-class UserController @Inject() (userService: UserService) extends Controller {
+@Singleton
+class UserController @Inject()(userService: UserService) extends Controller {
 
   def getUserById(userId: Int) = Action.async(BodyParsers.parse.empty) { _ =>
     userService.getUserById(userId).map {
