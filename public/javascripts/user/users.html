@@ -1,0 +1,35 @@
+<div>
+    <div class="text-align-right">
+        <div class="icon-input">
+            <input type="text" data-ng-model="data.userFilter" placeholder="Filter User">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+        </div>
+    </div>
+
+    <div class="page-header">
+        <h1>Users</h1>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <td>First Name</td>
+            <td>Last Name</td>
+            <td>Email</td>
+            <td class="text-align-center">Actions</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr data-ng-repeat="user in data.users | filter:{searchFilter:data.userFilter}">
+            <td>{{user.firstName}}</td>
+            <td>{{user.lastName}}</td>
+            <td>{{user.email}}</td>
+            <td class="text-align-center">
+                <a href="#!/user/profile/{{user.id}}">
+                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

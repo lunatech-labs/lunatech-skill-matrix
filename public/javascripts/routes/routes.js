@@ -4,9 +4,13 @@ angular.module('techmatrix').config(['$routeProvider',function($routeProvider) {
      templateUrl: '/assets/javascripts/skill/skillMatrix.html',
      controller: 'SkillController'
     })
-    .when('/user/:userId', {
-     templateUrl: '/assets/javascripts/user/userSkills.html',
-     controller: 'UserController'
+    .when('/users', {
+     templateUrl: '/assets/javascripts/user/users.html',
+     controller: 'UsersController'
     })
+    .when('/user/profile/:userId', {
+         templateUrl: '/assets/javascripts/user/userProfile.html',
+         controller: 'UserProfileController'
+        })
     .otherwise('/skillmatrix');
 }]);

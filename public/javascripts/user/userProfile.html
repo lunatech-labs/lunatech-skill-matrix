@@ -1,0 +1,22 @@
+<div>
+    <div class="page-header">
+        <h1>{{data.user.lastName}} <small>{{data.user.firstName}}</small></h1>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <td><strong>Tech</strong></td>
+                <td><strong>Tech Type</strong></td>
+                <td><strong>Skill Level</strong></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="skill in data.user.skill">
+                <td class="text-transform-capitalize">{{skill.tech.name}}</td>
+                <td class="text-transform-capitalize">{{data.techType[skill.tech.techType].text}}</td>
+                <td class="text-transform-capitalize">{{data.level[skill.skillLevel].text}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

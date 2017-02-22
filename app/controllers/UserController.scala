@@ -22,4 +22,10 @@ class UserController @Inject()(userService: UserService) extends Controller {
     }
   }
 
+  def getAllUsers = Action.async(BodyParsers.parse.empty) { _ =>
+    userService.getAll.map { users =>
+      Ok(Json.obj("users" -> Json.toJson(users)))
+    }
+  }
+
 }

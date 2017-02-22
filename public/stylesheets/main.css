@@ -12,16 +12,20 @@ body{
     text-transform: capitalize;
 }
 
+.text-align-right{
+    text-align:right;
+}
+
+.text-align-center{
+    text-align:center;
+}
+
 .display-block{
     display:block;
 }
 
 .display-inline-block{
     display:inline-block;
-}
-
-.text-align-right{
-    text-align:right;
 }
 
 .border-none{

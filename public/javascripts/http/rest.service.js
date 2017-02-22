@@ -1,4 +1,4 @@
-angular.module('techmatrix').service('RestService',['$http',function($http){
+angular.module('techmatrix').service('RestService',['$http','RestUrlService',function($http,RestUrlService){
 
     var baseUrl = '';
 
@@ -13,8 +13,12 @@ angular.module('techmatrix').service('RestService',['$http',function($http){
         getSkillMatrix:function(){
             return basicRequest('GET','/skillmatrix');
         },
-        getUserInfo:function(params){
-            return basicRequest('GET','/users', params);
+        getAllUsers: function(){
+            return basicRequest('GET','/users');
+        },
+        getUserProfile:function(params){
+            var url = RestUrlService.getUserProfile(params);
+            return basicRequest('GET',url);
         }
     };
 
