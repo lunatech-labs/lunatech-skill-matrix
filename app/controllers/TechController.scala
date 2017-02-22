@@ -1,6 +1,6 @@
 package controllers
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
 import play.api.libs.json.Json
 import play.api.mvc.{Action, BodyParsers, Controller}
@@ -12,6 +12,7 @@ import ExecutionContext.Implicits.global
 /**
   * Skill Controller.
   */
+@Singleton
 class TechController @Inject()(techService: TechService) extends Controller {
 
   def getAllTech() = Action.async(BodyParsers.parse.empty) { _ =>

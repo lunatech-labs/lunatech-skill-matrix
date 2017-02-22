@@ -1,6 +1,6 @@
 package controllers
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
 import io.kanaka.monadic.dsl._
 import models.{Skill, SkillMatrixItem, Tech}
@@ -16,6 +16,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * Skill Matrix Controller.
   * The controller is responsible for the operations related to a users's skills.
   */
+@Singleton
 class SkillMatrixController @Inject()(skillMatrixService: SkillMatrixService,
                                       techService: TechService) extends Controller {
 
@@ -39,8 +40,8 @@ class SkillMatrixController @Inject()(skillMatrixService: SkillMatrixService,
         skillMatrixItem: SkillMatrixItem <- request.body.validate[SkillMatrixItem] ?|
           (err => BadRequest(Json.obj("message" -> JsError.toJson(err))))
 
-         _techID <- validateTechIdPresentForUpdateOperation(skillMatrixItem) ?|
-            BadRequest(Json.obj("message" -> getBadRequestResponseForUpdateOperation()))
+        _techID <- validateTechIdPresentForUpdateOperation(skillMatrixItem) ?|
+          BadRequest(Json.obj("message" -> getBadRequestResponseForUpdateOperation()))
 
         updatedSkill <- skillMatrixService.updateUserSkill(skillId, userId, skillMatrixItem.tech, skillMatrixItem.skillLevel) ?|
           NotFound(Json.obj("message" -> "skill could not be found"))
@@ -70,9 +71,10 @@ class SkillMatrixController @Inject()(skillMatrixService: SkillMatrixService,
   }
 
   def getSkillMatrixByTechId(techId: Int) = Action.async(BodyParsers.parse.empty) { _ =>
-    skillMatrixService.getSkillMatrixByTechId(techId).map{
+    skillMatrixService.getSkillMatrixByTechId(techId).map {
       case None => NotFound(Json.obj("message" -> "Tech not found"))
-      case m => Ok(Json.obj("skills" -> Json.toJson(m)))}
+      case m => Ok(Json.obj("skills" -> Json.toJson(m)))
+    }
   }
 
   private def validateTechIdPresentForUpdateOperation(skillMatrixItem: SkillMatrixItem): Future[Option[Int]] = skillMatrixItem.tech.id match {
@@ -81,7 +83,8 @@ class SkillMatrixController @Inject()(skillMatrixService: SkillMatrixService,
   }
 
   private def getBadRequestResponseForUpdateOperation(): JsValueWrapper = {
-    Json.parse("""{
+    Json.parse(
+      """{
         "obj.tech.id": [
       {
         "msg": [
