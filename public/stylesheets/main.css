@@ -21,16 +21,24 @@ body{
     text-align:center;
 }
 
+.vertical-align-middle{
+    vertical-align: middle!important;
+}
+
 .display-block{
     display:block;
 }
 
 .display-inline-block{
-    display:inline-block;
+    display:inline-block!important;
 }
 
 .border-none{
     border:none!important;
+}
+
+.width-150{
+    width:150px;
 }
 
 nav{

@@ -105,7 +105,37 @@ angular.module('techmatrix').controller('UserHomeController',[
         },function(response){
             showMessage('Error removing tech',failureAlert);
         });
-    }
+    };
+
+    $scope.updateSkill = function(skill){
+        angular.forEach($scope.data.user.skills,function(s){
+            s.updating = false;
+        });
+        skill.updating = true;
+        $scope.data.updatingSkill = $scope.data.level[skill.skillLevel]
+    };
+
+    $scope.finishUpdatingSkill = function(skill){
+        var data = {
+            userId:$scope.data.user.id,
+            skillId:skill.id,
+            body:{
+                tech:{
+                    id:skill.tech.id,
+                    name:skill.tech.name,
+                    techType:skill.tech.techType
+                },
+                skillLevel:$scope.data.updatingSkill.value
+            }
+        };
+        RestService.updateSkill(data).then(function(response){
+            skill.updating = false;
+            skill.skillLevel = response.data.updatedSkill.skillLevel;
+            showMessage('Tech updated',successAlert)
+        },function(response){
+            showMessage('Error updating tech',failureAlert)
+        })
+    };
 
     function showMessage(message,isSuccess){
         $scope.data.message.show = true;
