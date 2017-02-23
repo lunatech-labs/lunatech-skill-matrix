@@ -38,6 +38,8 @@ angular.module('techmatrix').controller('UserHomeController',[
                 $scope.data.user.skills = response.data.userSkills.skill.map(addSearchFilter);
                 $scope.data.newInput = true;
             },function(response){
+                $scope.data.user.skills = [];
+                $scope.data.newInput = true;
                 showMessage('Error getting user skills',failureAlert);
             });
         }

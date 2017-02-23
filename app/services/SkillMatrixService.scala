@@ -90,7 +90,11 @@ class SkillMatrixService @Inject()(techService: TechService,
   }
 
   private def computeUserSkillResponse(user: User, skills: Seq[(Skill, Tech)]): Option[UserSkillResponse] = skills.size match {
-    case 0 => None
+    case 0 => Some(UserSkillResponse(
+      userId = user.id.get,
+      firstName = user.firstName,
+      lastName = user.lastName,
+      skills = Seq()))
     case _ =>
       Some(UserSkillResponse(
         userId = user.id.get,
