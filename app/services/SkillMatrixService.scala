@@ -99,7 +99,8 @@ class SkillMatrixService @Inject()(techService: TechService,
         skills = skills.map { skill =>
           SkillMatrixItem(
             tech = skill._2,
-            skillLevel = skill._1.skillLevel
+            skillLevel = skill._1.skillLevel,
+            id = skill._1.id
           )
         }))
   }
