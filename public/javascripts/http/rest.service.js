@@ -28,6 +28,10 @@ angular.module('techmatrix').service('RestService',['$http','RestUrlService',fun
         removeSkill:function(params){
             var url = RestUrlService.removeSkill(params.userId,params.skillId);
             return basicRequest('DELETE',url);
+        },
+        updateSkill:function(data){
+            var url = RestUrlService.updateSkill(data.userId,data.skillId);
+            return basicRequest('PUT',url,data.body);
         }
     };
 

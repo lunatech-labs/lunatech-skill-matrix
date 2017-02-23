@@ -8,6 +8,9 @@ angular.module('techmatrix').service('RestUrlService',[function(){
         },
         removeSkill:function(userId,skillId){
             return '/users/'+userId+'/skill/'+skillId;
+        },
+        updateSkill:function(userId,skillId){
+            return '/users/'+userId+'/skill/'+skillId;
         }
     };
 
