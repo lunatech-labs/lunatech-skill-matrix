@@ -1,0 +1,61 @@
+<div>
+    <div class="page-header">
+        <h1>{{data.user.lastName}} <small>{{data.user.firstName}}</small></h1>
+    </div>
+
+    <div class="alert" data-ng-class="data.message.class" role="alert" data-ng-show="data.message.show">
+        <button type="button" class="close" data-ng-click="dismissAlert()"><span aria-hidden="true">&times;</span></button>
+        {{data.message.value}}
+    </div>
+    <h3>Add Tech</h3>
+    <form class="form-inline">
+        <div class="form-group">
+            <input type="text" class="form-control" data-focus-me="data.newInput" data-ng-focus="data.newInput = false" data-ng-model="data.skillForm.name" placeholder="Tech">
+        </div>
+
+        <select class="form-control"
+                data-ng-model="data.skillForm.techType"
+                data-ng-options="techType.text for techType in data.techType track by techType.value">
+        </select>
+
+        <select class="form-control"
+                data-ng-model="data.skillForm.skillLevel"
+                data-ng-options="level.text for level in data.level track by level.value">
+        </select>
+
+        <button type="submit" data-ng-click="addSkill()" class="btn btn-info">Add</button>
+    </form>
+
+
+    <hr>
+
+    <div class="text-align-right">
+        <div class="icon-input">
+            <input type="text" data-ng-model="data.skillFilter" placeholder="Filter Tech">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+        </div>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <td><strong>Tech</strong></td>
+            <td><strong>Tech Type</strong></td>
+            <td><strong>Skill Level</strong></td>
+            <td class="text-align-center"><strong>Action</strong></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr data-ng-repeat="skill in data.user.skills | filter:{searchFilter:data.skillFilter}">
+            <td class="text-transform-capitalize">{{skill.tech.name}}</td>
+            <td class="text-transform-capitalize">{{data.techType[skill.tech.techType].text}}</td>
+            <td class="text-transform-capitalize">{{data.level[skill.skillLevel].text}}</td>
+            <td class="text-align-center actions">
+                <a href="" data-ng-click="removeSkill(skill)">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

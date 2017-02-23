@@ -31,7 +31,8 @@ class SkillMatrixController @Inject()(skillMatrixService: SkillMatrixService,
         "skillAdded" -> Json.toJson(
           SkillMatrixItem(
             tech = Tech(Some(createdSkill.techId), skillMatrixItem.tech.name, skillMatrixItem.tech.techType),
-            skillLevel = createdSkill.skillLevel))))
+            skillLevel = createdSkill.skillLevel,
+            id = createdSkill.id))))
   }
 
   def updateSkill(userId: Int, skillId: Int) = Action.async(BodyParsers.parse.json) {
@@ -99,6 +100,6 @@ class SkillMatrixController @Inject()(skillMatrixService: SkillMatrixService,
   private def getResponseForUpdateOperation(skill: Skill): Future[SkillMatrixItem] = {
     for {
       tech <- techService.getById(skill.techId)
-    } yield SkillMatrixItem(tech = tech.get, skillLevel = skill.skillLevel)
+    } yield SkillMatrixItem(tech = tech.get, skillLevel = skill.skillLevel, id = skill.id)
   }
 }

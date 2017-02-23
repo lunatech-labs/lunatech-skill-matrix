@@ -1,5 +1,6 @@
 body{
     margin:0px;
+    margin-top:70px;
 }
 
 .container{
@@ -33,7 +34,19 @@ body{
 }
 
 nav{
-   box-shadow:0px 3px 3px rgba(0,0,0,0.3)
+   box-shadow:0px 3px 3px rgba(0,0,0,0.3);
+}
+
+.form-inline select{
+    margin: 0px 8px;
+    padding: 5px;
+}
+
+.form-inline select{
+    width:150px!important;
+}
+.form-inline input{
+    width:300px!important;
 }
 
 .icon-input{
@@ -46,4 +59,8 @@ nav{
 .icon-input input{
     outline:none;
     border:none;
+}
+
+.actions a {
+    margin: 0px 5px;
 }

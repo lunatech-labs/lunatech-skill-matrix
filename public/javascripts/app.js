@@ -1,1 +1,1 @@
-angular.module('techmatrix',['ngRoute']);
+angular.module('techmatrix',['ngRoute','ngCookies']);

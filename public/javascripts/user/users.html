@@ -13,10 +13,10 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <td>First Name</td>
-            <td>Last Name</td>
-            <td>Email</td>
-            <td class="text-align-center">Actions</td>
+            <td><strong>First Name</strong></td>
+            <td><strong>Last Name</strong></td>
+            <td><strong>Email</strong></td>
+            <td class="text-align-center"><strong>Actions</strong></td>
         </tr>
         </thead>
         <tbody>
@@ -24,9 +24,12 @@
             <td>{{user.firstName}}</td>
             <td>{{user.lastName}}</td>
             <td>{{user.email}}</td>
-            <td class="text-align-center">
+            <td class="text-align-center actions">
                 <a href="#!/user/profile/{{user.id}}">
                     <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                </a>
+                <a href="" data-ng-click="logIn(user)">
+                    <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
                 </a>
             </td>
         </tr>
