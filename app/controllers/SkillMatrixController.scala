@@ -52,17 +52,15 @@ class SkillMatrixController @Inject()(skillMatrixService: SkillMatrixService,
   }
 
   def deleteSkill(userId: Int, userSkillId: Int) = Action.async(BodyParsers.parse.empty) { _ =>
-    skillMatrixService.deleteUserSkill(userId, userSkillId).map {
-      case None => NotFound(Json.obj("message" -> "Skill for this user could not be found"))
-      case _ => NoContent
-    }
+    for {
+      _ <- skillMatrixService.deleteUserSkill(userId, userSkillId) ?| NotFound(Json.obj("message" -> "Skill for this user could not be found"))
+    } yield NoContent
   }
 
   def getUserSkills(userId: Int) = Action.async(BodyParsers.parse.empty) { _ =>
-    skillMatrixService.getUserSkills(userId).map {
-      case None => NotFound(Json.obj("message" -> "User not found"))
-      case m => Ok(Json.obj("userSkills" -> Json.toJson(m)))
-    }
+    for {
+      m <- skillMatrixService.getUserSkills(userId) ?| NotFound(Json.obj("message" -> "User not found"))
+    } yield Ok(Json.obj("userSkills" -> Json.toJson(m)))
   }
 
   def getSkillMatrix() = Action.async(BodyParsers.parse.empty) { _ =>
@@ -72,10 +70,9 @@ class SkillMatrixController @Inject()(skillMatrixService: SkillMatrixService,
   }
 
   def getSkillMatrixByTechId(techId: Int) = Action.async(BodyParsers.parse.empty) { _ =>
-    skillMatrixService.getSkillMatrixByTechId(techId).map {
-      case None => NotFound(Json.obj("message" -> "Tech not found"))
-      case m => Ok(Json.obj("skills" -> Json.toJson(m)))
-    }
+    for {
+      m <- skillMatrixService.getSkillMatrixByTechId(techId) ?| NotFound(Json.obj("message" -> "Tech not found"))
+    } yield Ok(Json.obj("skills" -> Json.toJson(m)))
   }
 
   private def validateTechIdPresentForUpdateOperation(skillMatrixItem: SkillMatrixItem): Future[Option[Int]] = skillMatrixItem.tech.id match {

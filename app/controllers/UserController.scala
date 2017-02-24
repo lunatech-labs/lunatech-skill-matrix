@@ -1,5 +1,6 @@
 package controllers
 
+import io.kanaka.monadic.dsl._
 import javax.inject.{Inject, Singleton}
 
 import play.api.libs.json.Json
@@ -16,10 +17,9 @@ import ExecutionContext.Implicits.global
 class UserController @Inject()(userService: UserService) extends Controller {
 
   def getUserById(userId: Int) = Action.async(BodyParsers.parse.empty) { _ =>
-    userService.getUserById(userId).map {
-      case Some(m) => Ok(Json.obj("user" -> Json.toJson(m)))
-      case None => NotFound(Json.obj("message" -> "User not found"))
-    }
+    for {
+      m <- userService.getUserById(userId) ?| NotFound(Json.obj("message" -> "User not found"))
+    } yield Ok(Json.obj("user" -> Json.toJson(m)))
   }
 
   def getAllUsers = Action.async(BodyParsers.parse.empty) { _ =>
