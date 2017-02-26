@@ -7,12 +7,12 @@ angular.module('techmatrix').constant('level', {
         text:"comfortable",
         value:"COMFORTABLE"
     },
-    DABBED:{
-        text:"dabbed",
-        value:"DABBED"
+    DABBLED:{
+        text:"dabbled",
+        value:"DABBLED"
     },
     FOSSIL:{
-        text:"fossil",
-        value:"FOSSIL"
+        text:"forgot",
+        value:"FORGOT"
     }
 });

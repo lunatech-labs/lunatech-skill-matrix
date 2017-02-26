@@ -1,24 +1,21 @@
 package models
 
-import play.api.libs.functional.syntax.unlift
-import play.api.libs.json.{JsPath, Reads, Writes}
 import play.api.libs.functional.syntax._
-import scala.concurrent._
-import ExecutionContext.Implicits.global
-
+import play.api.libs.json.{JsPath, Reads, Writes}
 import slick.driver.PostgresDriver.api._
+import slick.lifted.{ForeignKeyQuery, ProvenShape}
 
 
 case class UserAuth(id: Option[Int] = None, userId: Int, key: String, secret: String)
 
 class UsersAuth(tag: Tag) extends Table[UserAuth](tag, "user_auth") {
-  def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
-  def userId = column[Int]("user_id")
-  def key = column[String]("user_key")
-  def secret = column[String]("secret")
-  def * = (id.?, userId, key, secret) <> ((UserAuth.apply _).tupled, UserAuth.unapply _)
+  def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
+  def userId: Rep[Int] = column[Int]("user_id")
+  def key: Rep[String] = column[String]("user_key")
+  def secret: Rep[String] = column[String]("secret")
+  def * : ProvenShape[UserAuth] = (id.?, userId, key, secret) <> ((UserAuth.apply _).tupled, UserAuth.unapply)
 
-  def user = foreignKey("USER_FK", userId, TableQuery[Users])(_.id)
+  def user: ForeignKeyQuery[Users, User] = foreignKey("USER_FK", userId, TableQuery[Users])(_.id)
 }
 
 object UserAuth {
@@ -34,6 +31,6 @@ object UserAuth {
       (JsPath \ "userId").write[Int] and
       (JsPath \ "key").write[String] and
       (JsPath \ "secret").write[String]
-    )(unlift(UserAuth.unapply _))
+    )(unlift(UserAuth.unapply))
 }
 

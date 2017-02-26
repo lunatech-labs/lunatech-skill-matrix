@@ -1,14 +1,12 @@
 package models
 
-import models._
-import models.responses._
-import play.api.libs.functional.syntax.unlift
+import play.api.libs.functional.syntax.{unlift, _}
 import play.api.libs.json.{JsPath, Reads, Writes}
-import play.api.libs.functional.syntax._
-import scala.concurrent._
-import ExecutionContext.Implicits.global
-
 import slick.driver.PostgresDriver.api._
+import slick.lifted.{ForeignKeyQuery, ProvenShape, TableQuery}
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent._
 
 
 case class Skill(id: Option[Int] = None, userId: Int, techId: Int, skillLevel: SkillLevel)
@@ -26,28 +24,28 @@ object Skill {
       (JsPath \ "userId").write[Int] and
       (JsPath \ "techId").write[Int] and
       (JsPath \ "skillLevel").write[SkillLevel]
-    ) (unlift(Skill.unapply _))
+    ) (unlift(Skill.unapply))
 }
 
 class Skills(tag: Tag) extends Table[models.Skill](tag, "user_skills") {
-  def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
+  def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
 
-  def userId = column[Int]("user_id")
+  def userId: Rep[Int] = column[Int]("user_id")
 
-  def techId = column[Int]("tech_id")
+  def techId: Rep[Int] = column[Int]("tech_id")
 
-  def skillLevel = column[SkillLevel]("skill_level")
+  def skillLevel: Rep[SkillLevel] = column[SkillLevel]("skill_level")
 
-  def * = (id.?, userId, techId, skillLevel) <> ((models.Skill.apply _).tupled, models.Skill.unapply _)
+  def * : ProvenShape[Skill] = (id.?, userId, techId, skillLevel) <> ((models.Skill.apply _).tupled, models.Skill.unapply _)
 
-  def user = foreignKey("USER_FK", userId, TableQuery[Users])(_.id)
+  def user: ForeignKeyQuery[Users, User] = foreignKey("USER_FK", userId, TableQuery[Users])(_.id)
 
-  def tech = foreignKey("TECH_FK", techId, TableQuery[Techs])(_.id)
+  def tech: ForeignKeyQuery[Techs, Tech] = foreignKey("TECH_FK", techId, TableQuery[Techs])(_.id)
 }
 
 
 object Skills {
-  val skillTable = TableQuery[Skills]
+  val skillTable: TableQuery[Skills] = TableQuery[Skills]
 
   def add(userId: Int, techId: Int, skillLevel: SkillLevel): Future[Skill] = {
     skillExistsByTechAndUserId(techId, userId).flatMap {
@@ -76,7 +74,7 @@ object Skills {
   def getAllSkillMatrixByUser(user: User): Future[Seq[(Skill, Tech)]] = {
     val join = for {
       skill <- skillTable.filter(_.userId === user.id)
-      tech <- Techs.techTable if (skill.techId === tech.id)
+      tech <- Techs.techTable if skill.techId === tech.id
     } yield {
       (skill, tech)
     }
@@ -108,8 +106,8 @@ object Skills {
   def getAllSkills: Future[Seq[(Skill, User, Tech)]] = {
     val join = for {
       skill <- skillTable
-      user <- Users.userTable if (skill.userId === user.id)
-      tech <- Techs.techTable if (skill.techId === tech.id)
+      user <- Users.userTable if skill.userId === user.id
+      tech <- Techs.techTable if skill.techId === tech.id
     } yield {
       (skill, user, tech)
     }

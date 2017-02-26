@@ -4,6 +4,7 @@ import play.api.test._
 import play.api.test.Helpers._
 import acceptance.TestData._
 import play.api.libs.json._
+import play.test.WithApplication
 
 class SkillMatrixControllerSpec extends AcceptanceSpec {
 
@@ -26,7 +27,7 @@ class SkillMatrixControllerSpec extends AcceptanceSpec {
   }
 
   info("The POST /users/:userId/skills for adding a skill to a user")
-  feature("It should return a successful response containing the added skill when everything is fine") {
+  feature("It should return a successful response containing the added skill when everything is fine")  {
     scenario("Everything is fine") {
       val request = FakeRequest("POST", s"/users/${dataMap(ID_USER_ODERSKY)}/skills").withBody(addSkillRequestJson)
       val response = route(app, request).get
@@ -36,7 +37,7 @@ class SkillMatrixControllerSpec extends AcceptanceSpec {
       // I do not know how to test the whole response, so I will be testing parts of it
 
       contentAsString(response) must include ("skillLevel")
-      contentAsString(response) must include ("DABBED")
+      contentAsString(response) must include ("DABBLED")
       contentAsString(response) must include ("techType")
       contentAsString(response) must include ("LANGUAGE")
       contentAsString(response) must include ("name")
@@ -46,7 +47,7 @@ class SkillMatrixControllerSpec extends AcceptanceSpec {
     }
   }
 
-  feature("It should return an error") {
+  feature("It should return an error" + new WithApplication) {
     scenario("It should return a bad request when tech is missing") {
       val request = FakeRequest("POST", s"/users/${dataMap(ID_USER_ODERSKY)}/skills").withBody(addSkillRequestWithMissingTechJson)
       val response = route(app, request).get
@@ -93,7 +94,7 @@ class SkillMatrixControllerSpec extends AcceptanceSpec {
       // I do not know how to test the whole response, so I will be testing parts of it
 
       contentAsString(response) must include ("skillLevel")
-      contentAsString(response) must include ("DABBED")
+      contentAsString(response) must include ("DABBLED")
       contentAsString(response) must include ("techType")
       contentAsString(response) must include ("LANGUAGE")
       contentAsString(response) must include ("name")
@@ -229,7 +230,6 @@ class SkillMatrixControllerSpec extends AcceptanceSpec {
       contentAsJson(response) mustEqual responseWithCorrectId
     }
   }
-  // The test will fail because the controller is missing the functionality
   feature("It should return an error2") {
     scenario("It should return 404 NotFound when the techId is not present in the database") {
       val request = FakeRequest("GET", "/skillmatrix/76548")

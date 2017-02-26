@@ -1,12 +1,11 @@
 package models
 
-import models._
-import play.api.libs.json.{JsPath, Reads, Writes}
 import play.api.libs.functional.syntax._
-import scala.concurrent._
-import ExecutionContext.Implicits.global
-
+import play.api.libs.json.{JsPath, Reads, Writes}
 import slick.driver.PostgresDriver.api._
+import slick.lifted.{ProvenShape, TableQuery}
+
+import scala.concurrent._
 
 
 case class Tech(id: Option[Int], name: String, techType: TechType)
@@ -22,18 +21,18 @@ object Tech {
     (JsPath \ "id").writeNullable[Int] and
       (JsPath \ "name").write[String] and
       (JsPath \ "techType").write[TechType]
-    )(unlift(Tech.unapply _))
+    )(unlift(Tech.unapply))
 }
 
 class Techs(tag: Tag) extends Table[models.Tech](tag, "tech") {
-  def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
-  def name = column[String]("tech_name")
-  def techType = column[TechType]("tech_type")
-  def * =  (id.?, name, techType) <> ((models.Tech.apply _).tupled, models.Tech.unapply _)
+  def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
+  def name: Rep[String] = column[String]("tech_name")
+  def techType: Rep[TechType] = column[TechType]("tech_type")
+  def * : ProvenShape[Tech] =  (id.?, name, techType) <> ((models.Tech.apply _).tupled, models.Tech.unapply)
 }
 
 object Techs{
-  val techTable = TableQuery[Techs]
+  val techTable: TableQuery[Techs] = TableQuery[Techs]
 
   def add(tech: Tech): Future[Int] = {
     val normalizedTech = tech.copy(name = tech.name.toLowerCase)
@@ -54,7 +53,7 @@ object Techs{
     Connection.db.run(getTechIdQuery.result.headOption)
   }
 
-  def getAllTech = {
+  def getAllTech: Future[Seq[Tech]] = {
     Connection.db.run(techTable.result)
   }
 
@@ -63,7 +62,7 @@ object Techs{
     Connection.db.run(getByIdQuery.result.headOption)
   }
 
-  def updateTech(techId: Int, tech: Tech) = {
+  def updateTech(techId: Int, tech: Tech): Future[Option[Tech]] = {
     val r = (techTable returning techTable).insertOrUpdate(tech)
     Connection.db.run(r)
   }

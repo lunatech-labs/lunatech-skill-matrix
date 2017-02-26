@@ -1,6 +1,5 @@
 package models
 
-import models._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Reads, Writes}
 
@@ -17,7 +16,7 @@ object SkillMatrixItem {
     (JsPath \ "tech").write[Tech] and
       (JsPath \ "skillLevel").write[SkillLevel] and
       (JsPath \ "id").writeNullable[Int]
-    ) (unlift(SkillMatrixItem.unapply _))
+    ) (unlift(SkillMatrixItem.unapply))
 }
 
 

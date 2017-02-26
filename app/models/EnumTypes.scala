@@ -10,8 +10,8 @@ object SkillLevel {
     skillLevel match {
       case "CAN_TEACH" => CAN_TEACH
       case "COMFORTABLE" => COMFORTABLE
-      case "DABBED" => DABBED
-      case "FOSSIL" => FOSSIL
+      case "DABBLED" => DABBLED
+      case "FORGOT" => FORGOT
     }
 
   }
@@ -32,9 +32,9 @@ object SkillLevel {
 
   case object COMFORTABLE extends SkillLevel
 
-  case object DABBED extends SkillLevel
+  case object DABBLED extends SkillLevel
 
-  case object FOSSIL extends SkillLevel
+  case object FORGOT extends SkillLevel
 
 }
 
