@@ -9,13 +9,10 @@ import services.TechService
 import scala.concurrent._
 import ExecutionContext.Implicits.global
 
-/**
-  * Skill Controller.
-  */
 @Singleton
 class TechController @Inject()(techService: TechService) extends Controller {
 
-  def getAllTech() = Action.async(BodyParsers.parse.empty) { _ =>
+  def getAllTech(): Action[Unit] = Action.async(BodyParsers.parse.empty) { _ =>
     techService.getAllTech.map(m =>
       Ok(Json.obj("tech" -> Json.toJson(m))))
   }

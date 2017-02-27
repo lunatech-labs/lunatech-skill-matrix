@@ -103,7 +103,7 @@ This is used in the POST a users makes in order to add a skill to his list. It l
 		"name": "Prolog",
 		"techType": "LANGUAGE"
 	},
-	"skillLevel": "DABBED"
+	"skillLevel": "DABBLED"
 }
 
 At the moment of writing, we haven't found yet a way on how to validate that the request contains 2 objects (tech and skillLevel),
@@ -134,7 +134,7 @@ This looks like this:
         },
          {
            "userName": "Dolores Umbridge",
-            "level": "DABBED"
+            "level": "DABBLED"
          }
       ]
 }

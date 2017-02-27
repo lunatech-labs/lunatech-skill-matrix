@@ -5,7 +5,7 @@ version := "1.0-SNAPSHOT"
 
 scalaVersion := "2.11.7"
 
-lazy val AcceptanceTest = config("acc") extend (Test)
+lazy val AcceptanceTest = config("acc") extend Test
 val isAcceptanceTest: String => Boolean = _ startsWith "acceptance"
 
 lazy val root = (project in file("."))
@@ -13,10 +13,8 @@ lazy val root = (project in file("."))
   .configs(AcceptanceTest)
   .settings(inConfig(AcceptanceTest)(Defaults.testTasks): _*) //adds the tasks and settings for the new test configuration
   .settings(
-  testOptions in AcceptanceTest := Seq(Tests.Filter(isAcceptanceTest)/*, Tests.Argument("-oF")*/)
+  testOptions in AcceptanceTest := Seq(Tests.Filter(isAcceptanceTest))
 )
-
-//testOptions in Test += Tests.Argument("-oF")
 
 libraryDependencies ++= Seq(
   cache,
@@ -28,10 +26,12 @@ libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick" % "3.1.1",
   "com.typesafe.play" %% "play-slick" % "2.0.0",
   "com.typesafe.play" %% "play-slick-evolutions" % "2.0.0",
-  "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
   "org.postgresql" % "postgresql" % "9.3-1102-jdbc41",
-  "com.h2database" % "h2" % "1.3.148",
   "org.scalaz" %% "scalaz-core" % "7.2.8",
-  "io.kanaka" %% "play-monadic-actions" % "2.0.0"
+  "io.kanaka" %% "play-monadic-actions" % "2.0.0",
+
+  "com.h2database" % "h2" % "1.3.148" % Test,
+  "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
+
 )
 

@@ -290,8 +290,8 @@ definitions:
     enum:
       - can teach
       - comfortable
-      - dabbed
-      - fossil
+      - dabbled
+      - forgot
 
   SkillMatrixResponse:
     type: object

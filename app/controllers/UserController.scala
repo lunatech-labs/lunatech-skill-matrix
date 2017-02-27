@@ -10,19 +10,16 @@ import services.UserService
 import scala.concurrent._
 import ExecutionContext.Implicits.global
 
-/**
-  * User Controller
-  */
 @Singleton
 class UserController @Inject()(userService: UserService) extends Controller {
 
-  def getUserById(userId: Int) = Action.async(BodyParsers.parse.empty) { _ =>
+  def getUserById(userId: Int): Action[Unit] = Action.async(BodyParsers.parse.empty) { _ =>
     for {
-      m <- userService.getUserById(userId) ?| NotFound(Json.obj("message" -> "User not found"))
-    } yield Ok(Json.obj("user" -> Json.toJson(m)))
+      user <- userService.getUserById(userId) ?| NotFound(Json.obj("message" -> "User not found"))
+    } yield Ok(Json.obj("user" -> Json.toJson(user)))
   }
 
-  def getAllUsers = Action.async(BodyParsers.parse.empty) { _ =>
+  def getAllUsers: Action[Unit] = Action.async(BodyParsers.parse.empty) { _ =>
     userService.getAll.map { users =>
       Ok(Json.obj("users" -> Json.toJson(users)))
     }

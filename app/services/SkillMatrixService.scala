@@ -84,7 +84,7 @@ class SkillMatrixService @Inject()(techService: TechService,
         techKey.id.get,
         techKey.name,
         techKey.techType,
-        items.map { case (skill, user, tech) => SkillMatrixUsersAndLevel(user.fullName, skill.skillLevel) }
+        items.map { case (skill, user, _) => SkillMatrixUsersAndLevel(user.fullName, skill.skillLevel) }
       )
     }.toSeq
   }

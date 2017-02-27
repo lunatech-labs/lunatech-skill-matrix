@@ -27,14 +27,14 @@ object TestData {
       |		"name": "brainfuck",
       |		"techType": "LANGUAGE"
       |	},
-      |	"skillLevel": "DABBED"
+      |	"skillLevel": "DABBLED"
       |}
     """.stripMargin)
 
   val addSkillRequestWithMissingTechJson: JsValue = Json.parse(
     """
       |{
-      |	"skillLevel": "DABBED"
+      |	"skillLevel": "DABBLED"
       |}
     """.stripMargin)
 
@@ -54,7 +54,7 @@ object TestData {
       |	"tech": {
       |		"techType": "LANGUAGE"
       |	},
-      |	"skillLevel": "DABBED"
+      |	"skillLevel": "DABBLED"
       |}
     """.stripMargin)
 
@@ -64,7 +64,7 @@ object TestData {
       |	"tech": {
       |		"name": "brainfuck"
       |	},
-      |	"skillLevel": "DABBED"
+      |	"skillLevel": "DABBLED"
       |}
     """.stripMargin)
 
@@ -76,14 +76,14 @@ object TestData {
       |		"name": "scala",
       |		"techType": "LANGUAGE"
       |		},
-      |	"skillLevel": "DABBED"
+      |	"skillLevel": "DABBLED"
       |}
     """.stripMargin)
 
   val putSkillRequestWithMissingTechJson: JsValue = Json.parse(
     """
       |{
-      |	"skillLevel": "DABBED"
+      |	"skillLevel": "DABBLED"
       |}
     """.stripMargin)
 
@@ -105,7 +105,7 @@ object TestData {
       |		"id": 5,
       |		"techType": "LANGUAGE"
       |		},
-      |	"skillLevel": "DABBED"
+      |	"skillLevel": "DABBLED"
       |}
     """.stripMargin)
 
@@ -116,7 +116,7 @@ object TestData {
       |		"id": 5,
       |		"name": "scala"
       |		},
-      |	"skillLevel": "DABBED"
+      |	"skillLevel": "DABBLED"
       |}
     """.stripMargin)
 
@@ -127,7 +127,7 @@ object TestData {
       |		"name": "scala",
       |		"techType": "LANGUAGE"
       |		},
-      |	"skillLevel": "DABBED"
+      |	"skillLevel": "DABBLED"
       |}
     """.stripMargin)
 
