@@ -1,5 +1,6 @@
 package models
 
+import common.DBConnection
 import play.api.libs.functional.syntax.unlift
 import play.api.libs.json.{JsPath, Reads, Writes}
 import play.api.libs.functional.syntax._
@@ -53,33 +54,33 @@ class Users(tag: Tag) extends Table[User](tag, "users") {
 object Users {
   val userTable: TableQuery[Users] = TableQuery[Users]
 
-  def getUserById(userId: Int): Future[Option[User]] = {
+  def getUserById(userId: Int)(implicit connection: DBConnection): Future[Option[User]] = {
     exists(userId).flatMap {
       case true =>
         val query = userTable.filter(x => x.id === userId)
-        Connection.db.run(query.result.headOption)
+        connection.db.run(query.result.headOption)
       case false => Future(None)
     }
   }
 
-  def getUserByEmail(email: String): Future[Option[User]] = {
+  def getUserByEmail(email: String)(implicit connection: DBConnection): Future[Option[User]] = {
     val query = userTable.filter(_.email === email)
-    Connection.db.run(query.result.headOption)
+    connection.db.run(query.result.headOption)
   }
 
-  def getUserByGoogleId(googleId: String): Future[Option[User]] = ???
+  def getUserByGoogleId(googleId: String)(implicit connection: DBConnection): Future[Option[User]] = ???
 
-  def getAllUsers: Future[Seq[User]] = {
-    Connection.db.run(userTable.result)
+  def getAllUsers(implicit connection: DBConnection): Future[Seq[User]] = {
+    connection.db.run(userTable.result)
   }
 
-  def exists(id: Int): Future[Boolean] = {
-    Connection.db.run(userTable.filter(_.id === id).exists.result)
+  def exists(id: Int)(implicit connection: DBConnection): Future[Boolean] = {
+    connection.db.run(userTable.filter(_.id === id).exists.result)
   }
 
-  def add(user: User): Future[User] = {
+  def add(user: User)(implicit connection: DBConnection): Future[User] = {
     val query = userTable returning userTable += user
-    Connection.db.run(query)
+    connection.db.run(query)
   }
 }
 

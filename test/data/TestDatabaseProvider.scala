@@ -1,24 +1,16 @@
-package acceptance
+package data
 
-import acceptance.TestData._
+import common.DBConnectionProvider
 import models._
-import play.api.Application
-import play.api.db.slick.DatabaseConfigProvider
-import slick.driver.JdbcProfile
 import slick.driver.PostgresDriver.api._
-import slick.jdbc.JdbcBackend
 import slick.lifted.TableQuery
-
+import data.TestData._
 import scala.concurrent._
 import scala.concurrent.duration.Duration
 
 
-object TestDatabaseProvider {
-
-  implicit val app: Application = play.api.Play.current
-
-
-  val db: JdbcBackend#DatabaseDef = DatabaseConfigProvider.get[JdbcProfile].db
+trait TestDatabaseProvider {
+  self: DBConnectionProvider =>
 
   val skillTable: TableQuery[Skills] = TableQuery[Skills]
   val techTable: TableQuery[Techs] = TableQuery[Techs]
@@ -29,9 +21,8 @@ object TestDatabaseProvider {
     Await.result(db.run(setup), Duration.Inf)
   }
 
-
   def insertUserData(): Map[String, Int] = {
-    val userOdersky = User(None, "Martin", "Odersky", "martin.odersky@scala.com")
+    val userOdersky = User(None, "Martin", "Odersky", "martin.odersky@gmail.com")
     val userSeverus = User(None, "Severus", "Snape", "severus.snape@hogwarts.com")
 
     val idUserOdersky: Int = Await.result(db.run(userTable returning userTable.map(_.id) += userOdersky), Duration.Inf)
@@ -44,7 +35,7 @@ object TestDatabaseProvider {
     val techScala = Tech(None, "scala", TechType.LANGUAGE)
     val techFunctional = Tech(None, "functional programming", TechType.CONCEPTUAL)
     val techDefense = Tech(None, "defense against the dark arts", TechType.CONCEPTUAL)
-    val techDarkArts= Tech(None, "dark arts", TechType.CONCEPTUAL)
+    val techDarkArts = Tech(None, "dark arts", TechType.CONCEPTUAL)
 
     val idTechScala: Int = Await.result(db.run(techTable returning techTable.map(_.id) += techScala), Duration.Inf)
     val idTechFunctional: Int = Await.result(db.run(techTable returning techTable.map(_.id) += techFunctional), Duration.Inf)
@@ -70,7 +61,7 @@ object TestDatabaseProvider {
 
     userMap ++ techMap ++ Map(
       SKILL_ODERSKY_SCALA -> idSkillOderskyScala,
-      SKILL_SEVERUS_DEFENSE ->  idSkillSeverusDefense
+      SKILL_SEVERUS_DEFENSE -> idSkillSeverusDefense
     )
   }
 

@@ -1,10 +1,14 @@
 package services
 
+import javax.inject.Inject
+
+import common.DBConnection
 import models._
+
 import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class UserService() {
+class UserService @Inject() (implicit val connection: DBConnection) {
 
   def getUserById(userId: Int): Future[Option[User]] = {
     Users.getUserById(userId)

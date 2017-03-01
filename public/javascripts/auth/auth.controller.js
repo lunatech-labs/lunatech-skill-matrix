@@ -3,7 +3,10 @@ angular.module('techmatrix').controller('AuthController',[
     'RestService',
     '$cookies',
     '$location',
-    function($scope,RestService,$cookies,$location){
+    'config',
+    function($scope,RestService,$cookies,$location,config){
+    $scope.config = config;
+
     function onInit(){
         var user = $cookies.getObject('user')
         if(user){

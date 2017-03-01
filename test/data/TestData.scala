@@ -1,9 +1,10 @@
-package acceptance
+package data
 
 import play.api.libs.json.{JsValue, _}
 
 object TestData {
 
+  val ID_USER_SAYED_ALI = "idUserSayedAli"
   val ID_USER_ODERSKY = "idUserOdersky"
   val ID_USER_SNAPE = "idUserSnape"
 
@@ -16,6 +17,8 @@ object TestData {
   val SKILL_ODERSKY_FUNCTIONAL = "skillOderskyFunctional"
   val SKILL_SEVERUS_DEFENSE = "skillSeverusDefense"
   val SKILL_SEVERUS_DARK_ARTS = "skillSeverusDarkArts"
+
+  val X_AUTH_TOKEN = "X-AUTH-TOKEN"
 
   val errorUserNotFound = "User not found"
   val skillNotFound = "Skill for this user could not be found"

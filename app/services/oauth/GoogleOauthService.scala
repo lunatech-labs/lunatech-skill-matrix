@@ -6,20 +6,14 @@ import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.jackson.JacksonFactory
 import com.google.inject.Inject
 import com.typesafe.config.Config
-import io.circe._
-import io.circe.generic.semiauto._
 import play.api.inject.ApplicationLifecycle
 import scala.collection.JavaConverters._
 import scala.util.Try
 
+
+
 @Singleton
-class GoogleOauthService @Inject()(lifecycle: ApplicationLifecycle, config: Config) {
-
-  case class GoogleUser(userId: String, email: String, name: String, familyName: String, givenName: String)
-
-  object GoogleUser {
-    implicit val GoogleUserEncoder: Encoder[GoogleUser] = deriveEncoder
-  }
+class GoogleOauthService @Inject()(lifecycle: ApplicationLifecycle, config: Config) extends OauthService {
 
   def verifyToken(idTokenString: String): Option[GoogleUser] = {
 

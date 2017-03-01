@@ -1,11 +1,14 @@
 package services
 
+import javax.inject.Inject
+
+import common.DBConnection
 import models.{Tech, Techs}
 
 import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class TechService() {
+class TechService @Inject() (implicit val connection: DBConnection)  {
 
   def getAllTech: Future[Seq[Tech]] = {
     Techs.getAllTech

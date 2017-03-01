@@ -8,13 +8,16 @@ scalaVersion := "2.11.7"
 lazy val AcceptanceTest = config("acc") extend Test
 val isAcceptanceTest: String => Boolean = _ startsWith "acceptance"
 
+
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala)
   .configs(AcceptanceTest)
   .settings(inConfig(AcceptanceTest)(Defaults.testTasks): _*) //adds the tasks and settings for the new test configuration
   .settings(
-  testOptions in AcceptanceTest := Seq(Tests.Filter(isAcceptanceTest))
-)
+    testOptions in AcceptanceTest := Seq(Tests.Filter(isAcceptanceTest))
+  ).settings(
+    javaOptions in Test += "-Dconfig.file=test/application-test.conf"
+  )
 
 libraryDependencies ++= Seq(
   cache,
