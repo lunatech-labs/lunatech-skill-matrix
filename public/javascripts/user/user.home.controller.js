@@ -5,7 +5,8 @@ angular.module('techmatrix').controller('UserHomeController',[
     'level',
     '$cookies',
     '$location',
-    function($scope,RestService,techType,level,$cookies,$location){
+    'RestErrorService',
+    function($scope,RestService,techType,level,$cookies,$location,RestErrorService){
 
     var successAlert = true;
     var failureAlert = false;
@@ -34,10 +35,11 @@ angular.module('techmatrix').controller('UserHomeController',[
         if($scope.data.user === undefined){
             $location.path('/skillmatrix/nouser');
         }else{
-            RestService.getUserProfile($scope.data.user.id).then(function(response){
+            RestService.getMyProfile($scope.data.user.id).then(function(response){
                 $scope.data.user.skills = response.data.userSkills.skill.map(addSearchFilter);
                 $scope.data.newInput = true;
             },function(response){
+                RestErrorService.errorHandler(response)
                 $scope.data.user.skills = [];
                 $scope.data.newInput = true;
                 showMessage('Error getting user skills',failureAlert);
@@ -69,6 +71,7 @@ angular.module('techmatrix').controller('UserHomeController',[
                 $scope.data.newInput = true;
                 showMessage('Tech added',successAlert);
             },function(response){
+                RestErrorService.errorHandler(response)
                 showMessage('Error adding tech',failureAlert);
             });
 
@@ -105,6 +108,7 @@ angular.module('techmatrix').controller('UserHomeController',[
             })
             showMessage('Tech removed',successAlert);
         },function(response){
+            RestErrorService.errorHandler(response)
             showMessage('Error removing tech',failureAlert);
         });
     };
@@ -135,6 +139,7 @@ angular.module('techmatrix').controller('UserHomeController',[
             skill.skillLevel = response.data.updatedSkill.skillLevel;
             showMessage('Tech updated',successAlert)
         },function(response){
+            RestErrorService.errorHandler(response)
             showMessage('Error updating tech',failureAlert)
         })
     };

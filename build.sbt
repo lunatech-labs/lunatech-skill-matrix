@@ -30,6 +30,12 @@ libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % "7.2.8",
   "io.kanaka" %% "play-monadic-actions" % "2.0.0",
 
+  "com.google.api-client" % "google-api-client" % "1.22.0",
+  "com.google.http-client" % "google-http-client-jackson" % "1.22.0",
+  "io.circe" %% "circe-core" % "0.7.0",
+  "io.circe" %% "circe-generic" % "0.7.0",
+  "ch.qos.logback" % "logback-classic" % "1.1.7",
+
   "com.h2database" % "h2" % "1.3.148" % Test,
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
 

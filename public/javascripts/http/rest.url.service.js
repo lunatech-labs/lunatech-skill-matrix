@@ -3,14 +3,20 @@ angular.module('techmatrix').service('RestUrlService',[function(){
         getUserProfile:function(userId){
             return '/users/'+userId+'/skills';
         },
-        addSkill:function(userId){
-            return '/users/'+userId+'/skills';
+        getMyProfile:function(){
+            return '/users/me/skillmatrix';
         },
-        removeSkill:function(userId,skillId){
-            return '/users/'+userId+'/skill/'+skillId;
+        addSkill:function(){
+            return '/users/me/skillmatrix';
         },
-        updateSkill:function(userId,skillId){
-            return '/users/'+userId+'/skill/'+skillId;
+        removeSkill:function(skillId){
+            return '/users/me/skillmatrix/'+skillId;
+        },
+        updateSkill:function(skillId){
+            return '/users/me/skillmatrix/'+skillId;
+        },
+        googleAuth:function(token){
+            return '/google/auth';
         }
     };
 

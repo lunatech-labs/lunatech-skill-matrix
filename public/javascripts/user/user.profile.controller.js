@@ -4,7 +4,8 @@ angular.module('techmatrix').controller('UserProfileController',[
     '$routeParams',
     'techType',
     'level',
-    function($scope,RestService,$routeParams,techType,level){
+    'RestErrorService',
+    function($scope,RestService,$routeParams,techType,level,RestErrorService){
 
     $scope.data = {};
     $scope.data.user = undefined;
@@ -16,6 +17,7 @@ angular.module('techmatrix').controller('UserProfileController',[
         RestService.getUserProfile($routeParams.userId).then(function(response){
             $scope.data.user = response.data.userSkills;
         },function(response){
+            RestErrorService.errorHandler(response)
             console.log(response);
         })
     }

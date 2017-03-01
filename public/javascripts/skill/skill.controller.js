@@ -4,7 +4,8 @@ angular.module('techmatrix').controller('SkillController',[
     'techType',
     'level',
     '$routeParams',
-    function($scope,RestService,techType,level,$routeParams){
+    'RestErrorService',
+    function($scope,RestService,techType,level,$routeParams,RestErrorService){
 
     $scope.data = {};
     $scope.data.skills = [];
@@ -24,6 +25,7 @@ angular.module('techmatrix').controller('SkillController',[
             $scope.data.loading = false;
             $scope.data.skills = response.data.skills.map(addSearchFilter);
         },function(response){
+            RestErrorService.errorHandler(response)
             $scope.data.loading = false;
             console.log(response)
         });

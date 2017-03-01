@@ -11,8 +11,14 @@ import slick.lifted.{ProvenShape, TableQuery}
 
 
 case class User(id: Option[Int] = None, firstName: String, lastName: String, email: String) {
+  require(email != null && !email.isEmpty, "Email field shouldn't be empty")
+
   def fullName: String = {
     this.firstName + " " + this.lastName
+  }
+
+  def getUserId(): Int = {
+    id.getOrElse(throw new Exception("User id is not defined!"))
   }
 }
 
@@ -56,6 +62,12 @@ object Users {
     }
   }
 
+  def getUserByEmail(email: String): Future[Option[User]] = {
+    val query = userTable.filter(_.email === email)
+    Connection.db.run(query.result.headOption)
+  }
+
+  def getUserByGoogleId(googleId: String): Future[Option[User]] = ???
 
   def getAllUsers: Future[Seq[User]] = {
     Connection.db.run(userTable.result)
@@ -63,6 +75,11 @@ object Users {
 
   def exists(id: Int): Future[Boolean] = {
     Connection.db.run(userTable.filter(_.id === id).exists.result)
+  }
+
+  def add(user: User): Future[User] = {
+    val query = userTable returning userTable += user
+    Connection.db.run(query)
   }
 }
 
