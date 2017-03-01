@@ -5,7 +5,6 @@ import play.api.libs.json.{JsPath, Reads, Writes}
 import slick.driver.PostgresDriver.api._
 import slick.lifted.{ForeignKeyQuery, ProvenShape}
 
-
 case class UserAuth(id: Option[Int] = None, userId: Int, key: String, secret: String)
 
 class UsersAuth(tag: Tag) extends Table[UserAuth](tag, "user_auth") {

@@ -1,5 +1,6 @@
 package models
 
+import common.DBConnection
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Reads, Writes}
 import slick.driver.PostgresDriver.api._
@@ -15,31 +16,34 @@ object Tech {
     (JsPath \ "id").readNullable[Int] and
       (JsPath \ "name").read[String] and
       (JsPath \ "techType").read[TechType]
-    )(Tech.apply _)
+    ) (Tech.apply _)
 
   implicit val techWrites: Writes[Tech] = (
     (JsPath \ "id").writeNullable[Int] and
       (JsPath \ "name").write[String] and
       (JsPath \ "techType").write[TechType]
-    )(unlift(Tech.unapply))
+    ) (unlift(Tech.unapply))
 }
 
 class Techs(tag: Tag) extends Table[models.Tech](tag, "tech") {
   def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
+
   def name: Rep[String] = column[String]("tech_name")
+
   def techType: Rep[TechType] = column[TechType]("tech_type")
-  def * : ProvenShape[Tech] =  (id.?, name, techType) <> ((models.Tech.apply _).tupled, models.Tech.unapply)
+
+  def * : ProvenShape[Tech] = (id.?, name, techType) <> ((models.Tech.apply _).tupled, models.Tech.unapply)
 }
 
-object Techs{
+object Techs {
   val techTable: TableQuery[Techs] = TableQuery[Techs]
 
-  def add(tech: Tech): Future[Int] = {
+  def add(tech: Tech)(implicit connection: DBConnection): Future[Int] = {
     val normalizedTech = tech.copy(name = tech.name.toLowerCase)
-    Connection.db.run((techTable returning techTable.map(_.id)) += normalizedTech)
+    connection.db.run((techTable returning techTable.map(_.id)) += normalizedTech)
   }
 
-  def add(name: String, techType: TechType): Future[Int] = {
+  def add(name: String, techType: TechType)(implicit connection: DBConnection): Future[Int] = {
     val tech = Tech(
       id = None,
       name = name.toLowerCase,
@@ -48,22 +52,22 @@ object Techs{
     add(tech)
   }
 
-  def getTechIdByNameAndType(tech: Tech) : Future[Option[Int]] = {
+  def getTechIdByNameAndType(tech: Tech)(implicit connection: DBConnection): Future[Option[Int]] = {
     val getTechIdQuery = techTable.filter(t => t.name === tech.name.toLowerCase && t.techType === tech.techType).map(_.id).take(1)
-    Connection.db.run(getTechIdQuery.result.headOption)
+    connection.db.run(getTechIdQuery.result.headOption)
   }
 
-  def getAllTech: Future[Seq[Tech]] = {
-    Connection.db.run(techTable.result)
+  def getAllTech(implicit connection: DBConnection): Future[Seq[Tech]] = {
+    connection.db.run(techTable.result)
   }
 
-  def getTechById(techId: Int): Future[Option[Tech]] = {
+  def getTechById(techId: Int)(implicit connection: DBConnection): Future[Option[Tech]] = {
     val getByIdQuery = techTable.filter(_.id === techId)
-    Connection.db.run(getByIdQuery.result.headOption)
+    connection.db.run(getByIdQuery.result.headOption)
   }
 
-  def updateTech(techId: Int, tech: Tech): Future[Option[Tech]] = {
+  def updateTech(techId: Int, tech: Tech)(implicit connection: DBConnection): Future[Option[Tech]] = {
     val r = (techTable returning techTable).insertOrUpdate(tech)
-    Connection.db.run(r)
+    connection.db.run(r)
   }
 }

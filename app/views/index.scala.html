@@ -9,31 +9,41 @@
         <script src="@routes.Assets.versioned("javascripts/libs/angular.min.js")" type="text/javascript"></script>
         <script src="@routes.Assets.versioned("javascripts/libs/angular-route.min.js")" type="text/javascript"></script>
         <script src="@routes.Assets.versioned("javascripts/libs/angular-cookies.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.versioned("javascripts/libs/google-plus-signin.js")" type="text/javascript"></script>
         <script src="@routes.Assets.versioned("javascripts/app.js")" type="text/javascript"></script>
         <script src="@routes.Assets.versioned("javascripts/libs/focusMe.js")" type="text/javascript"></script>
         <script src="@routes.Assets.versioned("javascripts/constants/level.constant.js")" type="text/javascript"></script>
         <script src="@routes.Assets.versioned("javascripts/constants/tech.type.constant.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.versioned("javascripts/constants/config.constant.js")" type="text/javascript"></script>
         <script src="@routes.Assets.versioned("javascripts/http/rest.url.service.js")" type="text/javascript"></script>
         <script src="@routes.Assets.versioned("javascripts/http/rest.service.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.versioned("javascripts/http/rest.error.service.js")" type="text/javascript"></script>
         <script src="@routes.Assets.versioned("javascripts/routes/routes.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.versioned("javascripts/routes/auth.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.versioned("javascripts/auth/auth.controller.js")" type="text/javascript"></script>
         <script src="@routes.Assets.versioned("javascripts/user/users.controller.js")" type="text/javascript"></script>
         <script src="@routes.Assets.versioned("javascripts/user/user.profile.controller.js")" type="text/javascript"></script>
         <script src="@routes.Assets.versioned("javascripts/user/user.home.controller.js")" type="text/javascript"></script>
         <script src="@routes.Assets.versioned("javascripts/skill/skill.controller.js")" type="text/javascript"></script>
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+
     </head>
     <body data-ng-app="techmatrix">
-        <nav class="navbar navbar-default navbar-fixed-top">
+    <nav class="navbar navbar-default navbar-fixed-top" data-ng-if="auth">
           <div class="container-fluid">
             <div class="navbar-header">
-              <a class="navbar-brand" href="">Luna Tech</a>
+              <a class="navbar-brand" href="">LunaTech</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul class="nav navbar-nav">
+                <li><a href="#!/user/home">My profile</a></li>
                 <li><a href="#!/skillmatrix">Tech Matrix</a></li>
                 <li><a href="#!/users">Users</a></li>
-                <li><a href="#!/user/home">My profile</a></li>
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="" data-ng-click="logout()">Logout</a></li>
               </ul>
             </div>
           </div>

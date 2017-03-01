@@ -3,7 +3,8 @@ angular.module('techmatrix').controller('UsersController',[
     'RestService',
     '$cookies',
     '$location',
-    function($scope,RestService,$cookies,$location){
+    'RestErrorService',
+    function($scope,RestService,$cookies,$location,RestErrorService){
 
     $scope.data = {};
     $scope.data.users = [];
@@ -12,6 +13,7 @@ angular.module('techmatrix').controller('UsersController',[
         RestService.getAllUsers().then(function(response){
             $scope.data.users = response.data.users.map(addSearchFilter);
         },function(response){
+            RestErrorService.errorHandler(response)
             console.log(response);
         })
     }
@@ -20,11 +22,5 @@ angular.module('techmatrix').controller('UsersController',[
         user.searchFilter = user.firstName + "," + user.lastName + "," + user.email;
         return user;
     }
-
-    $scope.logIn = function(user){
-        $cookies.putObject('user',user);
-        $location.path('/user/home')
-    }
-
     onInit();
 }]);

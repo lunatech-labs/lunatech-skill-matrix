@@ -1,5 +1,10 @@
 angular.module('techmatrix').config(['$routeProvider',function($routeProvider) {
     $routeProvider
+    .when('/auth', {
+         templateUrl: '/assets/javascripts/auth/login.html',
+         controller: 'AuthController'
+        })
+
     .when('/skillmatrix', {
      templateUrl: '/assets/javascripts/skill/skillMatrix.html',
      controller: 'SkillController'

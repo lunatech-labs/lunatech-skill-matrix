@@ -2,14 +2,15 @@ package services
 
 import javax.inject.Inject
 
-import models.{Skill, SkillLevel, Skills, Tech, User, SkillMatrixItem}
+import common.DBConnection
+import models._
 import models.responses.{SkillMatrixResponse, SkillMatrixUsersAndLevel, UserSkillResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 
 class SkillMatrixService @Inject()(techService: TechService,
-                                   userService: UserService) {
+                                   userService: UserService)(implicit connection: DBConnection) {
 
   def addUserSkill(userId: Int, tech: Tech, skillLevel: SkillLevel): Future[Skill] = {
     val techId: Future[Int] = techService.getTechIdOrInsert(tech)

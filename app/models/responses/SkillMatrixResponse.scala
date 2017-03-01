@@ -5,7 +5,6 @@ import play.api.libs.functional.syntax._
 import play.api.libs.functional.syntax.unlift
 import play.api.libs.json.{JsPath, Writes}
 
-
 case class SkillMatrixResponse(techId: Int, techName: String, techType: TechType, users: Seq[SkillMatrixUsersAndLevel])
 
 object SkillMatrixResponse {
