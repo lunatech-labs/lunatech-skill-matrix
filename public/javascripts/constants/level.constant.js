@@ -11,7 +11,7 @@ angular.module('techmatrix').constant('level', {
         text:"dabbled",
         value:"DABBLED"
     },
-    FOSSIL:{
+    FORGOT:{
         text:"forgot",
         value:"FORGOT"
     }

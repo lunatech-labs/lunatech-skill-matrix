@@ -1,6 +1,6 @@
 package models
 
-import play.api.libs.json.{Format, JsString, JsSuccess, JsValue}
+import play.api.libs.json._
 import slick.driver.PostgresDriver.api._
 
 sealed trait SkillLevel
@@ -17,7 +17,15 @@ object SkillLevel {
   }
 
   implicit val skillLevelFormat = new Format[SkillLevel] {
-    def reads(json: JsValue) = JsSuccess(SkillLevel(json.as[String].value))
+    def reads(json: JsValue): JsResult[SkillLevel] = json match {
+      case JsString(s) =>
+        try {
+          JsSuccess(SkillLevel(json.as[String].value.toString))
+        } catch {
+          case _: scala.MatchError => JsError("Value is not in the list")
+        }
+      case _ => JsError("String values are expected")
+    }
 
     def writes(skillLevel: SkillLevel) = JsString(skillLevel.toString)
 
@@ -53,7 +61,16 @@ object TechType {
   }
 
   implicit val techTypeFormat = new Format[TechType] {
-    def reads(json: JsValue) = JsSuccess(TechType(json.as[String].value))
+    def reads(json: JsValue): JsResult[TechType] = json match {
+      case JsString(s) =>
+        try {
+          JsSuccess(TechType(json.as[String].value.toString))
+        } catch {
+          case _: scala.MatchError => JsError("Value is not in the list")
+        }
+      case _ => JsError("String values are expected")
+    }
+
 
     def writes(techType: TechType) = JsString(techType.toString)
 

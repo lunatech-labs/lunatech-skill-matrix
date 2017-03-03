@@ -261,10 +261,11 @@ object TestData {
     """.stripMargin)
 
   val genericPathMissing = "error.path.missing"
+  val genericEnumValueWrong = "Value is not in the list"
   val objTechMissing = "obj.tech"
-  val objSkillLevelMissing = "obj.skillLevel"
+  val objSkillLevelWrong = "obj.skillLevel"
   val objTechNameMissing = "obj.tech.name"
-  val objTechTypeMissing = "obj.tech.techType"
+  val objTechTypeWrong = "obj.tech.techType"
   val objTechIdMissing = "obj.tech.id"
 
 }
