@@ -8,7 +8,7 @@ angular.module('techmatrix').service('RestService',['$http','RestUrlService','$c
               url: url,
               data:data,
               headers: {
-                "X-AUTH-TOKEN": $cookies.getObject("user").token
+                "X-AUTH-TOKEN": $cookies.getObject("user") !== undefined ? $cookies.getObject("user").token : ''
               }
             });
     }
@@ -38,7 +38,7 @@ angular.module('techmatrix').service('RestService',['$http','RestUrlService','$c
         },
         addSKill:function(data){
             var url = RestUrlService.addSkill()
-            return basicRequest('POST',url,data.body);
+            return AuthenticatedRequest('POST',url,data.body);
         },
         removeSkill:function(params){
             var url = RestUrlService.removeSkill(params.skillId);
