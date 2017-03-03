@@ -1,4 +1,8 @@
-angular.module('techmatrix').run(['$rootScope','$cookies','$location','$q',function($rootScope,$cookies,$location,$q) {
+angular.module('techmatrix').run([
+    '$rootScope',
+    '$cookies',
+    '$location',
+    'GoogleApi',function($rootScope,$cookies,$location,GoogleApi) {
    $rootScope.$on('$locationChangeStart',function(event, next, current){
        var user = $cookies.getObject("user")
        $rootScope.auth = (user !== undefined)
@@ -10,18 +14,12 @@ angular.module('techmatrix').run(['$rootScope','$cookies','$location','$q',funct
 
     $rootScope.logout = function(){
         console.log("Logging out...")
-        console.log(gapi);
-//        gapi.load('auth2', function () {
-//          var auth2 = gapi.auth2.getAuthInstance();
-//          auth2.signOut().then(function () {
-//              $cookies.remove("user");
-//              console.log('User signed out.');
-//              $location.path("auth");
-//          });
-//      });
-//      //TODO sign out the user from google, make his token expire
-      $cookies.remove("user");
-      console.log('User signed out.');
-      $location.path("auth");
-      }
+        GoogleApi.load().then(function(){
+            GoogleApi.signOut().then(function(){
+                $rootScope.auth = false;
+                $cookies.remove("user");
+                $location.path("auth");
+            });
+        })
+    }
 }]);

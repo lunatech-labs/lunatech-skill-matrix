@@ -106,3 +106,9 @@ nav{
     float: left;
     width: 90px;
 }
+
+.login{
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%);
+}
