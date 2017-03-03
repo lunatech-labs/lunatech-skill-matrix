@@ -71,8 +71,32 @@ class SkillMatrixControllerSpec extends AcceptanceSpec with TestDatabaseProvider
 
       val response = route(app, request).get
       status(response) mustEqual 400
-      contentAsString(response) must include(objSkillLevelMissing)
+      contentAsString(response) must include(objSkillLevelWrong)
       contentAsString(response) must include(genericPathMissing)
+    }
+    scenario("It should return a bad request when skillLevel is an empty string") {
+      val addSkillRequestWithEmptySkillLevelJson = addSkillRequestJson
+        .transform(__.json.update((__ \ 'skillLevel).json.put(JsString("")))).get
+      val request = FakeRequest("POST", s"/users/me/skillmatrix")
+        .withBody(addSkillRequestWithEmptySkillLevelJson)
+        .withHeaders(("X-AUTH-TOKEN" -> authToken))
+
+      val response = route(app, request).get
+      status(response) mustEqual 400
+      contentAsString(response) must include(objSkillLevelWrong)
+      contentAsString(response) must include(genericEnumValueWrong)
+    }
+    scenario("It should return a bad request when the provided skillLevel is not part of the values we defined") {
+      val addSkillRequestWithNonExistentSkillLevelJson = addSkillRequestJson
+        .transform(__.json.update((__ \ 'skillLevel).json.put(JsString("non-existent-value")))).get
+      val request = FakeRequest("POST", s"/users/me/skillmatrix")
+        .withBody(addSkillRequestWithNonExistentSkillLevelJson)
+        .withHeaders(("X-AUTH-TOKEN" -> authToken))
+
+      val response = route(app, request).get
+      status(response) mustEqual 400
+      contentAsString(response) must include(objSkillLevelWrong)
+      contentAsString(response) must include(genericEnumValueWrong)
     }
     scenario("It should return a bad request when techName is missing") {
       val request = FakeRequest("POST", s"/users/me/skillmatrix")
@@ -91,8 +115,32 @@ class SkillMatrixControllerSpec extends AcceptanceSpec with TestDatabaseProvider
 
       val response = route(app, request).get
       status(response) mustEqual 400
-      contentAsString(response) must include(objTechTypeMissing)
+      contentAsString(response) must include(objTechTypeWrong)
       contentAsString(response) must include(genericPathMissing)
+    }
+    scenario("It should return a bad request when techType is an empty string") {
+      val addSkillRequestWithEmptyTechTypeJson = addSkillRequestJson
+        .transform(__.json.update((__ \ 'tech \ 'techType).json.put(JsString("")))).get
+      val request = FakeRequest("POST", s"/users/me/skillmatrix")
+        .withBody(addSkillRequestWithEmptyTechTypeJson)
+        .withHeaders(("X-AUTH-TOKEN" -> authToken))
+
+      val response = route(app, request).get
+      status(response) mustEqual 400
+      contentAsString(response) must include(objTechTypeWrong)
+      contentAsString(response) must include(genericEnumValueWrong)
+    }
+    scenario("It should return a bad request when the provided techType is not part of the values we defined") {
+      val addSkillRequestWithNonExistentTechTypeJson = addSkillRequestJson
+        .transform(__.json.update((__ \ 'tech \ 'techType).json.put(JsString("non-existent-value")))).get
+      val request = FakeRequest("POST", s"/users/me/skillmatrix")
+        .withBody(addSkillRequestWithNonExistentTechTypeJson)
+        .withHeaders(("X-AUTH-TOKEN" -> authToken))
+
+      val response = route(app, request).get
+      status(response) mustEqual 400
+      contentAsString(response) must include(objTechTypeWrong)
+      contentAsString(response) must include(genericEnumValueWrong)
     }
     scenario("It should return a InternalServerError when something goes wrong")(pending)
   }
@@ -144,8 +192,34 @@ class SkillMatrixControllerSpec extends AcceptanceSpec with TestDatabaseProvider
 
       val response = route(app, request).get
       status(response) mustEqual 400
-      contentAsString(response) must include(objSkillLevelMissing)
+      contentAsString(response) must include(objSkillLevelWrong)
       contentAsString(response) must include(genericPathMissing)
+
+    }
+    scenario("It should return a bad request when skillLevel is an empty string") {
+      val putSkillRequestWithEmptySkillLevelJson = putSkillRequestJson
+        .transform(__.json.update((__ \ 'skillLevel).json.put(JsString("")))).get
+      val request = FakeRequest("PUT", s"/users/me/skillmatrix/${dataMap(SKILL_ODERSKY_SCALA)}")
+        .withBody(putSkillRequestWithEmptySkillLevelJson)
+        .withHeaders(("X-AUTH-TOKEN" -> authToken))
+
+      val response = route(app, request).get
+      status(response) mustEqual 400
+      contentAsString(response) must include(objSkillLevelWrong)
+      contentAsString(response) must include(genericEnumValueWrong)
+
+    }
+    scenario("It should return a bad request when the provided skillLevel is not part of the values we defined") {
+      val putSkillRequestWithNonExistentSkillLevelJson = putSkillRequestJson
+        .transform(__.json.update((__ \ 'skillLevel).json.put(JsString("non-existent-value")))).get
+      val request = FakeRequest("PUT", s"/users/me/skillmatrix/${dataMap(SKILL_ODERSKY_SCALA)}")
+        .withBody(putSkillRequestWithNonExistentSkillLevelJson)
+        .withHeaders(("X-AUTH-TOKEN" -> authToken))
+
+      val response = route(app, request).get
+      status(response) mustEqual 400
+      contentAsString(response) must include(objSkillLevelWrong)
+      contentAsString(response) must include(genericEnumValueWrong)
 
     }
     scenario("It should return a bad request when techName is missing") {
@@ -166,7 +240,7 @@ class SkillMatrixControllerSpec extends AcceptanceSpec with TestDatabaseProvider
 
       val response = route(app, request).get
       status(response) mustEqual 400
-      contentAsString(response) must include(objTechTypeMissing)
+      contentAsString(response) must include(objTechTypeWrong)
       contentAsString(response) must include(genericPathMissing)
     }
 
