@@ -11,8 +11,16 @@ angular.module('techmatrix').constant('techType', {
         text:"framework",
         value:"FRAMEWORK"
     },
-    CONCEPTUAL:{
-        text:"conceptual",
-        value:"CONCEPTUAL"
+    CONCEPT:{
+        text:"concept",
+        value:"CONCEPT"
+    },
+    DATABASE:{
+        text:"database",
+        value:"DATABASE"
+    },
+    OTHER:{
+        text:"other",
+        value:"OTHER"
     }
 });

@@ -273,6 +273,9 @@ definitions:
       - language
       - library
       - framework
+      - concept
+      - database
+      - other
 
   SkillMatrixItem:
     type: object

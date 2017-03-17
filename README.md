@@ -41,7 +41,7 @@ So the difference between the *Tech* and *Skill* is that the tech represents the
 |id      | name      | type       |
 |--------|-----------|------------|
 |1       | Scala     | LANGUAGE   |
-|2       | Dark Arts | CONCEPTUAL |
+|2       | Dark Arts | CONCEPT |
 
 **Skill**:  
 
@@ -86,7 +86,7 @@ This looks like this:
 {
       "techId": 7,
       "techName": "Defense Against the Dark Arts",
-      "techType": "CONCEPTUAL",
+      "techType": "CONCEPT",
       "users": [
         {
           "userName": "Severus Snape",
@@ -116,7 +116,7 @@ UserSkillResponse:
         "tech": {
           "id": 7,
           "name": "Dark Arts",
-          "techType": "CONCEPTUAL"
+          "techType": "CONCEPT"
         },
         "skillLevel": "EXPERT"
       },
@@ -124,7 +124,7 @@ UserSkillResponse:
         "tech": {
           "id": 8,
           "name": "Defense against the Dark Arts",
-          "techType": "CONCEPTUAL"
+          "techType": "CONCEPT"
         },
         "skillLevel": "EXPERT"
       }
