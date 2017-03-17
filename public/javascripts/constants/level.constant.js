@@ -1,18 +1,18 @@
 angular.module('techmatrix').constant('level', {
-    CAN_TEACH:{
-        text:"can teach",
-        value:"CAN_TEACH"
+    EXPERT:{
+        text:"expert",
+        value:"EXPERT"
     },
-    COMFORTABLE:{
-        text:"comfortable",
-        value:"COMFORTABLE"
+    INTERMEDIATE:{
+        text:"intermediate",
+        value:"INTERMEDIATE"
     },
-    DABBLED:{
-        text:"dabbled",
-        value:"DABBLED"
+    NOVICE:{
+        text:"novice",
+        value:"NOVICE"
     },
-    FORGOT:{
-        text:"forgot",
-        value:"FORGOT"
+    LONG_TIME_AGO:{
+        text:"long time ago",
+        value:"LONG_TIME_AGO"
     }
 });

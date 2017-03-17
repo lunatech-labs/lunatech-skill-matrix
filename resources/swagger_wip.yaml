@@ -288,10 +288,10 @@ definitions:
   SkillLevel:
     type: string
     enum:
-      - can teach
-      - comfortable
-      - dabbled
-      - forgot
+      - expert
+      - intermediate
+      - novice
+      - long time ago
 
   SkillMatrixResponse:
     type: object

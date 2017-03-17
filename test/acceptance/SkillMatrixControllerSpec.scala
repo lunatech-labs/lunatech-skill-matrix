@@ -43,7 +43,7 @@ class SkillMatrixControllerSpec extends AcceptanceSpec with TestDatabaseProvider
       // I do not know how to test the whole response, so I will be testing parts of it
 
       contentAsString(response) must include("skillLevel")
-      contentAsString(response) must include("DABBLED")
+      contentAsString(response) must include("NOVICE")
       contentAsString(response) must include("techType")
       contentAsString(response) must include("LANGUAGE")
       contentAsString(response) must include("name")
@@ -162,7 +162,7 @@ class SkillMatrixControllerSpec extends AcceptanceSpec with TestDatabaseProvider
       // I do not know how to test the whole response, so I will be testing parts of it
 
       contentAsString(response) must include("skillLevel")
-      contentAsString(response) must include("DABBLED")
+      contentAsString(response) must include("NOVICE")
       contentAsString(response) must include("techType")
       contentAsString(response) must include("LANGUAGE")
       contentAsString(response) must include("name")

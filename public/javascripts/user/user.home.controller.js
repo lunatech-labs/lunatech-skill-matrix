@@ -27,7 +27,7 @@ angular.module('techmatrix').controller('UserHomeController',[
     $scope.data.skillForm = {
         name:undefined,
         techType:$scope.data.techType['LANGUAGE'],
-        skillLevel:$scope.data.level['COMFORTABLE']
+        skillLevel:$scope.data.level['INTERMEDIATE']
     }
 
     function onInit(){
@@ -92,7 +92,7 @@ angular.module('techmatrix').controller('UserHomeController',[
         return {
            name:undefined,
            techType:$scope.data.techType['LANGUAGE'],
-           skillLevel:$scope.data.level['COMFORTABLE']
+           skillLevel:$scope.data.level['INTERMEDIATE']
        }
     }
 
