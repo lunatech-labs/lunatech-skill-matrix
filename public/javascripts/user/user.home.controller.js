@@ -75,17 +75,33 @@ angular.module('techmatrix').controller('UserHomeController',[
                 showMessage('Error adding tech',failureAlert);
             });
 
-        }else{
-            showMessage('Please fill all field before adding a tech',failureAlert);
         }
     };
 
 
     function isValidateForm(){
-        return $scope.data.skillForm.name !== undefined &&
+        valid = true;
+        valid = $scope.data.skillForm.name !== undefined &&
         $scope.data.skillForm.name !== ''&&
         $scope.data.skillForm.techType !== undefined &&
         $scope.data.skillForm.skillLevel !== undefined;
+
+        if(!valid){
+            showMessage('Please fill all field before adding a tech',failureAlert);
+        }else{
+            valid = unknownSkill($scope.data.skillForm);
+            if(!valid){
+                showMessage('Already known skill',failureAlert);
+            }
+        }
+        return valid;
+    }
+
+    function unknownSkill(skill){
+        var known = $scope.data.user.skills.filter(function(s){
+            return s.tech.name.toLowerCase() === skill.name.toLowerCase() && s.tech.techType === skill.techType.value;
+        })
+        return known.length === 0
     }
 
     function getNewSkillForm(){
