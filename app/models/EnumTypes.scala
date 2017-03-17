@@ -56,7 +56,9 @@ object TechType {
       case "LANGUAGE" => LANGUAGE
       case "LIBRARY" => LIBRARY
       case "FRAMEWORK" => FRAMEWORK
-      case "CONCEPTUAL" => CONCEPTUAL
+      case "CONCEPT" => CONCEPT
+      case "DATABASE" => DATABASE
+      case "OTHER" => OTHER
     }
   }
 
@@ -87,6 +89,10 @@ object TechType {
 
   case object FRAMEWORK extends TechType
 
-  case object CONCEPTUAL extends TechType
+  case object CONCEPT extends TechType
+
+  case object DATABASE extends TechType
+
+  case object OTHER extends TechType
 
 }

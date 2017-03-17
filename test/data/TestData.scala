@@ -140,7 +140,7 @@ object TestData {
       |  "skills": {
       |    "techId": 1,
       |    "techName": "dark arts",
-      |    "techType": "CONCEPTUAL",
+      |    "techType": "CONCEPT",
       |    "users": [
       |      {
       |        "userName": "Severus Snape",
@@ -172,7 +172,7 @@ object TestData {
       |{
       |      "techId": 1,
       |      "techName": "functional programming",
-      |      "techType": "CONCEPTUAL",
+      |      "techType": "CONCEPT",
       |      "users": [
       |        {
       |          "userName": "Martin Odersky",
@@ -187,7 +187,7 @@ object TestData {
       |{
       |      "techId": 1,
       |      "techName": "defense against the dark arts",
-      |      "techType": "CONCEPTUAL",
+      |      "techType": "CONCEPT",
       |      "users": [
       |        {
       |          "userName": "Severus Snape",
@@ -202,7 +202,7 @@ object TestData {
       |{
       |      "techId": 1,
       |      "techName": "dark arts",
-      |      "techType": "CONCEPTUAL",
+      |      "techType": "CONCEPT",
       |      "users": [
       |        {
       |          "userName": "Severus Snape",
@@ -226,7 +226,7 @@ object TestData {
       |{
       |      "id": 4,
       |      "name": "functional programming",
-      |      "techType": "CONCEPTUAL"
+      |      "techType": "CONCEPT"
       |}
     """.stripMargin)
 
@@ -235,7 +235,7 @@ object TestData {
       |{
       |      "id": 4,
       |      "name": "defense against the dark arts",
-      |      "techType": "CONCEPTUAL"
+      |      "techType": "CONCEPT"
       |}
     """.stripMargin)
 
@@ -244,7 +244,7 @@ object TestData {
       |{
       |      "id": 4,
       |      "name": "dark arts",
-      |      "techType": "CONCEPTUAL"
+      |      "techType": "CONCEPT"
       |}
     """.stripMargin)
 

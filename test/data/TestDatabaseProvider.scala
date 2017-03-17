@@ -33,9 +33,9 @@ trait TestDatabaseProvider {
 
   def insertTechData(): Map[String, Int] = {
     val techScala = Tech(None, "scala", TechType.LANGUAGE)
-    val techFunctional = Tech(None, "functional programming", TechType.CONCEPTUAL)
-    val techDefense = Tech(None, "defense against the dark arts", TechType.CONCEPTUAL)
-    val techDarkArts = Tech(None, "dark arts", TechType.CONCEPTUAL)
+    val techFunctional = Tech(None, "functional programming", TechType.CONCEPT)
+    val techDefense = Tech(None, "defense against the dark arts", TechType.CONCEPT)
+    val techDarkArts = Tech(None, "dark arts", TechType.CONCEPT)
 
     val idTechScala: Int = Await.result(db.run(techTable returning techTable.map(_.id) += techScala), Duration.Inf)
     val idTechFunctional: Int = Await.result(db.run(techTable returning techTable.map(_.id) += techFunctional), Duration.Inf)
