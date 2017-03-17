@@ -30,14 +30,14 @@ object TestData {
       |		"name": "brainfuck",
       |		"techType": "LANGUAGE"
       |	},
-      |	"skillLevel": "DABBLED"
+      |	"skillLevel": "NOVICE"
       |}
     """.stripMargin)
 
   val addSkillRequestWithMissingTechJson: JsValue = Json.parse(
     """
       |{
-      |	"skillLevel": "DABBLED"
+      |	"skillLevel": "NOVICE"
       |}
     """.stripMargin)
 
@@ -57,7 +57,7 @@ object TestData {
       |	"tech": {
       |		"techType": "LANGUAGE"
       |	},
-      |	"skillLevel": "DABBLED"
+      |	"skillLevel": "NOVICE"
       |}
     """.stripMargin)
 
@@ -67,7 +67,7 @@ object TestData {
       |	"tech": {
       |		"name": "brainfuck"
       |	},
-      |	"skillLevel": "DABBLED"
+      |	"skillLevel": "NOVICE"
       |}
     """.stripMargin)
 
@@ -79,14 +79,14 @@ object TestData {
       |		"name": "scala",
       |		"techType": "LANGUAGE"
       |		},
-      |	"skillLevel": "DABBLED"
+      |	"skillLevel": "NOVICE"
       |}
     """.stripMargin)
 
   val putSkillRequestWithMissingTechJson: JsValue = Json.parse(
     """
       |{
-      |	"skillLevel": "DABBLED"
+      |	"skillLevel": "NOVICE"
       |}
     """.stripMargin)
 
@@ -108,7 +108,7 @@ object TestData {
       |		"id": 5,
       |		"techType": "LANGUAGE"
       |		},
-      |	"skillLevel": "DABBLED"
+      |	"skillLevel": "NOVICE"
       |}
     """.stripMargin)
 
@@ -119,7 +119,7 @@ object TestData {
       |		"id": 5,
       |		"name": "scala"
       |		},
-      |	"skillLevel": "DABBLED"
+      |	"skillLevel": "NOVICE"
       |}
     """.stripMargin)
 
@@ -130,7 +130,7 @@ object TestData {
       |		"name": "scala",
       |		"techType": "LANGUAGE"
       |		},
-      |	"skillLevel": "DABBLED"
+      |	"skillLevel": "NOVICE"
       |}
     """.stripMargin)
 
@@ -144,7 +144,7 @@ object TestData {
       |    "users": [
       |      {
       |        "userName": "Severus Snape",
-      |        "level": "CAN_TEACH"
+      |        "level": "EXPERT"
       |      }
       |    ]
       |  }
@@ -161,7 +161,7 @@ object TestData {
       |      "users": [
       |        {
       |          "userName": "Martin Odersky",
-      |          "level": "CAN_TEACH"
+      |          "level": "EXPERT"
       |        }
       |      ]
       |    }
@@ -176,7 +176,7 @@ object TestData {
       |      "users": [
       |        {
       |          "userName": "Martin Odersky",
-      |          "level": "CAN_TEACH"
+      |          "level": "EXPERT"
       |        }
       |      ]
       |    }
@@ -191,7 +191,7 @@ object TestData {
       |      "users": [
       |        {
       |          "userName": "Severus Snape",
-      |          "level": "CAN_TEACH"
+      |          "level": "EXPERT"
       |        }
       |      ]
       |    }
@@ -206,7 +206,7 @@ object TestData {
       |      "users": [
       |        {
       |          "userName": "Severus Snape",
-      |          "level": "CAN_TEACH"
+      |          "level": "EXPERT"
       |        }
       |      ]
       |    }

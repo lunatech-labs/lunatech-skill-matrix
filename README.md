@@ -47,8 +47,8 @@ So the difference between the *Tech* and *Skill* is that the tech represents the
 
 |id      | userId    | techId    | skillLevel  |
 |--------|-----------|-----------|-------------|
-|1       | 1         | 1         | COMFORTABLE |
-|2       | 2         | 2         | CAN_TEACH   |
+|1       | 1         | 1         | INTERMEDIATE |
+|2       | 2         | 2         | EXPERT   |
 
 We also have intermediate models that help to either intercept correctly the parameters in the controller or to hold the results needed.
 
@@ -63,7 +63,7 @@ This is used in the POST a users makes in order to add a skill to his list. It l
 		"name": "Prolog",
 		"techType": "LANGUAGE"
 	},
-	"skillLevel": "DABBLED"
+	"skillLevel": "NOVICE"
 }
 ```
 
@@ -90,11 +90,11 @@ This looks like this:
       "users": [
         {
           "userName": "Severus Snape",
-          "level": "CAN_TEACH"
+          "level": "EXPERT"
         },
          {
            "userName": "Dolores Umbridge",
-            "level": "DABBLED"
+            "level": "NOVICE"
          }
       ]
 }
@@ -118,7 +118,7 @@ UserSkillResponse:
           "name": "Dark Arts",
           "techType": "CONCEPTUAL"
         },
-        "skillLevel": "CAN_TEACH"
+        "skillLevel": "EXPERT"
       },
       {
         "tech": {
@@ -126,7 +126,7 @@ UserSkillResponse:
           "name": "Defense against the Dark Arts",
           "techType": "CONCEPTUAL"
         },
-        "skillLevel": "CAN_TEACH"
+        "skillLevel": "EXPERT"
       }
     ]
 }

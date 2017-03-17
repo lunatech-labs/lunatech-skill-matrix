@@ -8,10 +8,10 @@ sealed trait SkillLevel
 object SkillLevel {
   def apply(skillLevel: String): SkillLevel = {
     skillLevel match {
-      case "CAN_TEACH" => CAN_TEACH
-      case "COMFORTABLE" => COMFORTABLE
-      case "DABBLED" => DABBLED
-      case "FORGOT" => FORGOT
+      case "EXPERT" => EXPERT
+      case "INTERMEDIATE" => INTERMEDIATE
+      case "NOVICE" => NOVICE
+      case "LONG_TIME_AGO" => LONG_TIME_AGO
     }
 
   }
@@ -36,13 +36,13 @@ object SkillLevel {
     s => SkillLevel(s)
   )
 
-  case object CAN_TEACH extends SkillLevel
+  case object EXPERT extends SkillLevel
 
-  case object COMFORTABLE extends SkillLevel
+  case object INTERMEDIATE extends SkillLevel
 
-  case object DABBLED extends SkillLevel
+  case object NOVICE extends SkillLevel
 
-  case object FORGOT extends SkillLevel
+  case object LONG_TIME_AGO extends SkillLevel
 
 }
 
