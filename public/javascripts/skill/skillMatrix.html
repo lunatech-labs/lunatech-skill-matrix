@@ -1,25 +1,42 @@
-<div>
-    <div class="alert alert-danger" role="alert" data-ng-if="data.error">{{data.error}}</div>
-    <div class="text-align-right">
-        <div class="icon-input">
-            <input type="text" data-ng-model="data.skillFilter" placeholder="Filter Tech">
-            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-        </div>
-    </div>
-    <div data-ng-repeat="skill in data.skills | filter:{searchFilter:data.skillFilter}">
-        <div class="page-header">
-            <h1>{{skill.techName}} <small>{{data.techType[skill.techType].text}}</small></h1>
-        </div>
+<md-card layout="row" flex layout-padding class="search-card">
+  <md-icon md-font-set="fa fa-search fa-2x"></md-icon>
+  <input data-ng-model="data.skillFilter" type="text" placeholder="Filter" flex>
+</md-card>
 
-        <div>
-            <table class="table">
-                <tbody>
-                    <tr data-ng-repeat="user in skill.users">
-                        <td data-ng-class="$first ? 'border-none':''"><span class="display-block">{{user.userName}}</span></td>
-                        <td data-ng-class="$first ? 'border-none':''"><span class="display-block text-transform-capitalize">{{data.level[user.level].text}}</span></td>
-                    </tr>
-                </tbody>
-            </table>
+<div layout="row" layout-wrap>
+  <div layout="column" flex="100" flex-gt-md="50" data-ng-repeat="techType in data.techType">
+    <md-card layout-padding class="invisible-card">
+      <md-card-title>
+        <md-card-title-text>
+        <span class="md-headline text-transform-capitalize">
+          {{techType.text}}
+        </span>
+        </md-card-title-text>
+      </md-card-title>
+      <md-card-content layout="row" layout-wrap>
+        <div layout="column" flex="50"
+             data-ng-repeat="skill in data.groupedSkills[techType.value] | filter:{searchFilter:data.skillFilter}">
+          <md-card class="position-relative mb20" layout="column" flex>
+            <md-button class="md-fab md-mini md-primary add-skill-from-matrix" data-ng-click="addSkillToUser(skill)" data-ng-show="skill.isMissing">
+              <md-icon md-font-set="fa fa-plus fa-2x"></md-icon>
+            </md-button>
+            <md-card-title layout="center center">
+                <span class="md-headline text-transform-capitalize">
+                  {{skill.techName}}
+                </span>
+              <span flex></span>
+            </md-card-title>
+            <md-card-content layout="row">
+              <div data-ng-repeat="level in data.level"  flex>
+                <div class="user-on-level" data-ng-click="showUsers(skill.users[level.value])">
+                  <div class="badge" data-ng-class="getLevelBadgeClass(level.value)">{{skill.users[level.value].length}}</div>
+                  <md-icon class="icon-3x" md-font-set="fa fa-user fa-3x" data-ng-class="getLevelClass(level.value)"></md-icon>
+                </div>
+              </div>
+            </md-card-content>
+          </md-card>
         </div>
-    </div>
+      </md-card-content>
+    </md-card>
+  </div>
 </div>
