@@ -14,6 +14,10 @@ class TechService @Inject() (implicit val connection: DBConnection)  {
     Techs.getAllTech
   }
 
+  def search(query: String): Future[Seq[Tech]] = {
+    Techs.search(query)
+  }
+
   def getTechIdOrInsert(tech: Tech): Future[Int] = {
     Techs.getTechIdByNameAndType(tech).flatMap {
       case Some(id) => Future(id)

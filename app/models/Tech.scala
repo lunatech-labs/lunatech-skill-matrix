@@ -52,6 +52,12 @@ object Techs {
     add(tech)
   }
 
+  def search(query: String)(implicit connection: DBConnection): Future[Seq[Tech]] = {
+    val likeQuery = "%" + query + "%"
+    val searchQuery = techTable.filter(_.name.toLowerCase like likeQuery.toLowerCase)
+    connection.db.run(searchQuery.result)
+  }
+
   def getTechIdByNameAndType(tech: Tech)(implicit connection: DBConnection): Future[Option[Int]] = {
     val getTechIdQuery = techTable.filter(t => t.name === tech.name.toLowerCase && t.techType === tech.techType).map(_.id).take(1)
     connection.db.run(getTechIdQuery.result.headOption)

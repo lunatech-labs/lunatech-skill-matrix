@@ -28,6 +28,9 @@ DELETE /users/me/skillmatrix/:skillId     controllers.SkillMatrixController.dele
 # gets all skills entered by users
 GET     /alltech                     controllers.TechController.getAllTech
 
+# gets techs based on query
+GET     /techs/:query                     controllers.TechController.search(query: String)
+
 # Gets all skills entered by users together with info about users
 GET     /skillmatrix                controllers.SkillMatrixController.getSkillMatrix
 

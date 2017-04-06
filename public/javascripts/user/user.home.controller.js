@@ -44,11 +44,9 @@ angular.module('techmatrix').controller('UserHomeController',[
                     return s.tech.techType === techType.value;
                   })
                 });
-                $scope.data.newInput = true;
             },function(response){
                 RestErrorService.errorHandler(response)
                 $scope.data.user.skills = [];
-                $scope.data.newInput = true;
                 showMessage('Error getting user skills',failureAlert);
             });
         }
@@ -60,8 +58,8 @@ angular.module('techmatrix').controller('UserHomeController',[
     }
 
     $scope.addSkill = function(){
+        $scope.data.skillForm.name = $scope.data.selectedTech ? $scope.data.selectedTech.name : $scope.data.searchText;
         if(isValidateForm()){
-            hideMessage();
             var data = {
                 userId:$scope.data.user.id,
                 body:{
@@ -74,10 +72,11 @@ angular.module('techmatrix').controller('UserHomeController',[
             };
             RestService.addSKill(data).then(function(response){
                 $scope.data.skillForm = getNewSkillForm();
+                $scope.data.selectedTech = undefined;
+                $scope.data.searchText = undefined;
                 var skillWithFilter = addSearchFilter(response.data.skillAdded);
                 $scope.data.user.skills.push(skillWithFilter);
                 $scope.data.groupedSkills[skillWithFilter.tech.techType].push(skillWithFilter);
-                $scope.data.newInput = true;
                 showMessage('Tech added',successAlert);
             },function(response){
                 RestErrorService.errorHandler(response)
@@ -178,9 +177,6 @@ angular.module('techmatrix').controller('UserHomeController',[
               .textContent(message)
               .hideDelay(3000)
         );
-//        $scope.data.message.show = true;
-//        $scope.data.message.class = isSuccess ? 'alert-success' : 'alert-danger';
-//        $scope.data.message.value = message;
     }
 
     function hideMessage(){
@@ -219,6 +215,14 @@ angular.module('techmatrix').controller('UserHomeController',[
       }
       return '';
     }
+
+    $scope.queryTechs = function(query){
+      return RestService.getTechs(query).then(function(response){
+        return response.data;
+      },function(response){
+        return [];
+      });
+    };
 
     onInit();
 }]);

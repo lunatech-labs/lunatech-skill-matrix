@@ -12,12 +12,19 @@
   </md-card-title>
   <md-card-content layout="row" flex>
     <form layout="row" flex>
-      <md-input-container flex>
-        <label>Tech</label>
-        <input data-ng-model="data.skillForm.name"
-               data-focus-me="data.newInput"
-               data-ng-focus="data.newInput = false">
-      </md-input-container>
+      <md-autocomplete flex
+                       md-selected-item="data.selectedTech"
+                       md-search-text="data.searchText"
+                       md-items="tech in queryTechs(data.searchText)"
+                       md-item-text="tech.name"
+                       md-no-cache="true"
+                       md-floating-label="Tech"
+                       data-focus-me="data.newInput"
+                       data-ng-focus="data.newInput = false">
+        <md-item-template>
+          <span>{{tech.name}}</span>
+        </md-item-template>
+      </md-autocomplete>
 
       <md-input-container flex>
         <label>Type</label>
