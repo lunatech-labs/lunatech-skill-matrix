@@ -1,1 +1,1 @@
-angular.module('techmatrix',['ngRoute','ngCookies','directive.g+signin']);
+angular.module('techmatrix',['ngRoute','ngCookies','ngAria','ngMessages','directive.g+signin','ngMaterial']);

@@ -17,6 +17,9 @@ angular.module('techmatrix').service('RestUrlService',[function(){
         },
         googleAuth:function(token){
             return '/google/auth';
+        },
+        getTechs:function(params){
+          return '/techs/' + encodeURIComponent(params);
         }
     };
 

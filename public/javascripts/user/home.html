@@ -1,75 +1,91 @@
-<div>
-    <div class="page-header">
-        <h1>{{data.user.lastName}} <small>{{data.user.firstName}}</small></h1>
-    </div>
+<md-card layout="row" flex layout-padding class="search-card">
+  <md-icon md-font-set="fa fa-search fa-2x"></md-icon>
+  <input data-ng-model="data.skillFilter" type="text" placeholder="Filter" flex>
+</md-card>
 
-    <div class="alert" data-ng-class="data.message.class" role="alert" data-ng-show="data.message.show">
-        <button type="button" class="close" data-ng-click="dismissAlert()"><span aria-hidden="true">&times;</span></button>
-        {{data.message.value}}
-    </div>
-    <h3>Add Tech</h3>
-    <form class="form-inline">
-        <div class="form-group">
-            <input type="text" class="form-control" data-focus-me="data.newInput" data-ng-focus="data.newInput = false" data-ng-model="data.skillForm.name" placeholder="Tech">
-        </div>
 
-        <select class="form-control"
-                data-ng-model="data.skillForm.techType"
-                data-ng-options="techType.text for techType in data.techType track by techType.value">
-        </select>
+<md-card layout="column" flex layout-padding>
+  <md-card-title>
+    <md-card-title-text>
+      <span class="md-headline">Add tech</span>
+    </md-card-title-text>
+  </md-card-title>
+  <md-card-content layout="row" flex>
+    <form layout="row" flex>
+      <md-autocomplete flex
+                       md-selected-item="data.selectedTech"
+                       md-search-text="data.searchText"
+                       md-items="tech in queryTechs(data.searchText)"
+                       md-item-text="tech.name"
+                       md-no-cache="true"
+                       md-floating-label="Tech"
+                       data-focus-me="data.newInput"
+                       data-ng-focus="data.newInput = false">
+        <md-item-template>
+          <span>{{tech.name}}</span>
+        </md-item-template>
+      </md-autocomplete>
 
-        <select class="form-control"
-                data-ng-model="data.skillForm.skillLevel"
-                data-ng-options="level.text for level in data.level track by level.value">
-        </select>
+      <md-input-container flex>
+        <label>Type</label>
+        <md-select ng-model="data.skillForm.techType">
+          <md-optgroup>
+            <md-option ng-value="tech.value" data-ng-repeat="tech in data.techType"><span class="text-transform-capitalize">{{tech.text}}</span></md-option>
+          </md-optgroup>
+        </md-select>
+      </md-input-container>
 
-        <button type="submit" data-ng-click="addSkill()" class="btn btn-info">Add</button>
+      <md-input-container flex>
+        <label>Level</label>
+        <md-select ng-model="data.skillForm.skillLevel">
+          <md-optgroup>
+            <md-option ng-value="level.value" data-ng-repeat="level in data.level"><span class="text-transform-capitalize">{{level.text}}</span></md-option>
+          </md-optgroup>
+        </md-select>
+      </md-input-container>
+
+      <md-button class="md-primary md-fab" data-ng-click="addSkill()">
+        <md-icon md-font-set="fa fa-plus fa-2x"></md-icon>
+      </md-button>
     </form>
+  </md-card-content>
+</md-card>
 
+<div layout="row" layout-wrap>
+  <div layout="column" flex="100" flex-gt-md="50" data-ng-repeat="techType in data.techType">
+    <md-card layout-padding>
+      <md-card-title>
+        <md-card-title-text>
+        <span class="md-headline text-transform-capitalize">
+          {{techType.text}}
+        </span>
+        </md-card-title-text>
+      </md-card-title>
+      <md-card-content layout="row" layout-wrap>
+        <div layout="column"  flex="100" data-ng-repeat="skill in data.groupedSkills[techType.value] | filter:{searchFilter:data.skillFilter}">
+          <md-card class="{{getLevelClass(skill)}}" flex>
+            <div layout="row" layout-align="end end" layout-padding>
+              <span class="md-headline text-transform-capitalize">{{skill.tech.name}}</span>
+              <span flex></span>
+              <md-button class="md-icon-button" data-ng-click="updateSkill(skill)">
+                <md-icon md-font-set="fa fa-pencil" class="correct-icon" data-ng-class="skill.updating ? 'color-white' : ''"></md-icon>
+              </md-button>
 
-    <hr>
+              <md-button class="md-icon-button" data-ng-click="removeSkill(skill)">
+                <md-icon md-font-set="fa fa-trash" class="correct-icon"></md-icon>
+              </md-button>
+            </div>
 
-    <div class="text-align-right">
-        <div class="icon-input">
-            <input type="text" data-ng-model="data.skillFilter" placeholder="Filter Tech">
-            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            <div layout="row" data-ng-show="skill.updating">
+              <div flex="25" class="editButton {{getLevelClass({},level.value) +' '+ isSelectedLevelClass(skill, level.value)}} cursor-pointer"
+                   data-ng-repeat="level in data.level"
+                   data-ng-click="finishUpdatingSkill(skill, level)">
+                {{level.text}}
+              </div>
+            </div>
+          </md-card>
         </div>
-    </div>
-
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <td><strong>Tech</strong></td>
-            <td><strong>Tech Type</strong></td>
-            <td><strong>Skill Level</strong></td>
-            <td class="text-align-center"><strong>Action</strong></td>
-        </tr>
-        </thead>
-        <tbody>
-        <tr data-ng-repeat="skill in data.user.skills | filter:{searchFilter:data.skillFilter}">
-            <td class="text-transform-capitalize vertical-align-middle">{{skill.tech.name}}</td>
-            <td class="text-transform-capitalize vertical-align-middle">{{data.techType[skill.tech.techType].text}}</td>
-            <td class="text-transform-capitalize vertical-align-middle actions">
-                <span data-ng-show="!skill.updating">{{data.level[skill.skillLevel].text}}</span>
-                <select class="form-control width-150 display-inline-block"
-                        data-ng-show="skill.updating"
-                        data-ng-model="data.updatingSkill"
-                        data-ng-options="level.text for level in data.level track by level.value">
-                </select>
-
-                <a href="" data-ng-click="finishUpdatingSkill(skill)" data-ng-show="skill.updating">
-                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                </a>
-            </td>
-            <td class="text-align-center actions vertical-align-middle">
-                <a href="" data-ng-click="updateSkill(skill)">
-                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                </a>
-                <a href="" data-ng-click="removeSkill(skill)">
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                </a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+      </md-card-content>
+    </md-card>
+  </div>
 </div>

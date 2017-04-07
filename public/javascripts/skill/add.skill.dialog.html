@@ -1,0 +1,22 @@
+<md-dialog>
+  <md-dialog-content>
+    <md-toolbar class="md-whiteframe-4dp">
+      <div class="md-toolbar-tools">
+        <h2 flex>Add Skill</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" data-ng-click="close()">
+          <md-icon md-font-set="fa fa-times fa-2x"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <div layout="column" layout-gt-md="row" layout-padding layout-margin>
+      <md-button class="md-raised"
+                 data-ng-class="getLevelButtonClass(l.value)"
+                 data-ng-repeat="l in levels"
+                 data-ng-click="select(l)">{{l.text}}</md-button>
+
+    </div>
+
+  </md-dialog-content>
+</md-dialog>

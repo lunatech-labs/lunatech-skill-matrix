@@ -1,0 +1,27 @@
+<md-dialog>
+  <md-dialog-content>
+    <md-toolbar class="md-whiteframe-4dp">
+      <div class="md-toolbar-tools">
+        <h2 flex>Users</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" data-ng-click="close()">
+          <md-icon md-font-set="fa fa-times fa-2x"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <md-list>
+
+      <md-subheader class="md-no-sticky">
+        <div class="icon-input">
+          <i class="fa fa-search"></i>
+          <input data-ng-model="filter" placeholder="filter" flex>
+        </div>
+      </md-subheader>
+      <md-list-item ng-repeat="user in users | filter:{userName:filter}">
+        <p> {{ user.userName }} </p>
+      </md-list-item>
+    </md-list>
+
+  </md-dialog-content>
+</md-dialog>

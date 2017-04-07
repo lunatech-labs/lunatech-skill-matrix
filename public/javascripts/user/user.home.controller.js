@@ -6,7 +6,8 @@ angular.module('techmatrix').controller('UserHomeController',[
     '$cookies',
     '$location',
     'RestErrorService',
-    function($scope,RestService,techType,level,$cookies,$location,RestErrorService){
+    '$mdToast',
+    function($scope,RestService,techType,level,$cookies,$location,RestErrorService,$mdToast){
 
     var successAlert = true;
     var failureAlert = false;
@@ -16,6 +17,7 @@ angular.module('techmatrix').controller('UserHomeController',[
     $scope.data.techType = techType;
     $scope.data.level = level;
 
+    $scope.data.groupedSkills = {};
     $scope.data.user = undefined;
 
     $scope.data.message ={
@@ -26,8 +28,8 @@ angular.module('techmatrix').controller('UserHomeController',[
 
     $scope.data.skillForm = {
         name:undefined,
-        techType:$scope.data.techType['LANGUAGE'],
-        skillLevel:$scope.data.level['INTERMEDIATE']
+        techType:$scope.data.techType['LANGUAGE'].value,
+        skillLevel:$scope.data.level['INTERMEDIATE'].value
     }
 
     function onInit(){
@@ -37,11 +39,14 @@ angular.module('techmatrix').controller('UserHomeController',[
         }else{
             RestService.getMyProfile($scope.data.user.id).then(function(response){
                 $scope.data.user.skills = response.data.userSkills.skill.map(addSearchFilter);
-                $scope.data.newInput = true;
+                angular.forEach($scope.data.techType,function(techType){
+                  $scope.data.groupedSkills[techType.value] = $scope.data.user.skills.filter(function(s){
+                    return s.tech.techType === techType.value;
+                  })
+                });
             },function(response){
                 RestErrorService.errorHandler(response)
                 $scope.data.user.skills = [];
-                $scope.data.newInput = true;
                 showMessage('Error getting user skills',failureAlert);
             });
         }
@@ -53,22 +58,25 @@ angular.module('techmatrix').controller('UserHomeController',[
     }
 
     $scope.addSkill = function(){
+        $scope.data.skillForm.name = $scope.data.selectedTech ? $scope.data.selectedTech.name : $scope.data.searchText;
         if(isValidateForm()){
-            hideMessage();
             var data = {
                 userId:$scope.data.user.id,
                 body:{
                     tech:{
                         name:$scope.data.skillForm.name,
-                        techType:$scope.data.skillForm.techType.value
+                        techType:$scope.data.skillForm.techType
                     },
-                    skillLevel:$scope.data.skillForm.skillLevel.value
+                    skillLevel:$scope.data.skillForm.skillLevel
                 }
             };
             RestService.addSKill(data).then(function(response){
                 $scope.data.skillForm = getNewSkillForm();
-                $scope.data.user.skills.push(addSearchFilter(response.data.skillAdded));
-                $scope.data.newInput = true;
+                $scope.data.selectedTech = undefined;
+                $scope.data.searchText = undefined;
+                var skillWithFilter = addSearchFilter(response.data.skillAdded);
+                $scope.data.user.skills.push(skillWithFilter);
+                $scope.data.groupedSkills[skillWithFilter.tech.techType].push(skillWithFilter);
                 showMessage('Tech added',successAlert);
             },function(response){
                 RestErrorService.errorHandler(response)
@@ -99,7 +107,7 @@ angular.module('techmatrix').controller('UserHomeController',[
 
     function unknownSkill(skill){
         var known = $scope.data.user.skills.filter(function(s){
-            return s.tech.name.toLowerCase() === skill.name.toLowerCase() && s.tech.techType === skill.techType.value;
+            return s.tech.name.toLowerCase() === skill.name.toLowerCase() && s.tech.techType === skill.techType;
         })
         return known.length === 0
     }
@@ -107,8 +115,8 @@ angular.module('techmatrix').controller('UserHomeController',[
     function getNewSkillForm(){
         return {
            name:undefined,
-           techType:$scope.data.techType['LANGUAGE'],
-           skillLevel:$scope.data.level['INTERMEDIATE']
+           techType:$scope.data.techType['LANGUAGE'].value,
+           skillLevel:$scope.data.level['INTERMEDIATE'].value
        }
     }
 
@@ -122,6 +130,9 @@ angular.module('techmatrix').controller('UserHomeController',[
             $scope.data.user.skills = $scope.data.user.skills.filter(function(s){
                 return s.id !== skill.id;
             })
+            $scope.data.groupedSkills[skill.tech.techType] = $scope.data.groupedSkills[skill.tech.techType].filter(function(s){
+              return s.id !== skill.id;
+            })
             showMessage('Tech removed',successAlert);
         },function(response){
             RestErrorService.errorHandler(response)
@@ -131,13 +142,14 @@ angular.module('techmatrix').controller('UserHomeController',[
 
     $scope.updateSkill = function(skill){
         angular.forEach($scope.data.user.skills,function(s){
+          if(skill.id !== s.id){
             s.updating = false;
+          }
         });
-        skill.updating = true;
-        $scope.data.updatingSkill = $scope.data.level[skill.skillLevel]
+        skill.updating = !skill.updating;
     };
 
-    $scope.finishUpdatingSkill = function(skill){
+    $scope.finishUpdatingSkill = function(skill, level){
         var data = {
             userId:$scope.data.user.id,
             skillId:skill.id,
@@ -147,11 +159,10 @@ angular.module('techmatrix').controller('UserHomeController',[
                     name:skill.tech.name,
                     techType:skill.tech.techType
                 },
-                skillLevel:$scope.data.updatingSkill.value
+                skillLevel:level.value
             }
         };
         RestService.updateSkill(data).then(function(response){
-            skill.updating = false;
             skill.skillLevel = response.data.updatedSkill.skillLevel;
             showMessage('Tech updated',successAlert)
         },function(response){
@@ -161,9 +172,11 @@ angular.module('techmatrix').controller('UserHomeController',[
     };
 
     function showMessage(message,isSuccess){
-        $scope.data.message.show = true;
-        $scope.data.message.class = isSuccess ? 'alert-success' : 'alert-danger';
-        $scope.data.message.value = message;
+        $mdToast.show(
+            $mdToast.simple()
+              .textContent(message)
+              .hideDelay(3000)
+        );
     }
 
     function hideMessage(){
@@ -174,6 +187,41 @@ angular.module('techmatrix').controller('UserHomeController',[
 
     $scope.dismissAlert = function(){
         hideMessage();
+    };
+
+    $scope.getLevelClass = function(skill,l){
+      if(l){
+        skill = {
+          skillLevel: l
+        };
+      }
+      switch(skill.skillLevel){
+        case level.LONG_TIME_AGO.value:
+          return 'long-time-bg-color';
+        case level.NOVICE.value:
+          return 'novice-bg-color';
+        case level.INTERMEDIATE.value:
+          return 'intermediate-bg-color';
+        case level.EXPERT.value:
+          return 'expert-bg-color';
+        default:
+          return '';
+      }
+    };
+
+    $scope.isSelectedLevelClass = function(skill, l){
+      if(skill.skillLevel !== l){
+        return 'shadow';
+      }
+      return '';
+    }
+
+    $scope.queryTechs = function(query){
+      return RestService.getTechs(query).then(function(response){
+        return response.data;
+      },function(response){
+        return [];
+      });
     };
 
     onInit();

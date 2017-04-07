@@ -17,4 +17,9 @@ class TechController @Inject()(techService: TechService, auth: Authentication) e
     techService.getAllTech.map(m =>
       Ok(Json.obj("tech" -> Json.toJson(m))))
   }
+
+  def search(query: String): Action[Unit] = auth.UserAction.async(BodyParsers.parse.empty) { _ =>
+    techService.search(query).map(techs =>
+      Ok(Json.toJson(techs)))
+  }
 }

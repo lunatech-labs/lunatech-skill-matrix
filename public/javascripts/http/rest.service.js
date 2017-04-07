@@ -51,6 +51,10 @@ angular.module('techmatrix').service('RestService',['$http','RestUrlService','$c
         googleAuth:function(data){
             var url = RestUrlService.googleAuth();
             return basicRequest('POST',url,data);
+        },
+        getTechs:function(params){
+          var url = RestUrlService.getTechs(params);
+          return AuthenticatedRequest('GET',url);
         }
     };
 
