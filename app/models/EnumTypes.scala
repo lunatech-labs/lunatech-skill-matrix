@@ -6,21 +6,18 @@ import slick.driver.PostgresDriver.api._
 sealed trait SkillLevel
 
 object SkillLevel {
-  def apply(skillLevel: String): SkillLevel = {
-    skillLevel match {
+  def apply(skillLevel: String): SkillLevel = skillLevel match {
       case "EXPERT" => EXPERT
       case "INTERMEDIATE" => INTERMEDIATE
       case "NOVICE" => NOVICE
       case "LONG_TIME_AGO" => LONG_TIME_AGO
     }
 
-  }
-
-  implicit val skillLevelFormat = new Format[SkillLevel] {
+  implicit val skillLevelFormat: Format[SkillLevel] = new Format[SkillLevel] {
     def reads(json: JsValue): JsResult[SkillLevel] = json match {
       case JsString(s) =>
         try {
-          JsSuccess(SkillLevel(json.as[String].value.toString))
+          JsSuccess(SkillLevel(json.as[String]))
         } catch {
           case _: scala.MatchError => JsError("Value is not in the list")
         }
@@ -51,8 +48,7 @@ sealed trait TechType
 
 object TechType {
 
-  def apply(techType: String): TechType = {
-    techType match {
+  def apply(techType: String): TechType = techType match {
       case "LANGUAGE" => LANGUAGE
       case "LIBRARY" => LIBRARY
       case "FRAMEWORK" => FRAMEWORK
@@ -60,13 +56,12 @@ object TechType {
       case "DATABASE" => DATABASE
       case "OTHER" => OTHER
     }
-  }
 
-  implicit val techTypeFormat = new Format[TechType] {
+  implicit val techTypeFormat: Format[TechType] = new Format[TechType] {
     def reads(json: JsValue): JsResult[TechType] = json match {
       case JsString(s) =>
         try {
-          JsSuccess(TechType(json.as[String].value.toString))
+          JsSuccess(TechType(json.as[String]))
         } catch {
           case _: scala.MatchError => JsError("Value is not in the list")
         }
