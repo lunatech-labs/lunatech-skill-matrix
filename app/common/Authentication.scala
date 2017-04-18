@@ -24,7 +24,6 @@ class Authentication @Inject()(userService: UserService, oauth: OauthService) {
     def invokeBlock[A](request: Request[A], block: (UserRequest[A]) => Future[Result]): Future[Result] = {
 
       val xAuthToken = request.headers.get("X-AUTH-TOKEN").getOrElse(throw new Exception("You are not logged in."))
-      //.orElse(request.cookies.get("X-AUTH-TOKEN").map{_.value})
 
       oauth.verifyToken(xAuthToken) match {
         //Have a session cookie
