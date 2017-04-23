@@ -137,7 +137,6 @@ object TestData {
   val getSkillMatrixByTechIdResponseJson: JsValue = Json.parse(
     """
       |{
-      |  "skills": {
       |    "techId": 1,
       |    "techName": "dark arts",
       |    "techType": "CONCEPT",
@@ -147,7 +146,6 @@ object TestData {
       |        "level": "EXPERT"
       |      }
       |    ]
-      |  }
       |}
     """.stripMargin)
 
