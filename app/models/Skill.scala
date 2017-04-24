@@ -48,23 +48,20 @@ class Skills(tag: Tag) extends Table[models.Skill](tag, "user_skills") {
 object Skills {
   val skillTable: TableQuery[Skills] = TableQuery[Skills]
 
-  def add(userId: Int, techId: Int, skillLevel: SkillLevel)(implicit connection: DBConnection): Future[Skill] = {
+  def add(userId: Int, techId: Int, skillLevel: SkillLevel)(implicit connection: DBConnection): Future[Int] = {
     skillExistsByTechAndUserId(techId, userId).flatMap {
       case true =>
-        // in the end we should return a message that the skill already exists, not sure what to pass to the controller
-        // in order to make this method work.
         for {
           skillId <- getSkillId(userId, techId)
-        } yield Skill(skillId, userId = userId, techId = techId, skillLevel = skillLevel)
+        } yield skillId.get
       case false =>
         val userSkillObject = Skill(
           userId = userId,
           techId = techId,
           skillLevel = skillLevel)
-        val addSkillToSkillMatrixQuery = skillTable returning skillTable += userSkillObject
+        val addSkillToSkillMatrixQuery = skillTable returning skillTable.map(_.id) += userSkillObject
         connection.db.run(addSkillToSkillMatrixQuery)
     }
-
   }
 
   def getSkillId(userId: Int, techId: Int)(implicit connection: DBConnection): Future[Option[Int]] = {
@@ -82,7 +79,7 @@ object Skills {
     connection.db.run(join.result)
   }
 
-  def update(skillId: Int, userId: Int, techId: Int, skillLevel: SkillLevel)(implicit connection: DBConnection): Future[Option[Skill]] = {
+  def update(skillId: Int, userId: Int, techId: Int, skillLevel: SkillLevel)(implicit connection: DBConnection): Future[Option[Int]] = {
     val nrOfUpdatedRows: Future[Int] = connection.db.run(
       skillTable
         .filter(skill => skill.id === skillId && skill.userId === userId && skill.techId === techId)
@@ -92,7 +89,7 @@ object Skills {
     nrOfUpdatedRows.flatMap {
       case 0 => Future(None)
       case _ =>
-        val selectQuery = skillTable.filter(_.id === skillId)
+        val selectQuery = skillTable.filter(_.id === skillId).map(_.id)
         connection.db.run(selectQuery.result.headOption)
     }
   }

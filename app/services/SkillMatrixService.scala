@@ -12,7 +12,7 @@ import scala.concurrent._
 class SkillMatrixService @Inject()(techService: TechService,
                                    userService: UserService)(implicit connection: DBConnection) {
 
-  def addUserSkill(userId: Int, tech: Tech, skillLevel: SkillLevel): Future[Skill] = {
+  def addUserSkill(userId: Int, tech: Tech, skillLevel: SkillLevel): Future[Int] = {
     val techId: Future[Int] = techService.getTechIdOrInsert(tech)
 
     techId.flatMap { tId =>
@@ -20,7 +20,7 @@ class SkillMatrixService @Inject()(techService: TechService,
     }
   }
 
-  def updateUserSkill(skillId: Int, userId: Int, tech: Tech, skillLevel: SkillLevel): Future[Option[Skill]] = {
+  def updateUserSkill(skillId: Int, userId: Int, tech: Tech, skillLevel: SkillLevel): Future[Option[Int]] = {
     val techId: Future[Int] = techService.getTechIdOrInsert(tech)
 
     techId.flatMap { tId =>
