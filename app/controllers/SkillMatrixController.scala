@@ -23,7 +23,7 @@ class SkillMatrixController @Inject()(skillMatrixService: SkillMatrixService,
       for {
         skillMatrixItem: SkillMatrixItem <- request.body.validate[SkillMatrixItem]                                             ?| (err => BadRequest(Json.obj("message" -> JsError.toJson(err))))
         skillId <- skillMatrixService.addUserSkill(request.user.getUserId(), skillMatrixItem.tech, skillMatrixItem.skillLevel) ?| (err => InternalServerError(Json.obj("message" ->err.getMessage)))
-        techId <- techService.getTechIdOrInsert(skillMatrixItem.tech)                                                          ?| (err => InternalServerError) //TODO expose the getTechIdByNameAndType and use that
+        techId <- techService.getTechIdByNameAndType(skillMatrixItem.tech)                                                     ?| (err => InternalServerError) //TODO expose the getTechIdByNameAndType and use that
       } yield Created(Json.toJson(constructSkillMatrixItem(techId, skillId, skillMatrixItem)))
   }
 
@@ -49,7 +49,7 @@ class SkillMatrixController @Inject()(skillMatrixService: SkillMatrixService,
   }
 
   def getSkillMatrix: Action[Unit] = auth.UserAction.async(BodyParsers.parse.empty) { _ =>
-    skillMatrixService.getAllSkills.map( result => Ok(Json.obj("skills" -> Json.toJson(result))) )
+    skillMatrixService.getAllSkills.map( result => Ok(Json.toJson(result)))
   }
 
   def getSkillMatrixByTechId(techId: Int): Action[Unit] = auth.UserAction.async(BodyParsers.parse.empty) { _ =>
