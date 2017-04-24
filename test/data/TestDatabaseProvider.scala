@@ -5,6 +5,8 @@ import models._
 import slick.driver.PostgresDriver.api._
 import slick.lifted.TableQuery
 import data.TestData._
+import models.db.{Skills, Techs, Users}
+
 import scala.concurrent._
 import scala.concurrent.duration.Duration
 

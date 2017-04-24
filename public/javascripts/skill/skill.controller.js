@@ -31,7 +31,7 @@ angular.module('techmatrix').controller('SkillController',[
         $scope.data.loading = true;
         RestService.getSkillMatrix().then(function(response){
             $scope.data.loading = false;
-            $scope.data.skills = response.data.skills.map(addSearchFilter);
+            $scope.data.skills = response.data.map(addSearchFilter);
             $scope.data.skills = $scope.data.skills.map(function(skill){
               var users = {}
               var isMissing = true;

@@ -34,11 +34,20 @@ class UserControllerSpec extends AcceptanceSpec with TestDatabaseProvider {
       val response = route(app, request).get
 
       val respSeverus = getUserByIdResponse.
-        transform(__.json.update((__ \ 'user \ 'id).json.put(JsNumber(dataMap(ID_USER_SNAPE))))).get
+        transform(__.json.update((__ \ 'id).json.put(JsNumber(dataMap(ID_USER_SNAPE))))).get
 
       status(response) mustEqual 200
       contentAsString(response) must include(respSeverus.toString())
 
+    }
+  }
+  feature("It should return 404 when user is not found"){
+    scenario("user is not found") {
+      val request = FakeRequest("GET", s"/users/8763").withHeaders(("X-AUTH-TOKEN", authToken))
+      val response = route(app, request).get
+
+      status(response) mustEqual 404
+      contentAsString(response) must include(userNotFound)
     }
   }
 

@@ -1,32 +1,12 @@
-package models
+package models.db
 
 import common.DBConnection
-import play.api.libs.functional.syntax.{unlift, _}
-import play.api.libs.json.{JsPath, Reads, Writes}
+import models._
 import slick.driver.PostgresDriver.api._
 import slick.lifted.{ForeignKeyQuery, ProvenShape, TableQuery}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
-
-
-case class Skill(id: Option[Int] = None, userId: Int, techId: Int, skillLevel: SkillLevel)
-
-object Skill {
-  implicit val userSkillReads: Reads[Skill] = (
-    (JsPath \ "id").readNullable[Int] and
-      (JsPath \ "userId").read[Int] and
-      (JsPath \ "techId").read[Int] and
-      (JsPath \ "skillLevel").read[SkillLevel]
-    ) (Skill.apply _)
-
-  implicit val userSkillWrites: Writes[Skill] = (
-    (JsPath \ "id").writeNullable[Int] and
-      (JsPath \ "userId").write[Int] and
-      (JsPath \ "techId").write[Int] and
-      (JsPath \ "skillLevel").write[SkillLevel]
-    ) (unlift(Skill.unapply))
-}
 
 class Skills(tag: Tag) extends Table[models.Skill](tag, "user_skills") {
   def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
@@ -69,9 +49,9 @@ object Skills {
     connection.db.run(query.result.headOption)
   }
 
-  def getAllSkillMatrixByUser(user: User)(implicit connection: DBConnection): Future[Seq[(Skill, Tech)]] = {
+  def getAllSkillMatrixByUser(userId: Int)(implicit connection: DBConnection): Future[Seq[(Skill, Tech)]] = {
     val join = for {
-      skill <- skillTable.filter(_.userId === user.id)
+      skill <- skillTable.filter(_.userId === userId)
       tech <- Techs.techTable if skill.techId === tech.id
     } yield {
       (skill, tech)

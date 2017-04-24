@@ -4,6 +4,7 @@ import javax.inject.Inject
 
 import common.DBConnection
 import models._
+import models.db.Users
 
 import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global

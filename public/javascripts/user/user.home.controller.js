@@ -38,7 +38,7 @@ angular.module('techmatrix').controller('UserHomeController',[
             $location.path('/skillmatrix/nouser');
         }else{
             RestService.getMyProfile($scope.data.user.id).then(function(response){
-                $scope.data.user.skills = response.data.userSkills.skill.map(addSearchFilter);
+                $scope.data.user.skills = response.data.skills.map(addSearchFilter);
                 angular.forEach($scope.data.techType,function(techType){
                   $scope.data.groupedSkills[techType.value] = $scope.data.user.skills.filter(function(s){
                     return s.tech.techType === techType.value;
@@ -74,7 +74,7 @@ angular.module('techmatrix').controller('UserHomeController',[
                 $scope.data.skillForm = getNewSkillForm();
                 $scope.data.selectedTech = undefined;
                 $scope.data.searchText = undefined;
-                var skillWithFilter = addSearchFilter(response.data.skillAdded);
+                var skillWithFilter = addSearchFilter(response.data);
                 $scope.data.user.skills.push(skillWithFilter);
                 $scope.data.groupedSkills[skillWithFilter.tech.techType].push(skillWithFilter);
                 showMessage('Tech added',successAlert);
@@ -163,7 +163,7 @@ angular.module('techmatrix').controller('UserHomeController',[
             }
         };
         RestService.updateSkill(data).then(function(response){
-            skill.skillLevel = response.data.updatedSkill.skillLevel;
+            skill.skillLevel = response.data.skillLevel;
             showMessage('Tech updated',successAlert)
         },function(response){
             RestErrorService.errorHandler(response)

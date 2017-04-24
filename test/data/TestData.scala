@@ -20,8 +20,9 @@ object TestData {
 
   val X_AUTH_TOKEN = "X-AUTH-TOKEN"
 
-  val errorUserNotFound = "User not found"
-  val skillNotFound = "Skill for this user could not be found"
+  val userNotFound = "User not found"
+  val skillNotFound = "Skill not found"
+  val techNotFound = "Tech not found"
 
   val addSkillRequestJson: JsValue = Json.parse(
     """
@@ -249,12 +250,10 @@ object TestData {
   val getUserByIdResponse: JsValue = Json.parse(
     """
       |{
-      |  "user": {
-      |    "id": 4,
-      |    "firstName": "Severus",
-      |    "lastName": "Snape",
-      |    "email": "severus.snape@hogwarts.com"
-      |  }
+      |   "id": 4,
+      |   "firstName": "Severus",
+      |   "lastName": "Snape",
+      |   "email": "severus.snape@hogwarts.com"
       |}
     """.stripMargin)
 

@@ -2,13 +2,13 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
-import common.Authentication
+import common.{ApiErrors, Authentication}
 import io.kanaka.monadic.dsl._
 import models._
-import play.api.libs.json.Json.JsValueWrapper
 import play.api.libs.json._
 import play.api.mvc._
 import services.{SkillMatrixService, TechService}
+import models.ImplicitFormats._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
@@ -21,48 +21,48 @@ class SkillMatrixController @Inject()(skillMatrixService: SkillMatrixService,
 
   def addSkill(): Action[JsValue] = auth.UserAction.async(BodyParsers.parse.json) { request =>
       for {
-        skillMatrixItem: SkillMatrixItem <- request.body.validate[SkillMatrixItem]                                             ?| (err => BadRequest(Json.obj("message" -> JsError.toJson(err))))
-        skillId <- skillMatrixService.addUserSkill(request.user.getUserId(), skillMatrixItem.tech, skillMatrixItem.skillLevel) ?| (err => InternalServerError(Json.obj("message" ->err.getMessage)))
-        techId <- techService.getTechIdOrInsert(skillMatrixItem.tech)                                                          ?| (err => InternalServerError) //TODO expose the getTechIdByNameAndType and use that
+        skillMatrixItem: SkillMatrixItem <- request.body.validate[SkillMatrixItem]                                             ?| (err =>  ApiErrors.badRequest(JsError.toJson(err)))
+        skillId <- skillMatrixService.addUserSkill(request.user.getUserId, skillMatrixItem.tech, skillMatrixItem.skillLevel)   ?| (err => ApiErrors.internalServerError(err.getMessage))
+        techId <- techService.getTechIdByNameAndType(skillMatrixItem.tech)                                                     ?| ApiErrors.INTERNAL_SERVER_ERROR
       } yield Created(Json.toJson(constructSkillMatrixItem(techId, skillId, skillMatrixItem)))
   }
 
   def updateSkill(skillId: Int): Action[JsValue] = auth.UserAction.async(BodyParsers.parse.json) { implicit request =>
     for {
-      skillMatrixItem: SkillMatrixItem <- request.body.validate[SkillMatrixItem]                                                       ?| (err => BadRequest(Json.obj("message" -> JsError.toJson(err))))
-      _ <- validateTechIdPresentForUpdateOperation(skillMatrixItem)                                                                    ?| BadRequest(Json.obj("message" -> getBadRequestResponseForUpdateOperation))
-      _ <- skillMatrixService.updateUserSkill(skillId, request.user.getUserId(), skillMatrixItem.tech, skillMatrixItem.skillLevel)     ?| NotFound(Json.obj("message" -> "skill could not be found"))
+      skillMatrixItem: SkillMatrixItem <- request.body.validate[SkillMatrixItem]                                                       ?| (err =>  ApiErrors.badRequest(JsError.toJson(err)))
+      _ <- validateTechIdPresentForUpdateOperation(skillMatrixItem)                                                                    ?| ApiErrors.badRequest(getBadRequestResponseForUpdateOperation)
+      _ <- skillMatrixService.updateUserSkill(skillId, request.user.getUserId, skillMatrixItem.tech, skillMatrixItem.skillLevel)       ?| ApiErrors.SKILL_NOT_FOUND
     }
       yield Ok(Json.toJson(SkillMatrixItem(skillMatrixItem.tech, skillMatrixItem.skillLevel, Some(skillId))))
   }
 
   def deleteSkill(skillId: Int): Action[Unit] = auth.UserAction.async(BodyParsers.parse.empty) { implicit request =>
     for {
-      _ <- skillMatrixService.deleteUserSkill(request.user.getUserId(), skillId) ?| NotFound(Json.obj("message" -> "Skill for this user could not be found"))
+      _ <- skillMatrixService.deleteUserSkill(request.user.getUserId, skillId) ?| ApiErrors.SKILL_NOT_FOUND
     } yield NoContent
   }
 
   def getUserSkills(userId: Int): Action[Unit] = auth.UserAction.async(BodyParsers.parse.empty) { _ =>
     for {
-      userSkills <- skillMatrixService.getUserSkills(userId) ?| NotFound(Json.obj("message" -> "User not found"))
+      userSkills <- skillMatrixService.getUserSkills(userId) ?| ApiErrors.USER_NOT_FOUND
     } yield Ok(Json.toJson(userSkills))
   }
 
   def getSkillMatrix: Action[Unit] = auth.UserAction.async(BodyParsers.parse.empty) { _ =>
-    skillMatrixService.getAllSkills.map( result => Ok(Json.obj("skills" -> Json.toJson(result))) )
+    skillMatrixService.getAllSkills.map( result => Ok(Json.toJson(result)))
   }
 
   def getSkillMatrixByTechId(techId: Int): Action[Unit] = auth.UserAction.async(BodyParsers.parse.empty) { _ =>
     for {
-      skillMatrixForTech <- skillMatrixService.getSkillMatrixByTechId(techId) ?| NotFound(Json.obj("message" -> "Tech not found"))
+      skillMatrixForTech <- skillMatrixService.getSkillMatrixByTechId(techId) ?| ApiErrors.TECH_NOT_FOUND
     } yield Ok(Json.toJson(skillMatrixForTech))
   }
 
   def getMySkills: Action[AnyContent] = auth.UserAction.async { implicit request =>
-    skillMatrixService.getUserSkills(request.user.getUserId()).map( result => Ok(Json.toJson(result)) )
+    skillMatrixService.getUserSkills(request.user.getUserId).map( result => Ok(Json.toJson(result)) )
   }
 
-  private val getBadRequestResponseForUpdateOperation: JsValueWrapper = {
+  private val getBadRequestResponseForUpdateOperation: JsValue = {
     Json.parse(
       """{
         "obj.tech.id": [

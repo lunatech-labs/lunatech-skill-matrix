@@ -1,3 +1,5 @@
+# Lunatech Tech Matrix ![Build Status](http://jenkins.lunatech.com/job/TechMatrix/badge/icon)
+
 # Acceptance test
 You can use `sbt acc:test` command to run only the acceptance tests, or `sbt test` to run all the tests.
 

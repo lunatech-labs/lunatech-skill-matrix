@@ -4,7 +4,8 @@ import javax.inject.Inject
 
 import common.DBConnection
 import models._
-import models.responses.{SkillMatrixResponse, SkillMatrixUsersAndLevel, UserSkillResponse}
+import models.db.Skills
+import models.{SkillMatrixResponse, SkillMatrixUsersAndLevel, UserSkillResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
@@ -31,14 +32,14 @@ class SkillMatrixService @Inject()(techService: TechService,
   def deleteUserSkill(userId: Int, skillId: Int): Future[Option[Int]] = {
     Skills.delete(userId, skillId).map {
       case 0 => None
-      case rows@_ => Some(rows)
+      case nrOfRows@_ => Some(nrOfRows)
     }
   }
 
   def getUserSkills(userId: Int): Future[Option[UserSkillResponse]] = {
     userService.getUserById(userId).flatMap {
       case Some(user) =>
-        val result = Skills.getAllSkillMatrixByUser(user)
+        val result = Skills.getAllSkillMatrixByUser(userId)
         result.map { skills =>
           computeUserSkillResponse(user, skills)
         }
@@ -56,7 +57,7 @@ class SkillMatrixService @Inject()(techService: TechService,
   def getSkillMatrixByTechId(techId: Int): Future[Option[SkillMatrixResponse]] = {
     techService.getById(techId).flatMap {
       case Some(tech) =>
-        val skills = Skills.getSkillByTechId(tech.id.getOrElse(0))
+        val skills = Skills.getSkillByTechId(techId)
         val users = userService.getAll
 
         for {

@@ -262,8 +262,9 @@ class SkillMatrixControllerSpec extends AcceptanceSpec with TestDatabaseProvider
         .withHeaders("X-AUTH-TOKEN" -> authToken)
 
       val response = route(app, request).get
+
       status(response) mustEqual 404
-      contentAsString(response) must include("skill could not be found")
+      contentAsString(response) must include(skillNotFound)
     }
   }
 
@@ -302,7 +303,7 @@ class SkillMatrixControllerSpec extends AcceptanceSpec with TestDatabaseProvider
       val request = FakeRequest("GET", "/users/1090/skills").withHeaders("X-AUTH-TOKEN" -> authToken)
       val response = route(app, request).get
       status(response) mustEqual 404
-      contentAsString(response) must include(errorUserNotFound)
+      contentAsString(response) must include(userNotFound)
     }
   }
 
@@ -347,7 +348,7 @@ class SkillMatrixControllerSpec extends AcceptanceSpec with TestDatabaseProvider
       val request = FakeRequest("GET", "/skillmatrix/76548").withHeaders("X-AUTH-TOKEN" -> authToken)
       val response = route(app, request).get
       status(response) mustEqual 404
-      contentAsString(response) must include("Tech not found")
+      contentAsString(response) must include(techNotFound)
     }
   }
 }
