@@ -1,29 +1,11 @@
-package models
+package models.db
 
 import common.DBConnection
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Reads, Writes}
+import models.{Tech, TechType}
 import slick.driver.PostgresDriver.api._
 import slick.lifted.{ProvenShape, TableQuery}
 
 import scala.concurrent._
-
-
-case class Tech(id: Option[Int], name: String, techType: TechType)
-
-object Tech {
-  implicit val techReads: Reads[Tech] = (
-    (JsPath \ "id").readNullable[Int] and
-      (JsPath \ "name").read[String] and
-      (JsPath \ "techType").read[TechType]
-    ) (Tech.apply _)
-
-  implicit val techWrites: Writes[Tech] = (
-    (JsPath \ "id").writeNullable[Int] and
-      (JsPath \ "name").write[String] and
-      (JsPath \ "techType").write[TechType]
-    ) (unlift(Tech.unapply))
-}
 
 class Techs(tag: Tag) extends Table[models.Tech](tag, "tech") {
   def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)

@@ -1,43 +1,12 @@
-package models
+package models.db
 
 import common.DBConnection
-import play.api.libs.functional.syntax.unlift
-import play.api.libs.json.{JsPath, Reads, Writes}
-import play.api.libs.functional.syntax._
-
-import scala.concurrent._
-import ExecutionContext.Implicits.global
+import models.User
 import slick.driver.PostgresDriver.api._
 import slick.lifted.{ProvenShape, TableQuery}
 
-
-case class User(id: Option[Int] = None, firstName: String, lastName: String, email: String) {
-  require(email != null && !email.isEmpty, "Email field shouldn't be empty")
-
-  def fullName: String = {
-    this.firstName + " " + this.lastName
-  }
-
-  def getUserId(): Int = {
-    id.getOrElse(throw new Exception("User id is not defined!"))
-  }
-}
-
-object User {
-  implicit val userReads: Reads[User] = (
-    (JsPath \ "id").readNullable[Int] and
-      (JsPath \ "firstName").read[String] and
-      (JsPath \ "lastName").read[String] and
-      (JsPath \ "email").read[String]
-    ) (User.apply _)
-
-  implicit val userWrites: Writes[User] = (
-    (JsPath \ "id").writeNullable[Int] and
-      (JsPath \ "firstName").write[String] and
-      (JsPath \ "lastName").write[String] and
-      (JsPath \ "email").write[String]
-    ) (unlift(User.unapply))
-}
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent._
 
 class Users(tag: Tag) extends Table[User](tag, "users") {
   def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)

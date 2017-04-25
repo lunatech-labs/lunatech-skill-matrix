@@ -3,7 +3,8 @@ package services
 import javax.inject.Inject
 
 import common.DBConnection
-import models.{Tech, Techs}
+import models.Tech
+import models.db.Techs
 
 import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -23,6 +24,10 @@ class TechService @Inject() (implicit val connection: DBConnection)  {
       case Some(id) => Future(id)
       case None => Techs.add(tech)
     }
+  }
+
+  def getTechIdByNameAndType(tech: Tech): Future[Option[Int]] = {
+    Techs.getTechIdByNameAndType(tech)
   }
 
   def getById(techId: Int): Future[Option[Tech]] = {
