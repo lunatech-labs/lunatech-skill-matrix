@@ -91,23 +91,22 @@ class SkillMatrixService @Inject()(techService: TechService,
     }.toSeq
   }
 
-  private def computeUserSkillResponse(user: User, skills: Seq[(Skill, Tech)]): Option[UserSkillResponse] = skills.size match {
-    case 0 => Some(UserSkillResponse(
-      userId = user.id.get,
-      firstName = user.firstName,
-      lastName = user.lastName,
-      skills = Seq()))
-    case _ =>
-      Some(UserSkillResponse(
-        userId = user.id.get,
-        firstName = user.firstName,
-        lastName = user.lastName,
-        skills = skills.map { skill =>
+  private def computeUserSkillResponse(user: User, skills: Seq[(Skill, Tech)]): Option[UserSkillResponse] = {
+    val resultedSkills = skills.size match {
+      case 0 => Seq()
+      case _ =>
+        skills.map { skill =>
           SkillMatrixItem(
             tech = skill._2,
             skillLevel = skill._1.skillLevel,
             id = skill._1.id
           )
-        }))
+        }
+    }
+    Some(UserSkillResponse(
+      userId = user.id.get,
+      firstName = user.firstName,
+      lastName = user.lastName,
+      skills = resultedSkills))
   }
 }

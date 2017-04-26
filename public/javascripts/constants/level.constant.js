@@ -3,16 +3,20 @@ angular.module('techmatrix').constant('level', {
         text:"expert",
         value:"EXPERT"
     },
-    INTERMEDIATE:{
-        text:"intermediate",
-        value:"INTERMEDIATE"
+    PROFICIENT:{
+        text:"proficient",
+        value:"PROFICIENT"
     },
+    COMPETENT:{
+            text:"competent",
+            value:"COMPETENT"
+        },
+    ADVANCED_BEGINNER:{
+            text:"advanced beginner",
+            value:"ADVANCED_BEGINNER"
+        },
     NOVICE:{
         text:"novice",
         value:"NOVICE"
-    },
-    LONG_TIME_AGO:{
-        text:"long time ago",
-        value:"LONG_TIME_AGO"
     }
 });

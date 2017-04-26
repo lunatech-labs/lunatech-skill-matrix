@@ -5,12 +5,14 @@ import slick.driver.PostgresDriver.api._
 
 sealed trait SkillLevel
 
+
 object SkillLevel {
   def apply(skillLevel: String): SkillLevel = skillLevel match {
       case "EXPERT" => EXPERT
-      case "INTERMEDIATE" => INTERMEDIATE
+      case "PROFICIENT" => PROFICIENT
+      case "COMPETENT" => COMPETENT
+      case "ADVANCED_BEGINNER" => ADVANCED_BEGINNER
       case "NOVICE" => NOVICE
-      case "LONG_TIME_AGO" => LONG_TIME_AGO
     }
 
   implicit val skillLevelFormat: Format[SkillLevel] = new Format[SkillLevel] {
@@ -35,11 +37,13 @@ object SkillLevel {
 
   case object EXPERT extends SkillLevel
 
-  case object INTERMEDIATE extends SkillLevel
+  case object PROFICIENT extends SkillLevel
+
+  case object COMPETENT extends SkillLevel
+
+  case object ADVANCED_BEGINNER extends SkillLevel
 
   case object NOVICE extends SkillLevel
-
-  case object LONG_TIME_AGO extends SkillLevel
 
 }
 

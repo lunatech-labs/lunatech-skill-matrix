@@ -76,11 +76,13 @@ angular.module('techmatrix').controller('SkillController',[
           };
           $scope.getLevelButtonClass = function(l){
             switch(l){
-              case level.LONG_TIME_AGO.value:
-                return 'long-time-bg-color';
               case level.NOVICE.value:
+                return 'long-time-bg-color';
+              case level.ADVANCED_BEGINNER.value:
                 return 'novice-bg-color';
-              case level.INTERMEDIATE.value:
+              case level.COMPETENT.value:
+                return 'intermediate-bg-color';
+              case level.PROFICIENT.value:
                 return 'intermediate-bg-color';
               case level.EXPERT.value:
                 return 'expert-bg-color';
@@ -142,12 +144,14 @@ angular.module('techmatrix').controller('SkillController',[
 
     $scope.getLevelClass = function(l){
       switch(l){
-        case level.LONG_TIME_AGO.value:
-          return 'long-time-color';
         case level.NOVICE.value:
+          return 'long-time-color';
+        case level.ADVANCED_BEGINNER.value:
           return 'novice-color';
-        case level.INTERMEDIATE.value:
+        case level.COMPETENT.value:
           return 'intermediate-color';
+        case level.PROFICIENT.value:
+          return 'intermediate-bg-color';
         case level.EXPERT.value:
           return 'expert-color';
         default:
@@ -157,11 +161,13 @@ angular.module('techmatrix').controller('SkillController',[
 
     $scope.getLevelBadgeClass = function(l){
       switch(l){
-        case level.LONG_TIME_AGO.value:
-          return 'long-time-bg-color';
         case level.NOVICE.value:
+          return 'long-time-bg-color';
+        case level.ADVANCED_BEGINNER.value:
           return 'novice-bg-color';
-        case level.INTERMEDIATE.value:
+        case level.COMPETENT.value:
+          return 'intermediate-bg-color';
+        case level.PROFICIENT.value:
           return 'intermediate-bg-color';
         case level.EXPERT.value:
           return 'expert-bg-color';
