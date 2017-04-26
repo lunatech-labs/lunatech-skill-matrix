@@ -29,7 +29,7 @@ angular.module('techmatrix').controller('UserHomeController',[
     $scope.data.skillForm = {
         name:undefined,
         techType:$scope.data.techType['LANGUAGE'].value,
-        skillLevel:$scope.data.level['INTERMEDIATE'].value
+        skillLevel:$scope.data.level['COMPETENT'].value
     }
 
     function onInit(){
@@ -116,7 +116,7 @@ angular.module('techmatrix').controller('UserHomeController',[
         return {
            name:undefined,
            techType:$scope.data.techType['LANGUAGE'].value,
-           skillLevel:$scope.data.level['INTERMEDIATE'].value
+           skillLevel:$scope.data.level['COMPETENT'].value
        }
     }
 
@@ -196,11 +196,13 @@ angular.module('techmatrix').controller('UserHomeController',[
         };
       }
       switch(skill.skillLevel){
-        case level.LONG_TIME_AGO.value:
-          return 'long-time-bg-color';
         case level.NOVICE.value:
+          return 'long-time-bg-color';
+        case level.ADVANCED_BEGINNER.value:
           return 'novice-bg-color';
-        case level.INTERMEDIATE.value:
+        case level.COMPETENT.value:
+          return 'expert-bg-color';
+        case level.PROFICIENT.value:
           return 'intermediate-bg-color';
         case level.EXPERT.value:
           return 'expert-bg-color';

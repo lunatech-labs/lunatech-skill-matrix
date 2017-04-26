@@ -292,9 +292,10 @@ definitions:
     type: string
     enum:
       - expert
-      - intermediate
+      - proficient
+      - competent
+      - advanced beginner
       - novice
-      - long time ago
 
   SkillMatrixResponse:
     type: object

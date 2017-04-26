@@ -49,7 +49,7 @@ So the difference between the *Tech* and *Skill* is that the tech represents the
 
 |id      | userId    | techId    | skillLevel  |
 |--------|-----------|-----------|-------------|
-|1       | 1         | 1         | INTERMEDIATE |
+|1       | 1         | 1         | PROFICIENT  |
 |2       | 2         | 2         | EXPERT   |
 
 We also have intermediate models that help to either intercept correctly the parameters in the controller or to hold the results needed.
