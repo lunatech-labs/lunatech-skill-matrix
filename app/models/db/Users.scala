@@ -37,7 +37,10 @@ object Users {
     connection.db.run(query.result.headOption)
   }
 
-  def getUserByGoogleId(googleId: String)(implicit connection: DBConnection): Future[Option[User]] = ???
+  def getUserIdByEmail(email: String)(implicit connection: DBConnection): Future[Option[Int]] = {
+    val query = userTable.filter(_.email === email).map(_.id)
+    connection.db.run(query.result.headOption)
+  }
 
   def getAllUsers(implicit connection: DBConnection): Future[Seq[User]] = {
     connection.db.run(userTable.result)
@@ -47,8 +50,8 @@ object Users {
     connection.db.run(userTable.filter(_.id === id).exists.result)
   }
 
-  def add(user: User)(implicit connection: DBConnection): Future[User] = {
-    val query = userTable returning userTable += user
+  def add(user: User)(implicit connection: DBConnection): Future[Int] = {
+    val query = userTable returning userTable.map(_.id) += user
     connection.db.run(query)
   }
 }

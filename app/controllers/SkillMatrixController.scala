@@ -27,11 +27,12 @@ class SkillMatrixController @Inject()(skillMatrixService: SkillMatrixService,
       } yield Created(Json.toJson(constructSkillMatrixItem(techId, skillId, skillMatrixItem)))
   }
 
+  //TODO: rethink the update operation. In the body of the request we only need the new skill level
   def updateSkill(skillId: Int): Action[JsValue] = auth.UserAction.async(BodyParsers.parse.json) { implicit request =>
     for {
       skillMatrixItem: SkillMatrixItem <- request.body.validate[SkillMatrixItem]                                                       ?| (err =>  ApiErrors.badRequest(JsError.toJson(err)))
       _ <- validateTechIdPresentForUpdateOperation(skillMatrixItem)                                                                    ?| ApiErrors.badRequest(getBadRequestResponseForUpdateOperation)
-      _ <- skillMatrixService.updateUserSkill(skillId, request.user.getUserId, skillMatrixItem.tech, skillMatrixItem.skillLevel)       ?| ApiErrors.SKILL_NOT_FOUND
+      _ <- skillMatrixService.updateUserSkill(skillId, request.user.getUserId, skillMatrixItem.tech.id.get, skillMatrixItem.skillLevel)                                        ?| ApiErrors.SKILL_NOT_FOUND
     }
       yield Ok(Json.toJson(SkillMatrixItem(skillMatrixItem.tech, skillMatrixItem.skillLevel, Some(skillId))))
   }

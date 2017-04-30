@@ -22,7 +22,7 @@ class GoogleSignInController @Inject()(
     for {
       token <- request.body.\("token").validate[String]                                                      ?| (err => ApiErrors.badRequest(JsError.toJson(err)))
       gUser <- oauth.verifyToken(token)                                                                      ?| ApiErrors.UNAUTHORIZED
-      user <- userService.getOrCreateUserByEmail(User(None, gUser.givenName, gUser.familyName, gUser.email)) ?| ApiErrors.USER_NOT_FOUND
-    } yield Ok(Json.obj("user" -> Json.toJson(user)))
+      id <- userService.getOrCreateUserByEmail(User(None, gUser.givenName, gUser.familyName, gUser.email))   ?| ApiErrors.USER_NOT_FOUND
+    } yield Ok(Json.obj("user" -> Json.toJson(User(Some(id), gUser.givenName, gUser.familyName, gUser.email))))
   }
 }

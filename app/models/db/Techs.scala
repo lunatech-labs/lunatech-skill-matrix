@@ -25,15 +25,6 @@ object Techs {
     connection.db.run((techTable returning techTable.map(_.id)) += normalizedTech)
   }
 
-  def add(name: String, techType: TechType)(implicit connection: DBConnection): Future[Int] = {
-    val tech = Tech(
-      id = None,
-      name = name.toLowerCase,
-      techType = techType
-    )
-    add(tech)
-  }
-
   def search(query: String)(implicit connection: DBConnection): Future[Seq[Tech]] = {
     val likeQuery = "%" + query + "%"
     val searchQuery = techTable.filter(_.name.toLowerCase like likeQuery.toLowerCase)
@@ -54,8 +45,12 @@ object Techs {
     connection.db.run(getByIdQuery.result.headOption)
   }
 
-  def updateTech(techId: Int, tech: Tech)(implicit connection: DBConnection): Future[Option[Tech]] = {
-    val r = (techTable returning techTable).insertOrUpdate(tech)
-    connection.db.run(r)
+  def updateTech(techId: Int, tech: Tech)(implicit connection: DBConnection): Future[Int] = {
+    val action = techTable
+      .filter(_.id === techId)
+      .map(t => (t.name, t.techType))
+      .update((tech.name, tech.techType))
+
+    connection.db.run(action)
   }
 }
