@@ -10,7 +10,7 @@ angular.module('techmatrix').controller('AuthController',[
     function onInit(){
         var user = $cookies.getObject('user')
         if(user){
-            $location.path("user/home")
+            $location.path("skillmatrix")
         }
     }
 
@@ -32,7 +32,7 @@ angular.module('techmatrix').controller('AuthController',[
                           googleId: profile.getId(),
                           token:id_token
             });
-            $location.path('/user/home')
+            $location.path('skillmatrix')
         },function(response){
             showMessage('Error google authentication',failureAlert)
         });
