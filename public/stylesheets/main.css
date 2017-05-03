@@ -2,6 +2,8 @@ body{
   overflow: auto;
 }
 
+.layout-row.layout-wrap > * { flex: 1 1 50%; }
+
 .main-content {
   padding: 15px 30px;
 }
