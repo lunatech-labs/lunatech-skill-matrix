@@ -16,7 +16,7 @@
       <md-card-content layout="row" layout-wrap>
         <div layout="column" flex="50"
              data-ng-repeat="skill in data.groupedSkills[techType.value] | filter:{searchFilter:data.skillFilter}">
-          <md-card class="position-relative mb20" layout="column" flex>
+          <md-card class="position-relative mb20 cursor-pointer" layout="column" flex data-ng-click="showUsers(skill.users)">
             <md-button class="md-fab md-mini md-primary add-skill-from-matrix" data-ng-click="addSkillToUser(skill)" data-ng-show="skill.isMissing">
               <md-icon md-font-set="fa fa-plus fa-2x"></md-icon>
             </md-button>
@@ -28,7 +28,7 @@
             </md-card-title>
             <md-card-content layout="row">
               <div data-ng-repeat="level in data.level"  flex>
-                <div class="user-on-level" data-ng-click="showUsers(skill.users[level.value])">
+                <div class="user-on-level">
                   <div class="badge" data-ng-class="getLevelBadgeClass(level.value)">{{skill.users[level.value].length}}</div>
                   <md-icon class="icon-3x" md-font-set="fa fa-user fa-3x" data-ng-class="getLevelClass(level.value)"></md-icon>
                 </div>

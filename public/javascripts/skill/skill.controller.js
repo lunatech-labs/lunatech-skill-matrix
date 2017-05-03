@@ -127,8 +127,16 @@ angular.module('techmatrix').controller('SkillController',[
 
     $scope.showUsers = function(users){
       $mdDialog.show({
-        controller: function(users, $scope, $mdDialog){
-          $scope.users = users;
+        controller: function(users, $scope, $mdDialog, level){
+          $scope.users = {};
+          angular.forEach(users, function (value, index) {
+              var users = value.map(function (u) {
+                u.filterField = u.userName + ' ' + index;
+                return u;
+              });
+              $scope.users[index] = users;
+          });
+          $scope.level = level;
           $scope.close = function(){
             $mdDialog.cancel();
           };

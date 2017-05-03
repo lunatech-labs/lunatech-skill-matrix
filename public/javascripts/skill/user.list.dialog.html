@@ -18,9 +18,12 @@
           <input data-ng-model="filter" placeholder="filter" flex>
         </div>
       </md-subheader>
-      <md-list-item ng-repeat="user in users | filter:{userName:filter}">
-        <p> {{ user.userName }} </p>
-      </md-list-item>
+      <div data-ng-repeat="l in level">
+        <md-subheader class="md-no-sticky text-transform-capitalize" data-ng-if="users[l.value].length > 0">{{l.text}}</md-subheader>
+        <md-list-item data-ng-repeat="user in users[l.value] | filter:{filterField:filter}">
+          <p> {{ user.userName }} </p>
+        </md-list-item>
+      </div>
     </md-list>
 
   </md-dialog-content>

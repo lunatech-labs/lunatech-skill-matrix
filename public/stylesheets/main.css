@@ -185,7 +185,6 @@ body{
 .user-on-level {
   position: relative;
   text-align: center;
-  cursor: pointer;
   outline: none;
 }
 
