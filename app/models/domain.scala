@@ -14,15 +14,13 @@ case class User(id: Option[Int] = None, firstName: String, lastName: String, ema
   }
 }
 
-case class UserAuth(id: Option[Int] = None, userId: Int, key: String, secret: String)
-
 case class Tech(id: Option[Int], name: String, techType: TechType)
 
 case class Skill(id: Option[Int] = None, userId: Int, techId: Int, skillLevel: SkillLevel)
 
 case class SkillMatrixItem(tech: Tech, skillLevel: SkillLevel, id: Option[Int])
 
-case class SkillMatrixUsersAndLevel(userName: String, level: SkillLevel)
+case class SkillMatrixUsersAndLevel(fullName: String, level: SkillLevel)
 
 case class SkillMatrixResponse(techId: Int, techName: String, techType: TechType, users: Seq[SkillMatrixUsersAndLevel])
 
@@ -31,7 +29,6 @@ case class UserSkillResponse(userId: Int, firstName: String, lastName: String, s
 object ImplicitFormats {
 
   implicit val userFormat: Format[User] = Json.format[User]
-  implicit val userAuthFormat: Format[UserAuth] = Json.format[UserAuth]
   implicit val techFormat: Format[Tech] = Json.format[Tech]
   implicit val userSkillFormat: Format[Skill] = Json.format[Skill]
   implicit val skillMatrixItemFormat: Format[SkillMatrixItem] = Json.format[SkillMatrixItem]

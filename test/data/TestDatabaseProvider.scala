@@ -57,13 +57,15 @@ trait TestDatabaseProvider {
     val skillSeverusDarkArts = Skill(None, userMap(ID_USER_SNAPE), techMap(ID_TECH_DARK_ARTS), SkillLevel.EXPERT)
 
     val idSkillOderskyScala: Int = Await.result(db.run(skillTable returning skillTable.map(_.id) += skillOderskyScala), Duration.Inf)
-    Await.result(db.run(skillTable += skillOderskyFunctional), Duration.Inf)
+    val idSkillOderskyFunctional: Int = Await.result(db.run(skillTable returning skillTable.map(_.id) += skillOderskyFunctional), Duration.Inf)
     val idSkillSeverusDefense: Int = Await.result(db.run(skillTable returning skillTable.map(_.id) += skillSeverusDefense), Duration.Inf)
-    Await.result(db.run(skillTable += skillSeverusDarkArts), Duration.Inf)
+    val idSkillDarkArts = Await.result(db.run(skillTable returning skillTable.map(_.id) += skillSeverusDarkArts), Duration.Inf)
 
     userMap ++ techMap ++ Map(
       SKILL_ODERSKY_SCALA -> idSkillOderskyScala,
-      SKILL_SEVERUS_DEFENSE -> idSkillSeverusDefense
+      SKILL_ODERSKY_FUNCTIONAL -> idSkillOderskyFunctional,
+      SKILL_SEVERUS_DEFENSE -> idSkillSeverusDefense,
+      SKILL_SEVERUS_DARK_ARTS -> idSkillDarkArts
     )
   }
 

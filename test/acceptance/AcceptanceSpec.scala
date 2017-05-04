@@ -1,15 +1,17 @@
 package acceptance
 
-import com.typesafe.config.{Config, ConfigFactory}
 import common.DBConnectionProvider
+import data.TestDatabaseProvider
 import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatest.{BeforeAndAfter, BeforeAndAfterAll, FeatureSpec, MustMatchers}
 import org.scalatestplus.play.OneServerPerSuite
+import play.api.Application
 import play.api.db.slick.DatabaseConfigProvider
-import services.FakeOauthService
-import services.oauth.OauthService
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import services.FakeOauthService
+import services.oauth.OauthService
 import slick.driver.JdbcProfile
 import slick.jdbc.JdbcBackend
 
@@ -19,11 +21,14 @@ class AcceptanceSpec extends FeatureSpec
   with BeforeAndAfter
   with BeforeAndAfterAll
   with OneServerPerSuite
-  with DBConnectionProvider {
+  with DBConnectionProvider
+  with SwaggerValidator
+  with TestDatabaseProvider {
 
-  implicit override lazy val app = new GuiceApplicationBuilder()
+  implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
+
+  implicit override lazy val app: Application = new GuiceApplicationBuilder()
     .overrides(bind[OauthService].to[FakeOauthService])
-    //.overrides(bind[Config].toInstance(ConfigFactory.load()))
     .build
 
   override def db: JdbcBackend#DatabaseDef = app.injector.instanceOf(classOf[DatabaseConfigProvider]).get[JdbcProfile].db
@@ -31,4 +36,5 @@ class AcceptanceSpec extends FeatureSpec
   implicit lazy val portL = 9000
   lazy val authToken = "xxxx.xxx.xxx"
   val baseUrl: String = "https://localhost:" + portL.toString
+  val swaggerPath: String = "resources/swagger.json"
 }

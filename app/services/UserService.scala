@@ -19,18 +19,14 @@ class UserService @Inject() (implicit val connection: DBConnection) {
     Users.getUserByEmail(email)
   }
 
-  def getUserByGoogleId(googleId: String): Future[Option[User]] = {
-    Users.getUserByGoogleId(googleId)
-  }
-
   def getAll: Future[Seq[User]] = {
     Users.getAllUsers
   }
 
-  def getOrCreateUserByEmail(user: User): Future[User] = {
-    Users.getUserByEmail(user.email).flatMap {
-      case Some(user: User) =>
-        Future.successful(user)
+  def getOrCreateUserByEmail(user: User): Future[Int] = {
+    Users.getUserIdByEmail(user.email).flatMap {
+      case Some(id: Int) =>
+        Future.successful(id)
       case _ =>
         Users.add(user)
     }

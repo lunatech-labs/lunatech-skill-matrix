@@ -1,4 +1,3 @@
-
 name := """lunatech-tech-matrix"""
 
 version := "1.0-SNAPSHOT"
@@ -6,18 +5,24 @@ version := "1.0-SNAPSHOT"
 scalaVersion := "2.11.7"
 
 lazy val AcceptanceTest = config("acc") extend Test
+lazy val IntegrationTest = config("it") extend Test
+
 val isAcceptanceTest: String => Boolean = _ startsWith "acceptance"
+val isIntegrationTest: String => Boolean = _ startsWith "integration"
+
+val isNotIntegrationTest: String => Boolean = name => !isIntegrationTest(name)
 
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala)
   .configs(AcceptanceTest)
+  .configs(IntegrationTest)
   .settings(inConfig(AcceptanceTest)(Defaults.testTasks): _*) //adds the tasks and settings for the new test configuration
-  .settings(
-    testOptions in AcceptanceTest := Seq(Tests.Filter(isAcceptanceTest))
-  ).settings(
-    javaOptions in Test += "-Dconfig.file=test/application-test.conf"
-  )
+  .settings(inConfig(IntegrationTest)(Defaults.testTasks): _*) //adds the tasks and settings for the new test configuration
+  .settings(testOptions in AcceptanceTest := Seq(Tests.Filter(isAcceptanceTest)))
+  .settings(testOptions in IntegrationTest := Seq(Tests.Filter(isIntegrationTest)))
+  .settings(javaOptions in Test += "-Dconfig.file=test/application-test.conf")
+  .settings(testOptions in Test := Seq(Tests.Filter(isNotIntegrationTest)))
 
 libraryDependencies ++= Seq(
   cache,
@@ -40,7 +45,8 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.1.7",
 
   "com.h2database" % "h2" % "1.3.148" % Test,
-  "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
-
+  "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
+  "com.atlassian.oai" % "swagger-request-validator-core" % "1.0.7" % Test
 )
 
+coverageExcludedPackages := """controllers\..*Reverse.*;router.Routes.*;views.html.*"""

@@ -4,10 +4,9 @@ import play.api.test._
 import play.api.test.Helpers._
 import data.TestData._
 import data.TestDatabaseProvider
-import play.api.libs.json._
 
 
-class UserControllerSpec extends AcceptanceSpec with TestDatabaseProvider {
+class UserControllerSpec extends AcceptanceSpec {
 
   var dataMap: Map[String, Int] = _
 
@@ -33,11 +32,8 @@ class UserControllerSpec extends AcceptanceSpec with TestDatabaseProvider {
       val request = FakeRequest("GET", s"/users/${dataMap(ID_USER_SNAPE)}").withHeaders(("X-AUTH-TOKEN", authToken))
       val response = route(app, request).get
 
-      val respSeverus = getUserByIdResponse.
-        transform(__.json.update((__ \ 'id).json.put(JsNumber(dataMap(ID_USER_SNAPE))))).get
-
       status(response) mustEqual 200
-      contentAsString(response) must include(respSeverus.toString())
+      (request, response) must validateAgainstSwagger(swaggerPath)
 
     }
   }
@@ -47,7 +43,7 @@ class UserControllerSpec extends AcceptanceSpec with TestDatabaseProvider {
       val response = route(app, request).get
 
       status(response) mustEqual 404
-      contentAsString(response) must include(userNotFound)
+      (request, response) must validateResponseAgainstSwagger(swaggerPath)
     }
   }
 

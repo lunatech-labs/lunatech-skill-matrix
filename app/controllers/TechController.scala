@@ -15,7 +15,7 @@ import ExecutionContext.Implicits.global
 class TechController @Inject()(techService: TechService, auth: Authentication) extends Controller {
 
   def getAllTech: Action[Unit] = auth.UserAction.async(BodyParsers.parse.empty) { _ =>
-    techService.getAllTech.map(m => Ok(Json.obj("tech" -> Json.toJson(m))))
+    techService.getAllTech.map(m => Ok(Json.toJson(m)))
   }
 
   def search(query: String): Action[Unit] = auth.UserAction.async(BodyParsers.parse.empty) { _ =>

@@ -144,9 +144,6 @@ Right now, we are using PostgreSQL, and you should change the properties 'url', 
 
 ### Good to have:
 - logging
-- jenkins build
-- if you have ideas on how to improve the code, feel free to do it!
-- new features
 
 # Have ideas on adding or changing functionality?
 Talk to the product owner, Erik Bakker

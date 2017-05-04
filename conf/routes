@@ -1,41 +1,16 @@
-GET     /                controllers.MainController.index
-
+GET     /                                   controllers.MainController.index
+GET     /users                              controllers.UserController.getAllUsers
+GET     /users/:userId                      controllers.UserController.getUserById(userId: Int)
+GET     /users/:userId/skills               controllers.SkillMatrixController.getUserSkills(userId: Int)
+GET     /users/me/skillmatrix               controllers.SkillMatrixController.getMySkills
+POST    /users/me/skillmatrix               controllers.SkillMatrixController.addSkill
+PUT     /users/me/skillmatrix/:skillId      controllers.SkillMatrixController.updateSkill(skillId: Int)
+DELETE  /users/me/skillmatrix/:skillId      controllers.SkillMatrixController.deleteSkill(skillId: Int)
+GET     /alltech                            controllers.TechController.getAllTech
+GET     /techs/:query                       controllers.TechController.search(query: String)
+GET     /skillmatrix                        controllers.SkillMatrixController.getSkillMatrix
+GET     /skillmatrix/:techId                controllers.SkillMatrixController.getSkillMatrixByTechId(techId: Int)
+POST    /google/auth                        controllers.GoogleSignInController.authenticate()
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
-
-#Get all the users
-GET     /users               controllers.UserController.getAllUsers
-
-# Get user by id
-GET     /users/:userId               controllers.UserController.getUserById(userId: Int)
-
-# Get all skills entered by a user
-GET     /users/:userId/skills        controllers.SkillMatrixController.getUserSkills(userId: Int)
-
-#Get the skills of current logged user
-GET /users/me/skillmatrix                       controllers.SkillMatrixController.getMySkills
-
-# adds a skill to the current logged in user' skill matrix
-POST    /users/me/skillmatrix        controllers.SkillMatrixController.addSkill
-
-# Update an existing skill of the logged in user
-PUT     /users/me/skillmatrix/:skillId    controllers.SkillMatrixController.updateSkill(skillId: Int)
-
-# Deletes a skill from the list
-DELETE /users/me/skillmatrix/:skillId     controllers.SkillMatrixController.deleteSkill(skillId: Int)
-
-# gets all skills entered by users
-GET     /alltech                     controllers.TechController.getAllTech
-
-# gets techs based on query
-GET     /techs/:query                     controllers.TechController.search(query: String)
-
-# Gets all skills entered by users together with info about users
-GET     /skillmatrix                controllers.SkillMatrixController.getSkillMatrix
-
-# Gets all info related to a skill
-GET     /skillmatrix/:techId       controllers.SkillMatrixController.getSkillMatrixByTechId(techId: Int)
-
-# redirect to google authentication
-POST     /google/auth                          controllers.GoogleSignInController.authenticate()
+GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)

@@ -21,12 +21,8 @@ class SkillMatrixService @Inject()(techService: TechService,
     }
   }
 
-  def updateUserSkill(skillId: Int, userId: Int, tech: Tech, skillLevel: SkillLevel): Future[Option[Int]] = {
-    val techId: Future[Int] = techService.getTechIdOrInsert(tech)
-
-    techId.flatMap { tId =>
-      Skills.update(skillId, userId, tId, skillLevel)
-    }
+  def updateUserSkill(skillId: Int, userId: Int, techId: Int, skillLevel: SkillLevel): Future[Option[Int]] = {
+    Skills.update(skillId, userId, techId, skillLevel)
   }
 
   def deleteUserSkill(userId: Int, skillId: Int): Future[Option[Int]] = {
@@ -48,7 +44,7 @@ class SkillMatrixService @Inject()(techService: TechService,
   }
 
   def getAllSkills: Future[Seq[SkillMatrixResponse]] = {
-    val result = Skills.getAllSkills
+    val result: Future[Seq[(Skill, User, Tech)]] = Skills.getAllSkills
     result.map { matrix =>
       computeSkillMatrix(matrix.groupBy(_._3))
     }
@@ -91,22 +87,11 @@ class SkillMatrixService @Inject()(techService: TechService,
     }.toSeq
   }
 
-  private def computeUserSkillResponse(user: User, skills: Seq[(Skill, Tech)]): Option[UserSkillResponse] = {
-    val resultedSkills = skills.size match {
+  private def computeUserSkillResponse(user: User, skillsAndTech: Seq[(Skill, Tech)]): Option[UserSkillResponse] = {
+    val resultedSkills = skillsAndTech.size match {
       case 0 => Seq()
-      case _ =>
-        skills.map { skill =>
-          SkillMatrixItem(
-            tech = skill._2,
-            skillLevel = skill._1.skillLevel,
-            id = skill._1.id
-          )
-        }
+      case _ => skillsAndTech map Function.tupled((skill, tech) => SkillMatrixItem(tech, skill.skillLevel, skill.id))
     }
-    Some(UserSkillResponse(
-      userId = user.id.get,
-      firstName = user.firstName,
-      lastName = user.lastName,
-      skills = resultedSkills))
+    Some(UserSkillResponse(user.id.get, user.firstName, user.lastName, resultedSkills))
   }
 }

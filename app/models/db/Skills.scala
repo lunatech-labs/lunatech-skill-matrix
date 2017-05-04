@@ -28,25 +28,19 @@ class Skills(tag: Tag) extends Table[models.Skill](tag, "user_skills") {
 object Skills {
   val skillTable: TableQuery[Skills] = TableQuery[Skills]
 
-  def add(userId: Int, techId: Int, skillLevel: SkillLevel)(implicit connection: DBConnection): Future[Int] = {
+  def add(userId: Int, techId: Int, skillLevel: SkillLevel)(implicit connection: DBConnection): Future[Int] =
     skillExistsByTechAndUserId(techId, userId).flatMap {
       case true =>
-        for {
-          skillId <- getSkillId(userId, techId)
-        } yield skillId.get
+          for {
+            skillId <- getSkillId(userId, techId)
+          } yield skillId.get
       case false =>
-        val userSkillObject = Skill(
-          userId = userId,
-          techId = techId,
-          skillLevel = skillLevel)
-        val addSkillToSkillMatrixQuery = skillTable returning skillTable.map(_.id) += userSkillObject
-        connection.db.run(addSkillToSkillMatrixQuery)
-    }
-  }
-
-  def getSkillId(userId: Int, techId: Int)(implicit connection: DBConnection): Future[Option[Int]] = {
-    val query = skillTable.filter(x => x.userId === userId && x.techId === techId).map(_.id).take(1)
-    connection.db.run(query.result.headOption)
+          val userSkillObject = Skill(
+            userId = userId,
+            techId = techId,
+            skillLevel = skillLevel)
+          val addSkillToSkillMatrixQuery = skillTable returning skillTable.map(_.id) += userSkillObject
+          connection.db.run(addSkillToSkillMatrixQuery)
   }
 
   def getAllSkillMatrixByUser(userId: Int)(implicit connection: DBConnection): Future[Seq[(Skill, Tech)]] = {
@@ -59,6 +53,7 @@ object Skills {
     connection.db.run(join.result)
   }
 
+  //TODO:  refactor this method
   def update(skillId: Int, userId: Int, techId: Int, skillLevel: SkillLevel)(implicit connection: DBConnection): Future[Option[Int]] = {
     val nrOfUpdatedRows: Future[Int] = connection.db.run(
       skillTable
@@ -93,14 +88,20 @@ object Skills {
     connection.db.run(join.result)
   }
 
-  def getSkillById(skillId: Int)(implicit connection: DBConnection): Future[Option[Skill]] = {
-    val query = skillTable.filter(skill => skill.id === skillId)
-    connection.db.run(query.result.headOption)
-  }
+  //TODO: analyze to see if we will need this method
+//  def getSkillById(skillId: Int)(implicit connection: DBConnection): Future[Option[Skill]] = {
+//    val query = skillTable.filter(skill => skill.id === skillId)
+//    connection.db.run(query.result.headOption)
+//  }
 
   def getSkillByTechId(techId: Int)(implicit connection: DBConnection): Future[Seq[Skill]] = {
     val query = skillTable.filter(skill => skill.techId === techId)
     connection.db.run(query.result)
+  }
+
+  private def getSkillId(userId: Int, techId: Int)(implicit connection: DBConnection): Future[Option[Int]] = {
+    val query = skillTable.filter(x => x.userId === userId && x.techId === techId).map(_.id).take(1)
+    connection.db.run(query.result.headOption)
   }
 
   private def skillExistsForUser(skillId: Int, userId: Int)(implicit connection: DBConnection): Future[Boolean] = {
@@ -111,7 +112,8 @@ object Skills {
     connection.db.run(skillTable.filter(skill => skill.techId === techId && skill.userId === userId).exists.result)
   }
 
-  private def getAll(implicit connection: DBConnection): Future[Seq[Skill]] = {
-    connection.db.run(skillTable.result)
-  }
+  //TODO: analyze to see if we will need this method
+//  private def getAll(implicit connection: DBConnection): Future[Seq[Skill]] = {
+//    connection.db.run(skillTable.result)
+//  }
 }
