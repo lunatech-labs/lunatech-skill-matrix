@@ -1,6 +1,10 @@
-angular.module('techmatrix').run(['$rootScope', '$mdSidenav', function($rootScope, $mdSidenav){
+(function () {
+  'use strict';
 
-  $rootScope.toggleMenu = function(){
-    $mdSidenav('menu').toggle();
-  }
-}]);
+  angular.module('techmatrix').run(['$rootScope', '$mdSidenav', function($rootScope, $mdSidenav){
+
+    $rootScope.toggleMenu = function(){
+      $mdSidenav('menu').toggle();
+    }
+  }]);
+})()
