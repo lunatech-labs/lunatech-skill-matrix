@@ -40,7 +40,7 @@
                 var isMissing = true;
                 angular.forEach($scope.data.level, function(l){
                   users[l.value] = skill.users.filter(function(u){
-                    if(u.userName === $scope.data.user.full_name){
+                    if(u.fullName === $scope.data.user.full_name){
                       isMissing = false;
                     }
                     return u.level === l.value;
@@ -134,7 +134,7 @@
             $scope.users = {};
             angular.forEach(users, function (value, index) {
                 var users = value.map(function (u) {
-                  u.filterField = u.userName + ' ' + index;
+                  u.filterField = u.fullName + ' ' + index;
                   return u;
                 });
                 $scope.users[index] = users;

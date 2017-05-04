@@ -91,7 +91,7 @@
 
 
       function isValidateForm(){
-          valid = true;
+          var valid = true;
           valid = $scope.data.skillForm.name !== undefined &&
           $scope.data.skillForm.name !== ''&&
           $scope.data.skillForm.techType !== undefined &&

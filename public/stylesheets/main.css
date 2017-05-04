@@ -3,6 +3,7 @@ body{
 }
 
 .layout-row.layout-wrap > * { flex: 1 1 50%; }
+.safari-100 > * { flex: 1 1 100%!important; }
 
 .main-content {
   padding: 15px 30px;
