@@ -44,7 +44,7 @@
         </md-select>
       </md-input-container>
 
-      <md-button class="md-primary md-fab" data-ng-click="addSkill()">
+      <md-button class="md-primary md-fab" aria-label="add skill" data-ng-click="addSkill()">
         <md-icon md-font-set="fa fa-plus fa-2x"></md-icon>
       </md-button>
     </form>
@@ -67,11 +67,11 @@
             <div layout="row" layout-align="end end" layout-padding>
               <span class="md-headline text-transform-capitalize">{{skill.tech.name}}</span>
               <span flex></span>
-              <md-button class="md-icon-button" data-ng-click="updateSkill(skill)">
+              <md-button class="md-icon-button" aria-label="update skill" data-ng-click="updateSkill(skill)">
                 <md-icon md-font-set="fa fa-pencil" class="correct-icon" data-ng-class="skill.updating ? 'color-white' : ''"></md-icon>
               </md-button>
 
-              <md-button class="md-icon-button" data-ng-click="removeSkill(skill)">
+              <md-button class="md-icon-button" aria-label="remove skill" data-ng-click="removeSkill(skill)">
                 <md-icon md-font-set="fa fa-trash" class="correct-icon"></md-icon>
               </md-button>
             </div>

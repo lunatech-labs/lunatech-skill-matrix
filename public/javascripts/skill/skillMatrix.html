@@ -17,7 +17,7 @@
         <div layout="column" flex="50"
              data-ng-repeat="skill in data.groupedSkills[techType.value] | filter:{searchFilter:data.skillFilter}">
           <md-card class="position-relative mb20 cursor-pointer" layout="column" flex data-ng-click="showUsers(skill.users)">
-            <md-button class="md-fab md-mini md-primary add-skill-from-matrix" data-ng-click="addSkillToUser(skill)" data-ng-show="skill.isMissing">
+            <md-button class="md-fab md-mini md-primary add-skill-from-matrix" aria-label="add skill" data-ng-click="addSkillToUser(skill)" data-ng-show="skill.isMissing">
               <md-icon md-font-set="fa fa-plus fa-2x"></md-icon>
             </md-button>
             <md-card-title layout="center center">
