@@ -77,13 +77,13 @@ angular.module('techmatrix').controller('SkillController',[
           $scope.getLevelButtonClass = function(l){
             switch(l){
               case level.NOVICE.value:
-                return 'long-time-bg-color';
-              case level.ADVANCED_BEGINNER.value:
                 return 'novice-bg-color';
+              case level.ADVANCED_BEGINNER.value:
+                return 'advanced-beginner-bg-color';
               case level.COMPETENT.value:
-                return 'intermediate-bg-color';
+                return 'competent-bg-color';
               case level.PROFICIENT.value:
-                return 'intermediate-bg-color';
+                return 'proficient-bg-color';
               case level.EXPERT.value:
                 return 'expert-bg-color';
               default:
@@ -153,13 +153,13 @@ angular.module('techmatrix').controller('SkillController',[
     $scope.getLevelClass = function(l){
       switch(l){
         case level.NOVICE.value:
-          return 'long-time-color';
-        case level.ADVANCED_BEGINNER.value:
           return 'novice-color';
+        case level.ADVANCED_BEGINNER.value:
+          return 'advanced-beginner-color';
         case level.COMPETENT.value:
-          return 'intermediate-color';
+          return 'competent-color';
         case level.PROFICIENT.value:
-          return 'intermediate-bg-color';
+          return 'proficient-color';
         case level.EXPERT.value:
           return 'expert-color';
         default:
@@ -170,13 +170,13 @@ angular.module('techmatrix').controller('SkillController',[
     $scope.getLevelBadgeClass = function(l){
       switch(l){
         case level.NOVICE.value:
-          return 'long-time-bg-color';
-        case level.ADVANCED_BEGINNER.value:
           return 'novice-bg-color';
+        case level.ADVANCED_BEGINNER.value:
+          return 'advanced-beginner-bg-color';
         case level.COMPETENT.value:
-          return 'intermediate-bg-color';
+          return 'competent-bg-color';
         case level.PROFICIENT.value:
-          return 'intermediate-bg-color';
+          return 'proficient-bg-color';
         case level.EXPERT.value:
           return 'expert-bg-color';
         default:

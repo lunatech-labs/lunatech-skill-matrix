@@ -113,40 +113,49 @@ body{
     transform: translate(-50%);
 }
 
-.long-time-color{
-  color:#828277;
-}
-
-.long-time-bg-color{
-  color:rgba(255,255,255,0.87)!important;
-  background-color:#828277!important;
-}
-
 .novice-color{
-  color:#F5D769;
+  color:#DB5375;
 }
 
 .novice-bg-color{
   color:rgba(255,255,255,0.87)!important;
-  background-color:#F5D769!important;
+  background-color:#DB5375!important;
 }
 
-.intermediate-color{
-  color:#ED8A3F;
+.advanced-beginner-color{
+  color:#EC9192;
 }
 
-.intermediate-bg-color{
+.advanced-beginner-bg-color{
   color:rgba(255,255,255,0.87)!important;
-  background-color:#ED8A3F!important;
+  background-color:#EC9192!important;
+}
+
+.competent-color{
+  color:#DFBE99;
+}
+
+.competent-bg-color{
+  color:rgba(255,255,255,0.87)!important;
+  background-color:#DFBE99!important;
+}
+
+.proficient-color{
+  color:#B5BD89;
+}
+
+.proficient-bg-color{
+  color:rgba(255,255,255,0.87)!important;
+  background-color:#B5BD89!important;
 }
 
 .expert-color{
-  color:#8DB87C;
+  color:#729EA1;
 }
 
 .expert-bg-color{
   color:rgba(255,255,255,0.87)!important;
-  background-color:#8DB87C!important;
+  background-color:#729EA1!important;
 }
 
 .fix-btn-toolbar{

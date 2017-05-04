@@ -197,13 +197,13 @@ angular.module('techmatrix').controller('UserHomeController',[
       }
       switch(skill.skillLevel){
         case level.NOVICE.value:
-          return 'long-time-bg-color';
-        case level.ADVANCED_BEGINNER.value:
           return 'novice-bg-color';
+        case level.ADVANCED_BEGINNER.value:
+          return 'advanced-beginner-bg-color';
         case level.COMPETENT.value:
-          return 'expert-bg-color';
+          return 'competent-bg-color';
         case level.PROFICIENT.value:
-          return 'intermediate-bg-color';
+          return 'proficient-bg-color';
         case level.EXPERT.value:
           return 'expert-bg-color';
         default:
