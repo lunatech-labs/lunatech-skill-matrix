@@ -1,11 +1,15 @@
-angular.module('techmatrix').controller('MenuController', [
-  '$scope',
-  '$location',
-  '$mdSidenav',
-  function($scope, $location, $mdSidenav){
+(function () {
+  'use strict';
 
-    $scope.goTo = function(path){
-      $mdSidenav('menu').toggle();
-      $location.path(path);
-    }
-}]);
+  angular.module('techmatrix').controller('MenuController', [
+    '$scope',
+    '$location',
+    '$mdSidenav',
+    function($scope, $location, $mdSidenav){
+
+      $scope.goTo = function(path){
+        $mdSidenav('menu').toggle();
+        $location.path(path);
+      }
+  }]);
+})()

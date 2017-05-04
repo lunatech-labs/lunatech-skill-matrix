@@ -1,27 +1,31 @@
-angular.module('techmatrix').service('RestUrlService',[function(){
-    var api = {
-        getUserProfile:function(userId){
-            return '/users/'+userId+'/skills';
-        },
-        getMyProfile:function(){
-            return '/users/me/skillmatrix';
-        },
-        addSkill:function(){
-            return '/users/me/skillmatrix';
-        },
-        removeSkill:function(skillId){
-            return '/users/me/skillmatrix/'+skillId;
-        },
-        updateSkill:function(skillId){
-            return '/users/me/skillmatrix/'+skillId;
-        },
-        googleAuth:function(token){
-            return '/google/auth';
-        },
-        getTechs:function(params){
-          return '/techs/' + encodeURIComponent(params);
-        }
-    };
+(function () {
+  'use strict';
 
-    return api;
-}]);
+  angular.module('techmatrix').service('RestUrlService',[function(){
+      var api = {
+          getUserProfile:function(userId){
+              return '/users/'+userId+'/skills';
+          },
+          getMyProfile:function(){
+              return '/users/me/skillmatrix';
+          },
+          addSkill:function(){
+              return '/users/me/skillmatrix';
+          },
+          removeSkill:function(skillId){
+              return '/users/me/skillmatrix/'+skillId;
+          },
+          updateSkill:function(skillId){
+              return '/users/me/skillmatrix/'+skillId;
+          },
+          googleAuth:function(token){
+              return '/google/auth';
+          },
+          getTechs:function(params){
+            return '/techs/' + encodeURIComponent(params);
+          }
+      };
+
+      return api;
+  }]);
+})()
