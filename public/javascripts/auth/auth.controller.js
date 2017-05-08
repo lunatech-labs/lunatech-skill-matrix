@@ -7,7 +7,8 @@
       '$cookies',
       '$location',
       'config',
-      function($scope,RestService,$cookies,$location,config){
+      '$mdToast',
+      function($scope,RestService,$cookies,$location,config,$mdToast){
       $scope.config = config;
 
       function onInit(){
@@ -37,7 +38,17 @@
               });
               $location.path('skillmatrix')
           },function(response){
-              showMessage('Error google authentication',failureAlert)
+            $mdToast.show(
+                          $mdToast.simple()
+                            .textContent('Error google authentication')
+                            .position({
+                                        bottom: false,
+                                        top: true,
+                                        left: true,
+                                        right: false
+                                      } )
+                            .hideDelay(3000)
+                        );
           });
       });
       $scope.$on('event:google-plus-signin-failure', function (event,authResult) {
