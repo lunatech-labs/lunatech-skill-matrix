@@ -11,7 +11,8 @@
       '$mdDialog',
       '$cookies',
       '$mdToast',
-      function($scope,RestService,techType,level,$routeParams,RestErrorService,$mdDialog,$cookies,$mdToast){
+      '$route',
+      function($scope,RestService,techType,level,$routeParams,RestErrorService,$mdDialog,$cookies,$mdToast,$route){
 
       $scope.data = {};
       $scope.data.skills = [];
@@ -118,6 +119,7 @@
               .textContent('Tech added')
               .hideDelay(3000)
           );
+          $route.reload();
         },function(response){
             RestErrorService.errorHandler(response)
             $mdToast.show(
