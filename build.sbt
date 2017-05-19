@@ -29,6 +29,8 @@ libraryDependencies ++= Seq(
   ws,
   evolutions,
   jdbc,
+  "ch.qos.logback" % "logback-classic" % "1.2.3",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
   "com.github.julien-truffaut" %% "monocle-core"  % "1.4.0-M1",
   "com.github.julien-truffaut" %% "monocle-macro" % "1.4.0-M1",
   "com.typesafe.slick" %% "slick" % "3.1.1",

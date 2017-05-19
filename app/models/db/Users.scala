@@ -1,5 +1,6 @@
 package models.db
 
+import com.typesafe.scalalogging.LazyLogging
 import common.DBConnection
 import models.User
 import slick.driver.PostgresDriver.api._
@@ -20,7 +21,7 @@ class Users(tag: Tag) extends Table[User](tag, "users") {
   def * : ProvenShape[User] = (id.?, firstName, lastName, email) <> ((User.apply _).tupled, User.unapply)
 }
 
-object Users {
+object Users extends LazyLogging {
   val userTable: TableQuery[Users] = TableQuery[Users]
 
   def getUserById(userId: Int)(implicit connection: DBConnection): Future[Option[User]] = {
@@ -51,6 +52,7 @@ object Users {
   }
 
   def add(user: User)(implicit connection: DBConnection): Future[Int] = {
+    logger.info("add new user {}", user)
     val query = userTable returning userTable.map(_.id) += user
     connection.db.run(query)
   }
