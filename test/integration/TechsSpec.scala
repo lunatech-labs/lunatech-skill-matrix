@@ -33,7 +33,7 @@ class TechsSpec extends IntegrationSpec {
     }
 
     "get techId by name and type" in {
-      val response = getTechIdByNameAndType(Tech(None, "dark arts", TechType.CONCEPT))(dbConn).futureValue
+      val response = getTechIdByName(Tech(None, "dark arts", TechType.CONCEPT))(dbConn).futureValue
       response.get mustEqual dataMap(ID_TECH_DARK_ARTS)
     }
 

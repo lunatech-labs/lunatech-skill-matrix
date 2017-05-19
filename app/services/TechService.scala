@@ -20,14 +20,14 @@ class TechService @Inject() (implicit val connection: DBConnection)  {
   }
 
   def getTechIdOrInsert(tech: Tech): Future[Int] = {
-    getTechIdByNameAndType(tech).flatMap {
+    getTechIdByName(tech).flatMap {
       case Some(id) => Future(id)
       case None => Techs.add(tech)
     }
   }
 
-  def getTechIdByNameAndType(tech: Tech): Future[Option[Int]] = {
-    Techs.getTechIdByNameAndType(tech)
+  def getTechIdByName(tech: Tech): Future[Option[Int]] = {
+    Techs.getTechIdByName(tech)
   }
 
   def getById(techId: Int): Future[Option[Tech]] = {

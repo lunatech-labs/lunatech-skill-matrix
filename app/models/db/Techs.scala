@@ -31,8 +31,8 @@ object Techs {
     connection.db.run(searchQuery.result)
   }
 
-  def getTechIdByNameAndType(tech: Tech)(implicit connection: DBConnection): Future[Option[Int]] = {
-    val getTechIdQuery = techTable.filter(t => t.name === tech.name.toLowerCase && t.techType === tech.techType).map(_.id).take(1)
+  def getTechIdByName(tech: Tech)(implicit connection: DBConnection): Future[Option[Int]] = {
+    val getTechIdQuery = techTable.filter(t => t.name === tech.name.toLowerCase).map(_.id).take(1)
     connection.db.run(getTechIdQuery.result.headOption)
   }
 

@@ -23,7 +23,7 @@ class SkillMatrixController @Inject()(skillMatrixService: SkillMatrixService,
       for {
         skillMatrixItem: SkillMatrixItem <- request.body.validate[SkillMatrixItem]                                             ?| (err =>  ApiErrors.badRequest(JsError.toJson(err)))
         skillId <- skillMatrixService.addUserSkill(request.user.getUserId, skillMatrixItem.tech, skillMatrixItem.skillLevel)   ?| (err => ApiErrors.internalServerError(err.getMessage))
-        techId <- techService.getTechIdByNameAndType(skillMatrixItem.tech)                                                     ?| ApiErrors.INTERNAL_SERVER_ERROR
+        techId <- techService.getTechIdByName(skillMatrixItem.tech)                                                     ?| ApiErrors.INTERNAL_SERVER_ERROR
       } yield Created(Json.toJson(constructSkillMatrixItem(techId, skillId, skillMatrixItem)))
   }
 
