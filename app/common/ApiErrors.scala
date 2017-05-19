@@ -1,12 +1,14 @@
 package common
 
+import com.typesafe.scalalogging.LazyLogging
 import play.api.libs.json._
 import play.api.libs.json.Json
+import play.api.mvc.Result
 import play.api.mvc.Results._
 
 case class Error(code: String, message: String)
 
-object ApiErrors {
+object ApiErrors extends LazyLogging {
 
   implicit val errorFormat: Format[Error] = Json.format[Error]
 
@@ -17,6 +19,10 @@ object ApiErrors {
   val INTERNAL_SERVER_ERROR = InternalServerError
 
   def badRequest(message: JsValue) = BadRequest(Json.toJson(Error("INVALID_JSON", message.toString)))
-  def internalServerError(message: String) = InternalServerError(Json.toJson(Error("INTERNAL_ERROR", message)))
+
+  def internalServerError(message: String): Result = {
+    logger.info("internal server error with message {}", message)
+    InternalServerError(Json.toJson(Error("INTERNAL_ERROR", message)))
+  }
 
 }

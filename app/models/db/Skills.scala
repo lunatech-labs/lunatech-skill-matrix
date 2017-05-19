@@ -1,5 +1,6 @@
 package models.db
 
+import com.typesafe.scalalogging.LazyLogging
 import common.DBConnection
 import models._
 import slick.driver.PostgresDriver.api._
@@ -25,10 +26,10 @@ class Skills(tag: Tag) extends Table[models.Skill](tag, "user_skills") {
 }
 
 
-object Skills {
+object Skills extends LazyLogging {
   val skillTable: TableQuery[Skills] = TableQuery[Skills]
 
-  def add(userId: Int, techId: Int, skillLevel: SkillLevel)(implicit connection: DBConnection): Future[Int] =
+  def add(userId: Int, techId: Int, skillLevel: SkillLevel)(implicit connection: DBConnection): Future[Int] = {
     skillExistsByTechAndUserId(techId, userId).flatMap {
       case true =>
           for {
@@ -39,8 +40,10 @@ object Skills {
             userId = userId,
             techId = techId,
             skillLevel = skillLevel)
+          logger.info("adding new skill for userId {} and techId {} with skillLevel {}", userId.toString, techId.toString, skillLevel)
           val addSkillToSkillMatrixQuery = skillTable returning skillTable.map(_.id) += userSkillObject
           connection.db.run(addSkillToSkillMatrixQuery)
+    }
   }
 
   def getAllSkillMatrixByUser(userId: Int)(implicit connection: DBConnection): Future[Seq[(Skill, Tech)]] = {
@@ -55,6 +58,7 @@ object Skills {
 
   //TODO:  refactor this method
   def update(skillId: Int, userId: Int, techId: Int, skillLevel: SkillLevel)(implicit connection: DBConnection): Future[Option[Int]] = {
+    logger.info("info updating skillId {} for user {} and techId {} with skillLevel {}", skillId.toString, userId.toString, techId.toString, skillLevel)
     val nrOfUpdatedRows: Future[Int] = connection.db.run(
       skillTable
         .filter(skill => skill.id === skillId && skill.userId === userId && skill.techId === techId)
@@ -72,7 +76,9 @@ object Skills {
   def delete(userId: Int, skillId: Int)(implicit connection: DBConnection): Future[Int] = {
     skillExistsForUser(skillId, userId).flatMap {
       case false => Future(0)
-      case true => connection.db.run(skillTable.filter(_.id === skillId).delete)
+      case true =>
+        logger.info("deleting skillId {} for userId {}", skillId.toString, userId.toString)
+        connection.db.run(skillTable.filter(_.id === skillId).delete)
     }
   }
 
@@ -87,12 +93,6 @@ object Skills {
 
     connection.db.run(join.result)
   }
-
-  //TODO: analyze to see if we will need this method
-//  def getSkillById(skillId: Int)(implicit connection: DBConnection): Future[Option[Skill]] = {
-//    val query = skillTable.filter(skill => skill.id === skillId)
-//    connection.db.run(query.result.headOption)
-//  }
 
   def getSkillByTechId(techId: Int)(implicit connection: DBConnection): Future[Seq[Skill]] = {
     val query = skillTable.filter(skill => skill.techId === techId)
@@ -112,8 +112,4 @@ object Skills {
     connection.db.run(skillTable.filter(skill => skill.techId === techId && skill.userId === userId).exists.result)
   }
 
-  //TODO: analyze to see if we will need this method
-//  private def getAll(implicit connection: DBConnection): Future[Seq[Skill]] = {
-//    connection.db.run(skillTable.result)
-//  }
 }
