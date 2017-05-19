@@ -29,8 +29,8 @@ class TechServiceSpec extends UnitSpec {
       response.map(_.name) mustBe List("scala", "functional programming", "defense against the dark arts", "dark arts")
     }
 
-    "return existing techId" in {
-      val response: Int = techService.getTechIdOrInsert(Tech(None, "scala", TechType.LANGUAGE)).futureValue
+    "return existing techId when tech name is found in the database even when type is different" in {
+      val response: Int = techService.getTechIdOrInsert(Tech(None, "scala", TechType.FRAMEWORK)).futureValue
       response mustBe dataMap(ID_TECH_SCALA)
     }
 
@@ -40,12 +40,12 @@ class TechServiceSpec extends UnitSpec {
     }
 
     "return the id of tech by name and type" in {
-      val response: Option[Int] = techService.getTechIdByNameAndType(Tech(None, "scala", TechType.LANGUAGE)).futureValue
+      val response: Option[Int] = techService.getTechIdByName(Tech(None, "scala", TechType.LANGUAGE)).futureValue
       response.get mustBe dataMap(ID_TECH_SCALA)
     }
 
     "return none when tech is not found by name and type" in {
-      val response: Option[Int] = techService.getTechIdByNameAndType(Tech(None, "brand new skill", TechType.CONCEPT)).futureValue
+      val response: Option[Int] = techService.getTechIdByName(Tech(None, "brand new skill", TechType.CONCEPT)).futureValue
       response mustBe None
     }
 
@@ -58,10 +58,6 @@ class TechServiceSpec extends UnitSpec {
       val response: Option[Tech] = techService.getById(42).futureValue
       response mustBe None
     }
-
-//    "return tech when searched with query" in {
-//
-//    }
 
   }
 
