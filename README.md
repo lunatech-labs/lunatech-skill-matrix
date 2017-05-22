@@ -1,7 +1,8 @@
 # Lunatech Tech Matrix ![Build Status](http://jenkins.lunatech.com/job/TechMatrix/badge/icon)
+Tech Matrix - Who knows what in Lunatech!
 
-# Acceptance test
-You can use `sbt acc:test` command to run only the acceptance tests, or `sbt test` to run all the tests.
+Tech Matrix allows users to set their level of knowledge on the technologies they know.
+This information helps assert teams best suited for new projects, people able to give workshops, which technologies we have a gap in, etc.
 
 # Data Model
 In the application there are a few entities we use:
@@ -138,12 +139,9 @@ The configuration of the project goes under conf/application.conf
 ```<code>
 Right now, we are using PostgreSQL, and you should change the properties 'url', 'user' and 'password' according to the configuration of your local database
 ```
-# TO DO:
-- add documentation (comments)
-- generate db schema
 
-### Good to have:
-- logging
+# Acceptance test
+You can use `sbt acc:test` command to run only the acceptance tests, or `sbt test` to run all the tests.
 
 # Have ideas on adding or changing functionality?
-Talk to the product owner, Erik Bakker
+Talk to the product owner, just add it to github issues list and we will take care of it!
