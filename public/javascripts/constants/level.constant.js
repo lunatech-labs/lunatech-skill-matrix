@@ -2,25 +2,25 @@
   'use strict';
 
   angular.module('techmatrix').constant('level', {
-      EXPERT:{
-          text:"expert",
-          value:"EXPERT"
+      NOVICE:{
+        text:"novice",
+        value:"NOVICE"
       },
-      PROFICIENT:{
-          text:"proficient",
-          value:"PROFICIENT"
+      ADVANCED_BEGINNER:{
+        text:"advanced beginner",
+        value:"ADVANCED_BEGINNER"
       },
       COMPETENT:{
-              text:"competent",
-              value:"COMPETENT"
-          },
-      ADVANCED_BEGINNER:{
-              text:"advanced beginner",
-              value:"ADVANCED_BEGINNER"
-          },
-      NOVICE:{
-          text:"novice",
-          value:"NOVICE"
+        text:"competent",
+        value:"COMPETENT"
+      },
+      PROFICIENT:{
+        text:"proficient",
+        value:"PROFICIENT"
+      },
+      EXPERT:{
+        text:"expert",
+        value:"EXPERT"
       }
   });
 })()
