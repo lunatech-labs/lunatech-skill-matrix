@@ -27,6 +27,10 @@ body{
   position: relative;
 }
 
+.width-100 {
+  width: 100%;
+}
+
 .text-transform-capitalize{
     text-transform: capitalize;
 }
@@ -107,13 +111,6 @@ body{
   padding: 5px 3px;
   outline: none;
 }
-
-.login{
-    position: fixed;
-    left: 50%;
-    transform: translate(-50%);
-}
-
 .novice-color{
   color:#DB5375;
 }
