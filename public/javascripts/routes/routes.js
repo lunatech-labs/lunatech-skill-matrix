@@ -20,6 +20,10 @@
        templateUrl: '/assets/javascripts/user/home.html',
        controller: 'UserHomeController'
       })
+      .when('/help', {
+       templateUrl: '/assets/javascripts/help/help.html',
+       controller: 'HelpController'
+      })
       .otherwise('/skillmatrix');
   }]);
 })()
