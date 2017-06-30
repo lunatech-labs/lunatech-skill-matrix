@@ -39,19 +39,25 @@
       <md-list flex>
         <md-list-item class="md-1-line" data-ng-click="goTo('/user/home')">
           <div class="md-list-item-text" layout="row">
-            <md-icon md-font-set="fa fa-home" class="correct-icon"></md-icon>
+            <md-icon md-font-set="fa fa-home fa-2x"></md-icon>
             <span>My profile</span>
+          </div>
+        </md-list-item>
+        <md-list-item class="md-1-line" data-ng-click="goTo('/user/list')">
+          <div class="md-list-item-text" layout="row">
+            <md-icon md-font-set="fa fa-users fa-2x"></md-icon>
+            <span>Users</span>
           </div>
         </md-list-item>
         <md-list-item class="md-1-line" data-ng-click="goTo('/skillmatrix')">
           <div class="md-list-item-text" layout="row">
-            <md-icon md-font-set="fa fa-table" class="correct-icon"></md-icon>
+            <md-icon md-font-set="fa fa-table fa-2x"></md-icon>
             <span>Tech Matrix</span>
           </div>
         </md-list-item>
         <md-list-item class="md-1-line" data-ng-click="logout()">
           <div class="md-list-item-text" layout="row">
-            <md-icon md-font-set="fa fa-sign-out" class="correct-icon"></md-icon>
+            <md-icon md-font-set="fa fa-sign-out fa-2x"></md-icon>
             <span>Logout</span>
           </div>
         </md-list-item>
@@ -96,6 +102,7 @@
 <script src='@routes.Assets.versioned("javascripts/routes/auth.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/auth/auth.controller.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/user/user.home.controller.js")' type="text/javascript"></script>
+<script src='@routes.Assets.versioned("javascripts/user/user.list.controller.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/skill/skill.controller.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/menu/menu.controller.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/menu/menu.toggle.run.js")' type="text/javascript"></script>

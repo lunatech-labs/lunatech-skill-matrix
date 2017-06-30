@@ -1,0 +1,27 @@
+<md-card layout="row" flex layout-padding class="search-card">
+  <md-icon md-font-set="fa fa-search fa-2x"></md-icon>
+  <input data-ng-model="data.userFilter" type="text" placeholder="Filter" flex>
+</md-card>
+
+<div data-ng-repeat="user in data.users | filter:{searchFilter:data.userFilter}" class="display-inline-block">
+  <md-card layout-padding layout="column" layout-align="center center">
+    <md-icon md-font-set="fa fa-user-circle-o fa-4x" class="user-profile-icon no-margin"></md-icon>
+    <div layout="column">
+      <div class="user-profile-info" layout="column">
+        <span>{{user.firstName}} {{user.lastName}}</span>
+        <span>{{user.email}}</span>
+        <span><strong>{{user.location ? user.location : 'no location'}}</strong></span>
+      </div>
+    </div>
+
+    <md-card-actions layout="row" layout-align="end center">
+      <md-button class="md-icon-button" aria-label="update skill" data-ng-click="edit(user)">
+        <md-icon md-font-set="fa fa-pencil" class="correct-icon"></md-icon>
+      </md-button>
+
+      <md-button class="md-icon-button" aria-label="remove skill" data-ng-click="remove(user)">
+        <md-icon md-font-set="fa fa-trash" class="correct-icon"></md-icon>
+      </md-button>
+    </md-card-actions>
+  </md-card>
+</div>
