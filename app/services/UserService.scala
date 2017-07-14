@@ -32,7 +32,7 @@ class UserService @Inject() (implicit val connection: DBConnection) {
       case Some(id: Int) =>
         Future.successful(id)
       case _ =>
-        Users.add(User(None, name, familyName, email, AccessLevel.All))
+        Users.add(User(None, name, familyName, email, AccessLevel.Basic))
     }
   }
 

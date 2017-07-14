@@ -99,15 +99,15 @@ object TechType {
 sealed trait AccessLevel
 
 object AccessLevel {
-  case object All        extends AccessLevel
+  case object Basic        extends AccessLevel
   case object Management extends AccessLevel
   case object Admin      extends AccessLevel
 
   def apply(accessLevel: String): AccessLevel = accessLevel match {
-    case "All"        => All
+    case "All"        => Basic
     case "Management" => Management
     case "Admin"      => Admin
-    case _            => All
+    case _            => Basic
   }
 
   implicit val accessLevelFormat: Format[AccessLevel] = new Format[AccessLevel] {
@@ -134,8 +134,8 @@ object AccessLevel {
   def isAccessible(userLevel:AccessLevel,accessLevel:AccessLevel):Boolean = {
     userLevel match {
       case Admin => true
-      case Management => accessLevel == Management || accessLevel == All
-      case All => accessLevel == All
+      case Management => accessLevel == Management || accessLevel == Basic
+      case Basic => accessLevel == Basic
       case _ => false
     }
   }

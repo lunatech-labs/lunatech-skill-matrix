@@ -56,22 +56,22 @@ class SkillsSpec extends IntegrationSpec {
       val expectedResponse = Seq(
         (
           Skill(Some(dataMap(SKILL_SEVERUS_DEFENSE)), dataMap(ID_USER_SNAPE), dataMap(ID_TECH_DEFENSE), SkillLevel.EXPERT),
-          User(Some(dataMap(ID_USER_SNAPE)), "Severus", "Snape", "severus.snape@hogwarts.com"),
+          User(Some(dataMap(ID_USER_SNAPE)), "Severus", "Snape", "severus.snape@hogwarts.com",AccessLevel.Basic),
           Tech(Some(dataMap(ID_TECH_DEFENSE)), "defense against the dark arts", TechType.CONCEPT)
         ),
         (
           Skill(Some(dataMap(SKILL_SEVERUS_DARK_ARTS)), dataMap(ID_USER_SNAPE), dataMap(ID_TECH_DARK_ARTS), SkillLevel.EXPERT),
-          User(Some(dataMap(ID_USER_SNAPE)), "Severus", "Snape", "severus.snape@hogwarts.com"),
+          User(Some(dataMap(ID_USER_SNAPE)), "Severus", "Snape", "severus.snape@hogwarts.com",AccessLevel.Basic),
           Tech(Some(dataMap(ID_TECH_DARK_ARTS)), "dark arts", TechType.CONCEPT)
         ),
         (
           Skill(Some(dataMap(SKILL_ODERSKY_SCALA)), dataMap(ID_USER_ODERSKY), dataMap(ID_TECH_SCALA), SkillLevel.EXPERT),
-          User(Some(dataMap(ID_USER_ODERSKY)), "Martin", "Odersky", "martin.odersky@gmail.com"),
+          User(Some(dataMap(ID_USER_ODERSKY)), "Martin", "Odersky", "martin.odersky@gmail.com",AccessLevel.Basic),
           Tech(Some(dataMap(ID_TECH_SCALA)), "scala", TechType.LANGUAGE)
         ),
         (
           Skill(Some(dataMap(SKILL_ODERSKY_FUNCTIONAL)), dataMap(ID_USER_ODERSKY), dataMap(ID_TECH_FUNCTIONAL), SkillLevel.EXPERT),
-          User(Some(dataMap(ID_USER_ODERSKY)), "Martin", "Odersky", "martin.odersky@gmail.com"),
+          User(Some(dataMap(ID_USER_ODERSKY)), "Martin", "Odersky", "martin.odersky@gmail.com",AccessLevel.Basic),
           Tech(Some(dataMap(ID_TECH_FUNCTIONAL)), "functional programming", TechType.CONCEPT)
         ))
       val response = getAllSkills(dbConn).futureValue

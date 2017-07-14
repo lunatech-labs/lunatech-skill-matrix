@@ -21,7 +21,7 @@ case class UserRequest[A](
 class Authentication @Inject()(userService: UserService, oauth: OauthService) extends LazyLogging {
 
   object UserAction {
-    def apply(): UserAction = new UserAction(AccessLevel.All)
+    def apply(): UserAction = new UserAction(AccessLevel.Basic)
     def apply(userLevel: AccessLevel): UserAction = new UserAction(userLevel)
   }
 

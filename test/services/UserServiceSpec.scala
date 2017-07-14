@@ -1,7 +1,7 @@
 package services
 
 import data.TestData.{ID_USER_SNAPE, nonExistentId}
-import models.User
+import models.{AccessLevel, User}
 
 class UserServiceSpec extends UnitSpec {
   var dataMap: Map[String, Int] = _
@@ -51,15 +51,13 @@ class UserServiceSpec extends UnitSpec {
     }
 
     "get userId by email when user is in database when calling getOrCreateUserByEmail" in {
-      val severus = User(Some(dataMap(ID_USER_SNAPE)), "Severus", "Snape", "severus.snape@hogwarts.com")
-      val response = userService.getOrCreateUserByEmail(severus).futureValue
+      val response = userService.getOrCreateUserByEmail("Severus", "Snape", "severus.snape@hogwarts.com").futureValue
 
       response mustEqual dataMap(ID_USER_SNAPE)
     }
 
     "create user by email when user is not in the database" in {
-      val minerva = User(None, "Minerva", "McGonagall", "minerva.mcgonagall@hogwarts.com")
-      val response = userService.getOrCreateUserByEmail(minerva).futureValue
+      val response = userService.getOrCreateUserByEmail("Minerva", "McGonagall", "minerva.mcgonagall@hogwarts.com").futureValue
 
       dataMap.values.exists(_ === response) mustBe false
     }
