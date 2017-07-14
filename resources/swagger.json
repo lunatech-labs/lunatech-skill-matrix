@@ -24,7 +24,8 @@
       "tokenUrl": "https://oauth.simple.api/token",
       "scopes": {
         "admin": "Admin scope",
-        "user": "User scope"
+        "management": "Manager scope",
+        "all": "User scope"
       }
     }
   },
@@ -61,7 +62,7 @@
         "security": [
           {
             "OauthSecurity": [
-              "admin"
+              "management"
             ]
           }
         ],
@@ -82,6 +83,49 @@
             "schema": {
               "$ref": "#/definitions/User"
             }
+          },
+          "401": {
+            "$ref": "#/responses/Standard401ErrorMessage"
+          },
+          "403": {
+            "$ref": "#/responses/Standard403ErrorMessage"
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "$ref": "#/responses/Standard500ErrorMessage"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes a user by id",
+        "description": "Deletes a user together with all their skills",
+        "operationId": "removeUser",
+        "security": [
+          {
+            "OauthSecurity": [
+              "management"
+            ]
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "user deleted, returning NoContent response"
           },
           "401": {
             "$ref": "#/responses/Standard401ErrorMessage"

@@ -13,6 +13,9 @@
     '$mdDialog',
     function($scope,RestService,techType,level,$cookies,$location,RestErrorService,$mdToast,$mdDialog){
 
+      var successAlert = true;
+      var failureAlert = false;
+
       $scope.data = {};
       $scope.data.users = [];
 
@@ -27,6 +30,14 @@
         });
       }
 
+      function showMessage(message,isSuccess){
+                $mdToast.show(
+                    $mdToast.simple()
+                      .textContent(message)
+                      .hideDelay(3000)
+                );
+            }
+
       $scope.remove = function(user){
         var confirm = $mdDialog.confirm()
                   .title('Remove user?')
@@ -35,9 +46,16 @@
                   .cancel('Cancel');
 
             $mdDialog.show(confirm).then(function() {
-              console.log('Confirm') //TODO
+              RestService.removeUser(user.id).then(function(response){
+                $scope.data.users = $scope.data.users.filter(function(s){
+                    return s.id !== user.id;
+                })
+                showMessage('User removed', successAlert)
+              }, function(response) {
+                RestErrorService.errorHandler(response)
+                showMessage('Error removing user', failureAlert)
+              })
             }, function() {
-              console.log('Cancel') //TODO
             });
       };
 

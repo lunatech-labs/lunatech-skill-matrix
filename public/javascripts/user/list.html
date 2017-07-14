@@ -10,15 +10,11 @@
       <div class="user-profile-info" layout="column">
         <span>{{user.firstName}} {{user.lastName}}</span>
         <span>{{user.email}}</span>
-        <span><strong>{{user.location ? user.location : 'no location'}}</strong></span>
+        <!--<span><strong>{{user.location ? user.location : 'no location'}}</strong></span>-->
       </div>
     </div>
 
     <md-card-actions layout="row" layout-align="end center">
-      <md-button class="md-icon-button" aria-label="update skill" data-ng-click="edit(user)">
-        <md-icon md-font-set="fa fa-pencil" class="correct-icon"></md-icon>
-      </md-button>
-
       <md-button class="md-icon-button" aria-label="remove skill" data-ng-click="remove(user)">
         <md-icon md-font-set="fa fa-trash" class="correct-icon"></md-icon>
       </md-button>

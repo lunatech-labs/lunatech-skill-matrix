@@ -95,3 +95,49 @@ object TechType {
   case object OTHER extends TechType
 
 }
+
+sealed trait AccessLevel
+
+object AccessLevel {
+  case object All        extends AccessLevel
+  case object Management extends AccessLevel
+  case object Admin      extends AccessLevel
+
+  def apply(accessLevel: String): AccessLevel = accessLevel match {
+    case "All"        => All
+    case "Management" => Management
+    case "Admin"      => Admin
+    case _            => All
+  }
+
+  implicit val accessLevelFormat: Format[AccessLevel] = new Format[AccessLevel] {
+    def reads(json: JsValue): JsResult[AccessLevel] = json match {
+      case JsString(s) =>
+        try {
+          JsSuccess(AccessLevel(json.as[String]))
+        } catch {
+          case _: scala.MatchError => JsError("Value is not in the list")
+        }
+      case _ => JsError("String values are expected")
+    }
+
+
+    def writes(accessLevel: AccessLevel) = JsString(accessLevel.toString)
+
+  }
+
+  implicit val accessLevelMappedColumn = MappedColumnType.base[AccessLevel, String](
+    e => e.toString,
+    s => AccessLevel(s)
+  )
+
+  def isAccessible(userLevel:AccessLevel,accessLevel:AccessLevel):Boolean = {
+    userLevel match {
+      case Admin => true
+      case Management => accessLevel == Management || accessLevel == All
+      case All => accessLevel == All
+      case _ => false
+    }
+  }
+
+}

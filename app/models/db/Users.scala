@@ -2,9 +2,10 @@ package models.db
 
 import com.typesafe.scalalogging.LazyLogging
 import common.DBConnection
-import models.User
+import models.{AccessLevel, User}
 import slick.driver.PostgresDriver.api._
 import slick.lifted.{ProvenShape, TableQuery}
+import models.AccessLevel.accessLevelFormat
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
@@ -18,7 +19,9 @@ class Users(tag: Tag) extends Table[User](tag, "users") {
 
   def email: Rep[String] = column[String]("email")
 
-  def * : ProvenShape[User] = (id.?, firstName, lastName, email) <> ((User.apply _).tupled, User.unapply)
+  def accessLevel: Rep[AccessLevel] = column[AccessLevel]("accesslevel")
+
+  def * : ProvenShape[User] = (id.?, firstName, lastName, email, accessLevel) <> ((User.apply _).tupled, User.unapply)
 }
 
 object Users extends LazyLogging {
@@ -55,6 +58,12 @@ object Users extends LazyLogging {
     logger.info("add new user {}", user)
     val query = userTable returning userTable.map(_.id) += user
     connection.db.run(query)
+  }
+
+  def remove(userId:Int)(implicit connection: DBConnection): Future[Int] = {
+    logger.info("deleting user with id {} and all their skills", userId)
+    val query = userTable.filter(_.id === userId)
+    connection.db.run(query.delete)
   }
 }
 
