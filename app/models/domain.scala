@@ -2,7 +2,7 @@ package models
 
 import play.api.libs.json.{Format, Json}
 
-case class User(id: Option[Int] = None, firstName: String, lastName: String, email: String) {
+case class User(id: Option[Int] = None, firstName: String, lastName: String, email: String, accessLevel: AccessLevel) {
   require(email != null && !email.isEmpty, "Email field shouldn't be empty")
 
   def fullName: String = {
@@ -37,3 +37,4 @@ object ImplicitFormats {
   implicit val userSkillResponseFormat: Format[UserSkillResponse] = Json.format[UserSkillResponse]
 
 }
+

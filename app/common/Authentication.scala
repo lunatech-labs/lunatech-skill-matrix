@@ -3,7 +3,7 @@ package common
 import javax.inject.Inject
 
 import com.typesafe.scalalogging.LazyLogging
-import models.User
+import models.{AccessLevel, User}
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.UserService
@@ -20,7 +20,12 @@ case class UserRequest[A](
 
 class Authentication @Inject()(userService: UserService, oauth: OauthService) extends LazyLogging {
 
-  object UserAction extends
+  object UserAction {
+    def apply(): UserAction = new UserAction(AccessLevel.All)
+    def apply(userLevel: AccessLevel): UserAction = new UserAction(userLevel)
+  }
+
+  class UserAction(accessLevel:AccessLevel) extends
     ActionBuilder[UserRequest] {
 
     def invokeBlock[A](request: Request[A], block: (UserRequest[A]) => Future[Result]): Future[Result] = {
@@ -33,8 +38,8 @@ class Authentication @Inject()(userService: UserService, oauth: OauthService) ex
         case Some(gUser) =>
           userService.getUserByEmail(gUser.email).flatMap {
             case Some(user: User) =>
-              logger.info("Logged in user {}", user)
-              block(new UserRequest(xAuthToken, user, request))
+              if (AccessLevel.isAccessible(user.accessLevel,accessLevel)) block(new UserRequest(xAuthToken, user, request))
+              else Future.successful(Results.Forbidden(Json.obj("message" -> s"User doesn't have the necessary access level.")))
             case _ =>
               logger.info("No user was found for the given token")
               Future.successful(Results.Unauthorized(Json.obj("message" -> s"No user was found for the token!")))

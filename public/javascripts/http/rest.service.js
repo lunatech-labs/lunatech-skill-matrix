@@ -58,7 +58,12 @@
           getTechs:function(params){
             var url = RestUrlService.getTechs(params);
             return AuthenticatedRequest('GET',url);
+          },
+          removeUser:function(userId){
+             var url = RestUrlService.removeUser(userId);
+             return AuthenticatedRequest('DELETE',url);
           }
+
       };
 
       return api;

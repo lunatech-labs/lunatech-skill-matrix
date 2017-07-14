@@ -23,6 +23,9 @@
           },
           getTechs:function(params){
             return '/techs/' + encodeURIComponent(params);
+          },
+          removeUser:function(userId){
+            return '/users/' + userId;
           }
       };
 
