@@ -26,17 +26,17 @@
             return user;
           });
         },function(response){
-          //TODO
+          showMessage('Error getting users',false)
         });
       }
 
       function showMessage(message,isSuccess){
-                $mdToast.show(
-                    $mdToast.simple()
-                      .textContent(message)
-                      .hideDelay(3000)
-                );
-            }
+        $mdToast.show(
+          $mdToast.simple()
+            .textContent(message)
+            .hideDelay(3000)
+        );
+      }
 
       $scope.remove = function(user){
         var confirm = $mdDialog.confirm()
@@ -58,10 +58,6 @@
             }, function() {
             });
       };
-
-      $scope.edit = function(user){
-        //TODO
-      }
 
       onInit();
     }])

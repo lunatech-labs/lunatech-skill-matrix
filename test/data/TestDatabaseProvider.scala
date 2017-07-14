@@ -24,8 +24,8 @@ trait TestDatabaseProvider {
   }
 
   def insertUserData(): Map[String, Int] = {
-    val userOdersky = User(None, "Martin", "Odersky", "martin.odersky@gmail.com")
-    val userSeverus = User(None, "Severus", "Snape", "severus.snape@hogwarts.com")
+    val userOdersky = User(None, "Martin", "Odersky", "martin.odersky@gmail.com",AccessLevel.Basic)
+    val userSeverus = User(None, "Severus", "Snape", "severus.snape@hogwarts.com",AccessLevel.Basic)
 
     val idUserOdersky: Int = Await.result(db.run(userTable returning userTable.map(_.id) += userOdersky), Duration.Inf)
     val idUserSeverus: Int = Await.result(db.run(userTable returning userTable.map(_.id) += userSeverus), Duration.Inf)
