@@ -8,7 +8,7 @@
         href='@routes.Assets.versioned("javascripts/components/angular-material/angular-material.css")'>
   <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/main.css")'>
   <link rel="shortcut icon" type="image/png" href='@routes.Assets.versioned("images/favicon.png")'>
-</head>
+ </head>
 <body data-ng-app="techmatrix" layout="column">
 
 <md-toolbar class="md-whiteframe-4dp">
@@ -49,6 +49,12 @@
             <span>Users</span>
           </div>
         </md-list-item>
+        <md-list-item class="md-1-line" data-ng-click="goTo('/alltech/list')">
+          <div class="md-list-item-text" layout="row">
+            <md-icon md-font-set="fa fa-book fa-2x"></md-icon>
+            <span>Tech</span>
+          </div>
+        </md-list-item>
         <md-list-item class="md-1-line" data-ng-click="goTo('/skillmatrix')">
           <div class="md-list-item-text" layout="row">
             <md-icon md-font-set="fa fa-table fa-2x"></md-icon>
@@ -74,7 +80,6 @@
   </div>
 </div>
 </body>
-
 <script src='@routes.Assets.versioned("javascripts/components/angular/angular.min.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/components/angular-route/angular-route.min.js")'
         type="text/javascript"></script>
@@ -103,6 +108,7 @@
 <script src='@routes.Assets.versioned("javascripts/auth/auth.controller.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/user/user.home.controller.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/user/user.list.controller.js")' type="text/javascript"></script>
+<script src='@routes.Assets.versioned("javascripts/tech/tech.list.controller.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/skill/skill.controller.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/menu/menu.controller.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/menu/menu.toggle.run.js")' type="text/javascript"></script>

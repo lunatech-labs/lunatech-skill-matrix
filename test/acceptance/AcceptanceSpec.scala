@@ -34,7 +34,9 @@ class AcceptanceSpec extends FeatureSpec
   override def db: JdbcBackend#DatabaseDef = app.injector.instanceOf(classOf[DatabaseConfigProvider]).get[JdbcProfile].db
 
   implicit lazy val portL = 9000
-  lazy val authToken = "xxxx.xxx.xxx"
+  lazy val authToken = "basic-xxx-xxx"
+  lazy val authTokenManagement = "management-xxx-xx"
+  lazy val authTokenAdmin = "admin-xxx-xx"
   val baseUrl: String = "https://localhost:" + portL.toString
   val swaggerPath: String = "resources/swagger.json"
 }

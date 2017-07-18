@@ -8,6 +8,8 @@ POST    /users/me/skillmatrix               controllers.SkillMatrixController.ad
 PUT     /users/me/skillmatrix/:skillId      controllers.SkillMatrixController.updateSkill(skillId: Int)
 DELETE  /users/me/skillmatrix/:skillId      controllers.SkillMatrixController.deleteSkill(skillId: Int)
 GET     /alltech                            controllers.TechController.getAllTech
+PUT     /alltech/:techId                    controllers.TechController.updateTech(techId: Int)
+DELETE  /alltech/:techId                    controllers.TechController.removeTech(techId: Int)
 GET     /techs/:query                       controllers.TechController.search(query: String)
 GET     /skillmatrix                        controllers.SkillMatrixController.getSkillMatrix
 GET     /skillmatrix/:techId                controllers.SkillMatrixController.getSkillMatrixByTechId(techId: Int)

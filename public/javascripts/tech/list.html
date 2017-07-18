@@ -1,0 +1,62 @@
+<md-card layout="row" flex layout-padding class="search-card">
+    <md-icon md-font-set="fa fa-search fa-2x"></md-icon>
+    <input data-ng-model="data.techFilter" type="text" placeholder="Filter" flex>
+</md-card>
+
+<div layout="row" layout-wrap>
+    <div layout="column" flex="100" flex-gt-md="50" data-ng-repeat="techType in data.techType">
+        <md-card layout-padding class="hide-box">
+            <md-card-title>
+                <md-card-title-text>
+        <span class="md-headline text-transform-capitalize">
+          {{techType.text}}
+        </span>
+                </md-card-title-text>
+            </md-card-title>
+            <md-card-content layout="row"  class="safari-100" layout-wrap>
+                <div layout="column"  flex="100" data-ng-repeat="tech in data.groupedTech[techType.value] | filter:{searchFilter:data.techFilter}">
+                    <md-card class="tech-bg-color" flex>
+                        <div layout="row" layout-align="end center" layout-padding>
+
+                            <div data-ng-show="tech.isUpdating" layout-align="end center">
+                                <md-input-container class="text-transform-capitalize no-margin"  flex-gt-sm>
+                                    <input data-ng-model="tech.name">
+                                </md-input-container>
+                            </div>
+
+                            <span class="text-transform-capitalize" data-ng-show="!tech.isUpdating" data-ng-click="beginUpdatingName(tech)">{{tech.name}}</span>
+
+                            <span flex></span>
+                            <div data-ng-show="tech.isUpdating">
+                                <md-button class="md-icon-button" aria-label="update tech name" data-ng-click="editTechName(tech.name, tech)">
+                                    <md-icon md-font-set="fa fa-check" class="correct-icon"></md-icon>
+                                </md-button>
+
+                                <md-button class="md-icon-button" aria-label="cancel" data-ng-click="cancel(tech)">
+                                    <md-icon md-font-set="fa fa-times" class="correct-icon"></md-icon>
+                                </md-button>
+                            </div>
+                            <div data-ng-show="!tech.isUpdating">
+                                <md-button class="md-icon-button" aria-label="update tech" data-ng-click="updateTech(tech)">
+                                    <md-icon md-font-set="fa fa-pencil" class="correct-icon"></md-icon>
+                                </md-button>
+
+                                <md-button class="md-icon-button" aria-label="remove tech" data-ng-click="removeTech(tech)">
+                                    <md-icon md-font-set="fa fa-trash" class="correct-icon"></md-icon>
+                                </md-button>
+                            </div>
+                        </div>
+
+                        <div layout="row" data-ng-show="tech.updating">
+                            <div flex="20" class="editButton {{tech-bg-color +' '+ isSelectedTypeClass(tech, techType.value)}} cursor-pointer"
+                                 data-ng-repeat="techType in data.techType"
+                                 data-ng-click="finishUpdatingTechType(tech, techType)">
+                                {{techType.text}}
+                            </div>
+                        </div>
+                    </md-card>
+                </div>
+            </md-card-content>
+        </md-card>
+    </div>
+</div>

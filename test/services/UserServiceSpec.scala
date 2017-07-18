@@ -47,7 +47,7 @@ class UserServiceSpec extends UnitSpec {
 
     "get all users" in {
       val response = userService.getAll.futureValue
-      response.map(_.firstName) mustBe List("Martin", "Severus")
+      response.map(_.firstName) mustBe List("Martin", "Severus", "Gandalf")
     }
 
     "get userId by email when user is in database when calling getOrCreateUserByEmail" in {

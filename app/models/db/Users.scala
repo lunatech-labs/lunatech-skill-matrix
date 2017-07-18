@@ -61,7 +61,6 @@ object Users extends LazyLogging {
   }
 
   def remove(userId:Int)(implicit connection: DBConnection): Future[Int] = {
-    logger.info("deleting user with id {} and all their skills", userId)
     val query = userTable.filter(_.id === userId)
     connection.db.run(query.delete)
   }

@@ -32,9 +32,9 @@ class SkillMatrixServiceSpec extends UnitSpec {
       dataMap.values.exists(_ === response) mustBe false
     }
 
-    "update a user skill and return its id" in {
+    "update a user skill and return its the number of rows updated" in {
       val response = skillMatrixService.updateUserSkill(dataMap(SKILL_SEVERUS_DEFENSE), dataMap(ID_USER_SNAPE),  dataMap(ID_TECH_DEFENSE), SkillLevel.PROFICIENT).futureValue
-      response.get mustBe dataMap(SKILL_SEVERUS_DEFENSE)
+      response.get mustBe 1
     }
 
     "return None when skillId does not exist for update operation" in {

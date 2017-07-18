@@ -167,10 +167,10 @@
           };
           RestService.updateSkill(data).then(function(response){
               skill.skillLevel = response.data.skillLevel;
-              showMessage('Tech updated',successAlert)
+              showMessage('Skill updated',successAlert)
           },function(response){
               RestErrorService.errorHandler(response)
-              showMessage('Error updating tech',failureAlert)
+              showMessage('Error updating skill',failureAlert)
           })
       };
 
