@@ -13,6 +13,12 @@ body{
   margin: 0px;
 }
 
+.hide-box {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
 .search-card md-icon {
   margin: 0px;
 }
@@ -158,6 +164,11 @@ body{
 .expert-bg-color{
   color:rgba(255,255,255,0.87)!important;
   background-color:#729EA1!important;
+}
+
+.tech-bg-color{
+  color:rgba(0,0,0,0.87)!important;
+  background-color:#FFFFFF!important;
 }
 
 .fix-btn-toolbar{

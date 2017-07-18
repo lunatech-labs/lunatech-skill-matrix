@@ -25,11 +25,13 @@ trait TestDatabaseProvider {
 
   def insertUserData(): Map[String, Int] = {
     val userOdersky = User(None, "Martin", "Odersky", "martin.odersky@gmail.com",AccessLevel.Basic)
-    val userSeverus = User(None, "Severus", "Snape", "severus.snape@hogwarts.com",AccessLevel.Basic)
+    val userSeverus = User(None, "Severus", "Snape", "severus.snape@hogwarts.com",AccessLevel.Management)
+    val userGandalf = User(None, "Gandalf", "YouShallPass", "gandalf@youshallpass.com", AccessLevel.Admin)
 
     val idUserOdersky: Int = Await.result(db.run(userTable returning userTable.map(_.id) += userOdersky), Duration.Inf)
     val idUserSeverus: Int = Await.result(db.run(userTable returning userTable.map(_.id) += userSeverus), Duration.Inf)
-    Map(ID_USER_ODERSKY -> idUserOdersky, ID_USER_SNAPE -> idUserSeverus)
+    val idUserGandalf: Int = Await.result(db.run(userTable returning userTable.map(_.id) += userGandalf), Duration.Inf)
+    Map(ID_USER_ODERSKY -> idUserOdersky, ID_USER_SNAPE -> idUserSeverus, ID_USER_GANDALF -> idUserGandalf)
 
   }
 

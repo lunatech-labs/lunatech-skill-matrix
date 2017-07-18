@@ -23,6 +23,10 @@
         templateUrl: '/assets/javascripts/user/list.html',
         controller: 'UserListController'
       })
+      .when('/alltech/list', {
+         templateUrl: '/assets/javascripts/tech/list.html',
+         controller: 'TechListController'
+      })
       .when('/help', {
        templateUrl: '/assets/javascripts/help/help.html',
        controller: 'HelpController'

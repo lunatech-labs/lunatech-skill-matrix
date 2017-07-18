@@ -62,7 +62,18 @@
           removeUser:function(userId){
              var url = RestUrlService.removeUser(userId);
              return AuthenticatedRequest('DELETE',url);
-          }
+          },
+          getAllTech: function(){
+             return AuthenticatedRequest('GET','/alltech');
+          },
+          removeTech:function(techId){
+             var url = RestUrlService.removeTech(techId);
+             return AuthenticatedRequest('DELETE',url);
+          },
+          updateTech:function(data){
+             var url = RestUrlService.updateTech(data.techId);
+             return AuthenticatedRequest('PUT',url,data.body);
+          },
 
       };
 

@@ -7,13 +7,14 @@ import services.oauth.{GoogleUser, OauthService}
 @Singleton
 class FakeOauthService @Inject()(config: Config) extends OauthService{
 
-  override def verifyToken(idTokenString: String): Option[GoogleUser] = {
-    Some(GoogleUser(
-      config.getString("user.googleId"),
-      config.getString("user.email"),
-      config.getString("user.name"),
-      config.getString("user.familyName"),
-      config.getString("user.givenName")
-    ))
+  override def verifyToken(idTokenString: String): Option[GoogleUser] = idTokenString.split("-").head match {
+    case level: String =>
+      Some(GoogleUser(
+        config.getString(s"users.$level.googleId"),
+        config.getString(s"users.$level.email"),
+        config.getString(s"users.$level.name"),
+        config.getString(s"users.$level.familyName"),
+        config.getString(s"users.$level.givenName")
+      ))
   }
 }
