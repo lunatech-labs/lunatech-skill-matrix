@@ -33,7 +33,16 @@
           md-whiteframe="3"
           data-ng-if="auth">
     <md-toolbar class="md-primary">
-      <h1 class="md-toolbar-tools">Tech Matrix</h1>
+      <h1 class="md-toolbar-tools">
+        <div class="position-relative width-100">
+          <div class="profile-picture">
+            <img data-ng-src="{{details.avatar}}">
+          </div>
+          <div>
+            <span>{{details.name}}</span>
+          </div>
+        </div>
+      </h1>
     </md-toolbar>
     <md-content layout-padding ng-controller="MenuController">
       <md-list flex>
