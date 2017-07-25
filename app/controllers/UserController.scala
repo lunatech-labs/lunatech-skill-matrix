@@ -8,7 +8,7 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, BodyParsers, Controller}
 import services.UserService
 import models.ImplicitFormats._
-import models.AccessLevel
+import models.{AccessLevel, TechFilter}
 
 import scala.concurrent._
 import ExecutionContext.Implicits.global
@@ -24,6 +24,12 @@ class UserController @Inject()(userService: UserService, auth: Authentication) e
 
   def getAllUsers: Action[Unit] = auth.UserAction(AccessLevel.Management).async(BodyParsers.parse.empty) { _ =>
     userService.getAll.map ( users => Ok(Json.toJson(users)) )
+  }
+
+  def searchUsers:Action[Seq[TechFilter]] = auth.UserAction(AccessLevel.Management).async(BodyParsers.parse.json[Seq[TechFilter]]) { r =>
+    for {
+      users <- userService.searchUsers(r.request.body)
+    } yield Ok(Json.toJson(users))
   }
 
   def removeUser(userId:Int): Action[Unit] = auth.UserAction(AccessLevel.Management).async(BodyParsers.parse.empty) { _ =>

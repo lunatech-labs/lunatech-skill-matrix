@@ -27,6 +27,10 @@ class UserService @Inject() (implicit val connection: DBConnection) {
     Users.getAllUsers
   }
 
+  def searchUsers(filters:Seq[TechFilter]):Future[Seq[User]] = {
+    Users.searchUsers(filters)
+  }
+
   def getOrCreateUserByEmail(name: String, familyName: String, email: String): Future[Int] = {
     Users.getUserIdByEmail(email).flatMap {
       case Some(id: Int) =>

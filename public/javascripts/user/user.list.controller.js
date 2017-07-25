@@ -26,7 +26,7 @@
             return user;
           });
         },function(response){
-          showMessage('Error getting users',false)
+          showMessage('Error getting users',failureAlert)
         });
       }
 

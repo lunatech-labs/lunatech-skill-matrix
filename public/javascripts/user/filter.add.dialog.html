@@ -1,0 +1,49 @@
+<md-dialog class="width-75">
+  <md-dialog-content>
+    <md-toolbar class="md-whiteframe-4dp">
+      <div class="md-toolbar-tools">
+        <h2 flex>Add Filter</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" aria-label="close" data-ng-click="close()">
+          <md-icon md-font-set="fa fa-times fa-2x"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <div layout="row" layout-margin layout-padding>
+      <md-input-container>
+        <label>Tech</label>
+        <md-select ng-model="tech" class="text-transform-capitalize">
+          <md-option ng-repeat="tech in techs" ng-value="tech.name" class="text-transform-capitalize">
+            {{tech.name}}
+          </md-option>
+        </md-select>
+      </md-input-container>
+
+      <md-input-container>
+        <label>Operation</label>
+        <md-select ng-model="operation" class="text-transform-capitalize" ng-change="validateLevel(operation)">
+          <md-option ng-repeat="operation in operations" ng-value="operation" class="text-transform-capitalize">
+            {{operation.text}}
+          </md-option>
+        </md-select>
+      </md-input-container>
+
+      <md-input-container data-ng-show="showLevel">
+        <label>Level</label>
+        <md-select ng-model="l" class="text-transform-capitalize">
+          <md-option ng-repeat="l in level" ng-value="l" class="text-transform-capitalize">
+            {{l.text}}
+          </md-option>
+        </md-select>
+      </md-input-container>
+
+      <span flex></span>
+
+      <md-button class="md-primary md-fab" aria-label="confirm filter" data-ng-click="confirm()">
+        <md-icon md-font-set="fa fa-check fa-2x"></md-icon>
+      </md-button>
+    </div>
+
+  </md-dialog-content>
+</md-dialog>
