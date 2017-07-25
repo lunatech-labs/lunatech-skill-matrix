@@ -2,10 +2,9 @@ package models.db
 
 import com.typesafe.scalalogging.LazyLogging
 import common.DBConnection
-import models.{AccessLevel, User}
+import models._
 import slick.driver.PostgresDriver.api._
 import slick.lifted.{ProvenShape, TableQuery}
-import models.AccessLevel.accessLevelFormat
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
@@ -63,6 +62,26 @@ object Users extends LazyLogging {
   def remove(userId:Int)(implicit connection: DBConnection): Future[Int] = {
     val query = userTable.filter(_.id === userId)
     connection.db.run(query.delete)
+  }
+
+  def searchUsers(filters:Seq[TechFilter])(implicit connection: DBConnection):Future[Seq[User]] = {
+    Skills.getAllSkills.map{ skills =>
+      val userSkills = skills.groupBy(_._2)
+      (for {
+        (user, skills) <- userSkills
+      } yield {
+        if(validateFilters(filters,skills)) Some(user)
+        else None
+      }).toSeq.flatten
+    }
+  }
+
+  private def validateFilters(filters:Seq[TechFilter], skills:Seq[(Skill,User,Tech)]):Boolean = {
+    filters.map{ filter =>
+      skills.map{ skill =>
+        filter.validate(skill._1,skill._3)
+      }.fold(false)( (a1,acc) => a1 || acc )
+    }.fold(true)( (a1,acc) => a1 && acc )
   }
 }
 

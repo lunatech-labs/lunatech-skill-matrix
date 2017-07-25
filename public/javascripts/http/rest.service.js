@@ -31,6 +31,9 @@
           getAllUsers: function(){
               return AuthenticatedRequest('GET','/users');
           },
+          searchUsers: function(data){
+              return AuthenticatedRequest('POST', '/users/search', data);
+          },
           getUserProfile:function(params){
               var url = RestUrlService.getUserProfile(params);
               return AuthenticatedRequest('GET',url);

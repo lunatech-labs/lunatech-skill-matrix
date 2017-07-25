@@ -27,6 +27,10 @@
          templateUrl: '/assets/javascripts/tech/list.html',
          controller: 'TechListController'
       })
+      .when('/user/profile', {
+        templateUrl: '/assets/javascripts/user/profile.html',
+        controller: 'UserProfileController'
+      })
       .when('/help', {
        templateUrl: '/assets/javascripts/help/help.html',
        controller: 'HelpController'

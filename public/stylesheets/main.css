@@ -41,6 +41,10 @@ body{
   width: 100%;
 }
 
+.width-75 {
+  width: 75%;
+}
+
 .text-transform-capitalize{
     text-transform: capitalize;
 }
@@ -245,4 +249,20 @@ body{
   width:auto;
   height:auto;
   margin-right: 20px;
+}
+
+.add-filter-button{
+  position:absolute;
+  right: -20px;
+  top: -20px;
+}
+
+.filter-badge {
+  display:inline-block;
+  background:#039BE5;
+  color:white;
+}
+
+.filter-badge md-button {
+  color:#01579B;
 }
