@@ -55,6 +55,56 @@
         }
       }
     },
+    "/users/search": {
+      "post": {
+        "summary": "Search users by filters",
+        "operationId": "searchUser",
+        "security": [
+          {
+            "OauthSecurity": [
+              "management"
+            ]
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "techFilter",
+            "description": "List of filter",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TechFilter"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/Standard400ErrorMessage"
+          },
+          "401": {
+            "$ref": "#/responses/Standard401ErrorMessage"
+          },
+          "403": {
+            "$ref": "#/responses/Standard403ErrorMessage"
+          },
+          "500": {
+            "$ref": "#/responses/Standard500ErrorMessage"
+          }
+        }
+      }
+    },
     "/users/{userId}": {
       "get": {
         "summary": "Get user by id",
@@ -701,6 +751,26 @@
           "items": {
             "$ref": "#/definitions/SkillMatrixItem"
           }
+        }
+      }
+    },
+    "TechFilter": {
+      "type": "object",
+      "properties": {
+        "tech": {
+          "type": "string"
+        },
+        "operation": {
+          "type": "string",
+          "enum": [
+            "EQUAL",
+            "GT",
+            "LT",
+            "ANY"
+          ]
+        },
+        "level": {
+          "type": "string"
         }
       }
     },

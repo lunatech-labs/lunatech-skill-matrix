@@ -1,7 +1,7 @@
 package services
 
 import data.TestData.{ID_USER_SNAPE, nonExistentId}
-import models.{AccessLevel, User}
+import models._
 
 class UserServiceSpec extends UnitSpec {
   var dataMap: Map[String, Int] = _
@@ -12,7 +12,7 @@ class UserServiceSpec extends UnitSpec {
   }
 
   before {
-    dataMap = insertUserData()
+    dataMap = insertSkillData()
   }
 
   after {
@@ -48,6 +48,16 @@ class UserServiceSpec extends UnitSpec {
     "get all users" in {
       val response = userService.getAll.futureValue
       response.map(_.firstName) mustBe List("Martin", "Severus", "Gandalf")
+    }
+
+    "search with matching filter" in {
+      val response = userService.searchUsers(Seq(TechFilter("scala",Operation.Equal,Some(SkillLevel.EXPERT)))).futureValue
+      response.map(_.firstName) mustBe List("Martin")
+    }
+
+    "search without matching filter" in {
+      val response = userService.searchUsers(Seq(TechFilter("scala",Operation.Equal,Some(SkillLevel.NOVICE)))).futureValue
+      response mustBe Nil
     }
 
     "get userId by email when user is in database when calling getOrCreateUserByEmail" in {
