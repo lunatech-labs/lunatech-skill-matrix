@@ -21,7 +21,7 @@ class GoogleSignInController @Inject()(userService: UserService, oauth: OauthSer
     for {
       token <- request.body.\("token").validate[String]                                                      ?| (err => ApiErrors.badRequest(JsError.toJson(err)))
       gUser <- oauth.verifyToken(token)                                                                      ?| ApiErrors.UNAUTHORIZED
-      id <- userService.getOrCreateUserByEmail(gUser.givenName, gUser.familyName, gUser.email)               ?| ApiErrors.USER_NOT_FOUND
-    } yield Ok(Json.obj("user" -> Json.toJson(User(Some(id), gUser.givenName, gUser.familyName, gUser.email, AccessLevel.Basic)))) //TODO: in case we need the real accessLevel, get it from db
+      user <- userService.getOrCreateUserByEmail(gUser.givenName, gUser.familyName, gUser.email)             ?| ApiErrors.USER_NOT_FOUND
+    } yield Ok(Json.obj("user" -> Json.toJson(user)))
   }
 }

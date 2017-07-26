@@ -46,31 +46,31 @@
     </md-toolbar>
     <md-content layout-padding ng-controller="MenuController">
       <md-list flex>
-        <md-list-item class="md-1-line" data-ng-click="goTo('/user/home')">
+        <md-list-item class="md-1-line" data-ng-click="goTo('/user/home')" data-ng-show="validateAccessLevel(details.accessLevel, accessLevel.Basic)">
           <div class="md-list-item-text" layout="row">
             <md-icon md-font-set="fa fa-home fa-2x"></md-icon>
             <span>My profile</span>
           </div>
         </md-list-item>
-        <md-list-item class="md-1-line" data-ng-click="goTo('/user/profile')">
+        <md-list-item class="md-1-line" data-ng-click="goTo('/user/profile')" data-ng-show="validateAccessLevel(details.accessLevel, accessLevel.Management)">
           <div class="md-list-item-text" layout="row">
             <md-icon md-font-set="fa fa-search fa-2x"></md-icon>
             <span>Profile Search</span>
           </div>
         </md-list-item>
-        <md-list-item class="md-1-line" data-ng-click="goTo('/user/list')">
+        <md-list-item class="md-1-line" data-ng-click="goTo('/user/list')" data-ng-show="validateAccessLevel(details.accessLevel, accessLevel.Management)">
           <div class="md-list-item-text" layout="row">
             <md-icon md-font-set="fa fa-users fa-2x"></md-icon>
             <span>Users</span>
           </div>
         </md-list-item>
-        <md-list-item class="md-1-line" data-ng-click="goTo('/alltech/list')">
+        <md-list-item class="md-1-line" data-ng-click="goTo('/alltech/list')" data-ng-show="validateAccessLevel(details.accessLevel, accessLevel.Admin)">
           <div class="md-list-item-text" layout="row">
             <md-icon md-font-set="fa fa-book fa-2x"></md-icon>
             <span>Tech</span>
           </div>
         </md-list-item>
-        <md-list-item class="md-1-line" data-ng-click="goTo('/skillmatrix')">
+        <md-list-item class="md-1-line" data-ng-click="goTo('/skillmatrix')" data-ng-show="validateAccessLevel(details.accessLevel, accessLevel.Basic)">
           <div class="md-list-item-text" layout="row">
             <md-icon md-font-set="fa fa-table fa-2x"></md-icon>
             <span>Tech Matrix</span>
@@ -115,6 +115,7 @@
 <script src='@routes.Assets.versioned("javascripts/constants/tech.type.constant.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/constants/operation.constant.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/constants/config.constant.js")' type="text/javascript"></script>
+<script src='@routes.Assets.versioned("javascripts/constants/access.level.constant.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/http/rest.url.service.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/http/rest.service.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/http/rest.error.service.js")' type="text/javascript"></script>

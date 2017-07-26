@@ -76,7 +76,10 @@
             "description": "List of filter",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/TechFilter"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TechFilter"
+              }
             }
           }
         ],
