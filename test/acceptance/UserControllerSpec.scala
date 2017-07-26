@@ -47,4 +47,25 @@ class UserControllerSpec extends AcceptanceSpec {
     }
   }
 
+  info("The POST /users/search for getting the matching users")
+  feature("It should return Array of User object") {
+    scenario("Everything is fine") {
+      val request = FakeRequest("POST", s"/users/search").withBody("[]").withHeaders(("X-AUTH-TOKEN", authTokenManagement),("Content-Type", "application/json; charset=utf8"))
+      val response = route(app, request).get
+
+      status(response) mustEqual 200
+      (request, response) must validateAgainstSwagger(swaggerPath)
+
+    }
+  }
+  feature("It should return 400 when body is malformed"){
+    scenario("body malformed") {
+      val request = FakeRequest("POST", s"/users/search").withBody("""[{"format":"wrong"}]""").withHeaders(("X-AUTH-TOKEN", authTokenManagement),("Content-Type", "application/json; charset=utf8"))
+      val response = route(app, request).get
+
+      status(response) mustEqual 400
+      (request, response) must validateResponseAgainstSwagger(swaggerPath)
+    }
+  }
+
 }
