@@ -168,4 +168,9 @@ object TestData {
       |}
     """.stripMargin)
 
+  val emptyTechFilter: JsValue = Json.parse(
+    """
+      |[]
+    """.stripMargin)
+
 }

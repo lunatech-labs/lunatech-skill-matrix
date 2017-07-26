@@ -28,27 +28,28 @@
           //Register the user in backend
           RestService.googleAuth({token: id_token}).then(function(response){
               $cookies.putObject('user',{
-                            name: profile.getGivenName(),
-                            last_name: profile.getFamilyName(),
-                            avatar: profile.getImageUrl(),
-                            email: profile.getEmail,
-                            full_name: profile.getName(),
-                            googleId: profile.getId(),
-                            token:id_token
+                name: profile.getGivenName(),
+                last_name: profile.getFamilyName(),
+                avatar: profile.getImageUrl(),
+                email: profile.getEmail,
+                full_name: profile.getName(),
+                googleId: profile.getId(),
+                token:id_token,
+                accessLevel: response.data.user.accessLevel
               });
               $location.path('skillmatrix')
           },function(response){
             $mdToast.show(
-                          $mdToast.simple()
-                            .textContent('Error google authentication')
-                            .position({
-                                        bottom: false,
-                                        top: true,
-                                        left: true,
-                                        right: false
-                                      } )
-                            .hideDelay(3000)
-                        );
+              $mdToast.simple()
+                .textContent('Error google authentication')
+                .position({
+                  bottom: false,
+                  top: true,
+                  left: true,
+                  right: false
+                })
+                .hideDelay(3000)
+            );
           });
       });
       $scope.$on('event:google-plus-signin-failure', function (event,authResult) {

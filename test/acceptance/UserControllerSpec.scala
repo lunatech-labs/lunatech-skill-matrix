@@ -50,7 +50,7 @@ class UserControllerSpec extends AcceptanceSpec {
   info("The POST /users/search for getting the matching users")
   feature("It should return Array of User object") {
     scenario("Everything is fine") {
-      val request = FakeRequest("POST", s"/users/search").withBody("[]").withHeaders(("X-AUTH-TOKEN", authTokenManagement),("Content-Type", "application/json; charset=utf8"))
+      val request = FakeRequest("POST", s"/users/search").withBody(emptyTechFilter).withHeaders(("X-AUTH-TOKEN", authTokenManagement))
       val response = route(app, request).get
 
       status(response) mustEqual 200

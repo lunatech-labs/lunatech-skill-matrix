@@ -31,12 +31,14 @@ class UserService @Inject() (implicit val connection: DBConnection) {
     Users.searchUsers(filters)
   }
 
-  def getOrCreateUserByEmail(name: String, familyName: String, email: String): Future[Int] = {
-    Users.getUserIdByEmail(email).flatMap {
-      case Some(id: Int) =>
-        Future.successful(id)
+  def getOrCreateUserByEmail(name: String, familyName: String, email: String): Future[Option[User]] = {
+    Users.getUserByEmail(email).flatMap {
+      case Some(user: User) =>
+        Future.successful(Some(user))
       case _ =>
-        Users.add(User(None, name, familyName, email, AccessLevel.Basic))
+        val user = User(None, name, familyName, email, AccessLevel.Basic)
+        Users.add(user)
+        Future.successful(Some(user))
     }
   }
 

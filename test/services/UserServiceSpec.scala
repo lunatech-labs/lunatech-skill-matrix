@@ -63,7 +63,7 @@ class UserServiceSpec extends UnitSpec {
     "get userId by email when user is in database when calling getOrCreateUserByEmail" in {
       val response = userService.getOrCreateUserByEmail("Severus", "Snape", "severus.snape@hogwarts.com").futureValue
 
-      response mustEqual dataMap(ID_USER_SNAPE)
+      response.map(_.id.getOrElse(0)).getOrElse(0) mustEqual dataMap(ID_USER_SNAPE)
     }
 
     "create user by email when user is not in the database" in {
