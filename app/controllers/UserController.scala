@@ -26,7 +26,7 @@ class UserController @Inject()(userService: UserService, auth: Authentication) e
     userService.getAll.map ( users => Ok(Json.toJson(users)) )
   }
 
-  def searchUsers:Action[Seq[TechFilter]] = auth.UserAction(AccessLevel.Management).async(BodyParsers.parse.json[Seq[TechFilter]]) { r =>
+  def searchUsers:Action[Seq[TechFilter]] = auth.UserAction().async(BodyParsers.parse.json[Seq[TechFilter]]) { r =>
     for {
       users <- userService.searchUsers(r.request.body)
     } yield Ok(Json.toJson(users))

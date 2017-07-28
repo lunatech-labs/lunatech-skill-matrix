@@ -78,8 +78,8 @@ object Users extends LazyLogging {
 
   private def validateFilters(filters:Seq[TechFilter], skills:Seq[(Skill,User,Tech)]):Boolean = {
     filters.map{ filter =>
-      skills.map{ skill =>
-        filter.validate(skill._1,skill._3)
+      skills.map{
+        case (skill,_,tech) => filter.validate(skill,tech)
       }.fold(false)( (a1,acc) => a1 || acc )
     }.fold(true)( (a1,acc) => a1 && acc )
   }
