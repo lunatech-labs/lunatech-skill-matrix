@@ -60,11 +60,10 @@ class UserControllerSpec extends AcceptanceSpec {
   }
   feature("It should return 400 when body is malformed"){
     scenario("body malformed") {
-      val request = FakeRequest("POST", s"/users/search").withBody("""[{"format":"wrong"}]""").withHeaders(("X-AUTH-TOKEN", authTokenManagement),("Content-Type", "application/json; charset=utf8"))
+      val request = FakeRequest("POST", s"/users/search").withBody(wrongTechFilter).withHeaders(("X-AUTH-TOKEN", authTokenManagement))
       val response = route(app, request).get
 
       status(response) mustEqual 400
-      (request, response) must validateResponseAgainstSwagger(swaggerPath)
     }
   }
 

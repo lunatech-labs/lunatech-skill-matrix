@@ -173,4 +173,13 @@ object TestData {
       |[]
     """.stripMargin)
 
+  val wrongTechFilter: JsValue = Json.parse(
+    """
+      |[
+      | {
+      |   "format":"wrong"
+      | }
+      |]
+    """.stripMargin)
+
 }
