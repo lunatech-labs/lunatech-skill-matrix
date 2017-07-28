@@ -7,6 +7,7 @@ object TestData {
   val ID_USER_SAYED_ALI = "idUserSayedAli"
   val ID_USER_ODERSKY = "idUserOdersky"
   val ID_USER_SNAPE = "idUserSnape"
+  val ID_USER_GANDALF = "idUserGandalf"
 
   val ID_TECH_SCALA = "idTechScala"
   val ID_TECH_FUNCTIONAL = "idTechFunctional"
@@ -21,6 +22,40 @@ object TestData {
   val X_AUTH_TOKEN = "X-AUTH-TOKEN"
 
   val nonExistentId = 4242
+
+  val updateTechJson: JsValue = Json.parse(
+    """
+       {
+        "name": "New updated name",
+        "techType": "LANGUAGE"
+       }
+    """.stripMargin
+  )
+
+  val updateTechDuplicateNameJson: JsValue = Json.parse(
+    """
+       {
+        "name": "scala",
+        "techType": "LANGUAGE"
+       }
+    """.stripMargin
+  )
+
+  val updateTechJsonWithMissingName: JsValue = Json.parse(
+    """
+       {
+        "techType": "LANGUAGE"
+       }
+    """.stripMargin
+  )
+
+  val updateTechJsonWithMissingType: JsValue = Json.parse(
+    """
+       {
+        "name": "New updated name"
+       }
+    """.stripMargin
+  )
 
   val addSkillRequestJson: JsValue = Json.parse(
     """
@@ -131,6 +166,20 @@ object TestData {
       |		},
       |	"skillLevel": "NOVICE"
       |}
+    """.stripMargin)
+
+  val emptyTechFilter: JsValue = Json.parse(
+    """
+      |[]
+    """.stripMargin)
+
+  val wrongTechFilter: JsValue = Json.parse(
+    """
+      |[
+      | {
+      |   "format":"wrong"
+      | }
+      |]
     """.stripMargin)
 
 }

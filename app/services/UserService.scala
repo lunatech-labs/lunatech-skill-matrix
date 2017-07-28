@@ -15,6 +15,10 @@ class UserService @Inject() (implicit val connection: DBConnection) {
     Users.getUserById(userId)
   }
 
+  def removeUser(userId: Int): Future[Int] = {
+    Users.remove(userId)
+  }
+
   def getUserByEmail(email: String): Future[Option[User]] = {
     Users.getUserByEmail(email)
   }
@@ -23,12 +27,18 @@ class UserService @Inject() (implicit val connection: DBConnection) {
     Users.getAllUsers
   }
 
-  def getOrCreateUserByEmail(user: User): Future[Int] = {
-    Users.getUserIdByEmail(user.email).flatMap {
-      case Some(id: Int) =>
-        Future.successful(id)
+  def searchUsers(filters:Seq[TechFilter]):Future[Seq[User]] = {
+    Users.searchUsers(filters)
+  }
+
+  def getOrCreateUserByEmail(name: String, familyName: String, email: String): Future[Option[User]] = {
+    Users.getUserByEmail(email).flatMap {
+      case Some(user: User) =>
+        Future.successful(Some(user))
       case _ =>
+        val user = User(None, name, familyName, email, AccessLevel.Basic)
         Users.add(user)
+        Future.successful(Some(user))
     }
   }
 

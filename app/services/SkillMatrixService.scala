@@ -22,7 +22,10 @@ class SkillMatrixService @Inject()(techService: TechService,
   }
 
   def updateUserSkill(skillId: Int, userId: Int, techId: Int, skillLevel: SkillLevel): Future[Option[Int]] = {
-    Skills.update(skillId, userId, techId, skillLevel)
+    Skills.update(skillId, userId, techId, skillLevel).map {
+      case 0 => None
+      case nrOfRows@_ => Some(nrOfRows)
+    }
   }
 
   def deleteUserSkill(userId: Int, skillId: Int): Future[Option[Int]] = {

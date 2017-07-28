@@ -4,7 +4,7 @@ import javax.inject.{Inject, Singleton}
 
 import com.typesafe.scalalogging.LazyLogging
 import common.ApiErrors
-import models.User
+import models.{AccessLevel, User}
 import play.api.libs.json.{JsError, JsValue, Json}
 import play.api.mvc.{Action, BodyParsers, Controller}
 import services.UserService
@@ -21,8 +21,7 @@ class GoogleSignInController @Inject()(userService: UserService, oauth: OauthSer
     for {
       token <- request.body.\("token").validate[String]                                                      ?| (err => ApiErrors.badRequest(JsError.toJson(err)))
       gUser <- oauth.verifyToken(token)                                                                      ?| ApiErrors.UNAUTHORIZED
-      id <- userService.getOrCreateUserByEmail(User(None, gUser.givenName, gUser.familyName, gUser.email))   ?| ApiErrors.USER_NOT_FOUND
-      _ = logger.info("logged user with id {}",id)
-    } yield Ok(Json.obj("user" -> Json.toJson(User(Some(id), gUser.givenName, gUser.familyName, gUser.email))))
+      user <- userService.getOrCreateUserByEmail(gUser.givenName, gUser.familyName, gUser.email)             ?| ApiErrors.USER_NOT_FOUND
+    } yield Ok(Json.obj("user" -> Json.toJson(user)))
   }
 }

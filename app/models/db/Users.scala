@@ -2,7 +2,7 @@ package models.db
 
 import com.typesafe.scalalogging.LazyLogging
 import common.DBConnection
-import models.User
+import models._
 import slick.driver.PostgresDriver.api._
 import slick.lifted.{ProvenShape, TableQuery}
 
@@ -18,7 +18,9 @@ class Users(tag: Tag) extends Table[User](tag, "users") {
 
   def email: Rep[String] = column[String]("email")
 
-  def * : ProvenShape[User] = (id.?, firstName, lastName, email) <> ((User.apply _).tupled, User.unapply)
+  def accessLevel: Rep[AccessLevel] = column[AccessLevel]("accesslevel")
+
+  def * : ProvenShape[User] = (id.?, firstName, lastName, email, accessLevel) <> ((User.apply _).tupled, User.unapply)
 }
 
 object Users extends LazyLogging {
@@ -55,6 +57,31 @@ object Users extends LazyLogging {
     logger.info("add new user {}", user)
     val query = userTable returning userTable.map(_.id) += user
     connection.db.run(query)
+  }
+
+  def remove(userId:Int)(implicit connection: DBConnection): Future[Int] = {
+    val query = userTable.filter(_.id === userId)
+    connection.db.run(query.delete)
+  }
+
+  def searchUsers(filters:Seq[TechFilter])(implicit connection: DBConnection):Future[Seq[User]] = {
+    Skills.getAllSkills.map{ skills =>
+      val userSkills = skills.groupBy(_._2)
+      (for {
+        (user, skills) <- userSkills
+      } yield {
+        if(validateFilters(filters,skills)) Some(user)
+        else None
+      }).toSeq.flatten
+    }
+  }
+
+  private def validateFilters(filters:Seq[TechFilter], skills:Seq[(Skill,User,Tech)]):Boolean = {
+    filters.map{ filter =>
+      skills.map{
+        case (skill,_,tech) => filter.validate(skill,tech)
+      }.fold(false)( (a1,acc) => a1 || acc )
+    }.fold(true)( (a1,acc) => a1 && acc )
   }
 }
 

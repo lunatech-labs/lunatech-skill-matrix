@@ -31,6 +31,9 @@
           getAllUsers: function(){
               return AuthenticatedRequest('GET','/users');
           },
+          searchUsers: function(data){
+              return AuthenticatedRequest('POST', '/users/search', data);
+          },
           getUserProfile:function(params){
               var url = RestUrlService.getUserProfile(params);
               return AuthenticatedRequest('GET',url);
@@ -58,7 +61,23 @@
           getTechs:function(params){
             var url = RestUrlService.getTechs(params);
             return AuthenticatedRequest('GET',url);
-          }
+          },
+          removeUser:function(userId){
+             var url = RestUrlService.removeUser(userId);
+             return AuthenticatedRequest('DELETE',url);
+          },
+          getAllTech: function(){
+             return AuthenticatedRequest('GET','/alltech');
+          },
+          removeTech:function(techId){
+             var url = RestUrlService.removeTech(techId);
+             return AuthenticatedRequest('DELETE',url);
+          },
+          updateTech:function(data){
+             var url = RestUrlService.updateTech(data.techId);
+             return AuthenticatedRequest('PUT',url,data.body);
+          },
+
       };
 
       return api;

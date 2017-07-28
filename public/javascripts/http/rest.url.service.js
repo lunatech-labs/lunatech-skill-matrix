@@ -22,8 +22,17 @@
               return '/google/auth';
           },
           getTechs:function(params){
-            return '/techs/' + encodeURIComponent(params);
-          }
+            return '/alltech/' + encodeURIComponent(params);
+          },
+          removeUser:function(userId){
+            return '/users/' + userId;
+          },
+          removeTech:function(techId){
+            return '/alltech/' + techId;
+          },
+          updateTech:function(techId){
+            return '/alltech/'+techId;
+          },
       };
 
       return api;

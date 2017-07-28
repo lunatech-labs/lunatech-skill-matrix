@@ -20,9 +20,9 @@ class Skills(tag: Tag) extends Table[models.Skill](tag, "user_skills") {
 
   def * : ProvenShape[Skill] = (id.?, userId, techId, skillLevel) <> ((models.Skill.apply _).tupled, models.Skill.unapply _)
 
-  def user: ForeignKeyQuery[Users, User] = foreignKey("USER_FK", userId, TableQuery[Users])(_.id)
+  def user: ForeignKeyQuery[Users, User] = foreignKey("USER_FK", userId, TableQuery[Users])(_.id, onDelete = ForeignKeyAction.Cascade)
 
-  def tech: ForeignKeyQuery[Techs, Tech] = foreignKey("TECH_FK", techId, TableQuery[Techs])(_.id)
+  def tech: ForeignKeyQuery[Techs, Tech] = foreignKey("TECH_FK", techId, TableQuery[Techs])(_.id, onDelete = ForeignKeyAction.Cascade)
 }
 
 
@@ -56,21 +56,13 @@ object Skills extends LazyLogging {
     connection.db.run(join.result)
   }
 
-  //TODO:  refactor this method
-  def update(skillId: Int, userId: Int, techId: Int, skillLevel: SkillLevel)(implicit connection: DBConnection): Future[Option[Int]] = {
+  def update(skillId: Int, userId: Int, techId: Int, skillLevel: SkillLevel)(implicit connection: DBConnection): Future[Int] = {
     logger.info("info updating skillId {} for user {} and techId {} with skillLevel {}", skillId.toString, userId.toString, techId.toString, skillLevel)
-    val nrOfUpdatedRows: Future[Int] = connection.db.run(
+    connection.db.run(
       skillTable
         .filter(skill => skill.id === skillId && skill.userId === userId && skill.techId === techId)
         .map(skill => skill.skillLevel)
         .update(skillLevel))
-
-    nrOfUpdatedRows.flatMap {
-      case 0 => Future(None)
-      case _ =>
-        val selectQuery = skillTable.filter(_.id === skillId).map(_.id)
-        connection.db.run(selectQuery.result.headOption)
-    }
   }
 
   def delete(userId: Int, skillId: Int)(implicit connection: DBConnection): Future[Int] = {

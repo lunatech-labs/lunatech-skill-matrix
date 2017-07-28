@@ -9,6 +9,16 @@ body{
   padding: 15px 30px;
 }
 
+.no-margin {
+  margin: 0px;
+}
+
+.hide-box {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
 .search-card md-icon {
   margin: 0px;
 }
@@ -29,6 +39,10 @@ body{
 
 .width-100 {
   width: 100%;
+}
+
+.width-75 {
+  width: 75%;
 }
 
 .text-transform-capitalize{
@@ -156,6 +170,11 @@ body{
   background-color:#729EA1!important;
 }
 
+.tech-bg-color{
+  color:rgba(0,0,0,0.87)!important;
+  background-color:#FFFFFF!important;
+}
+
 .fix-btn-toolbar{
   margin-left: 0px!important;
 }
@@ -211,4 +230,52 @@ body{
   border: none;
   outline: none;
   background: none;
+}
+
+.user-profile-icon {
+  width: auto;
+  height: auto;
+}
+.user-profile-info span:nth-child(1){
+  text-transform: capitalize;
+  text-align: center;
+}
+.user-profile-info span:nth-child(n+2){
+  font-size: 0.8em;
+  text-align: center;
+}
+
+.md-list-item-text md-icon {
+  width:auto;
+  height:auto;
+  margin-right: 20px;
+}
+
+.add-filter-button{
+  position:absolute;
+  right: -20px;
+  top: -20px;
+}
+
+.filter-badge {
+  display:inline-block;
+  background:#039BE5;
+  color:white;
+}
+
+.filter-badge md-button {
+  color:#01579B;
+}
+
+.profile-picture{
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  box-shadow: 0 0 2px 2px rgba(0,0,0,0.1);
+}
+
+.profile-picture img {
+  width: 60px;
 }

@@ -24,14 +24,15 @@
       "tokenUrl": "https://oauth.simple.api/token",
       "scopes": {
         "admin": "Admin scope",
-        "user": "User scope"
+        "management": "Manager scope",
+        "basic": "User scope"
       }
     }
   },
   "security": [
     {
       "OauthSecurity": [
-        "user"
+        "basic"
       ]
     }
   ],
@@ -54,6 +55,59 @@
         }
       }
     },
+    "/users/search": {
+      "post": {
+        "summary": "Search users by filters",
+        "operationId": "searchUser",
+        "security": [
+          {
+            "OauthSecurity": [
+              "management"
+            ]
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "techFilter",
+            "description": "List of filter",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TechFilter"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/Standard400ErrorMessage"
+          },
+          "401": {
+            "$ref": "#/responses/Standard401ErrorMessage"
+          },
+          "403": {
+            "$ref": "#/responses/Standard403ErrorMessage"
+          },
+          "500": {
+            "$ref": "#/responses/Standard500ErrorMessage"
+          }
+        }
+      }
+    },
     "/users/{userId}": {
       "get": {
         "summary": "Get user by id",
@@ -61,7 +115,7 @@
         "security": [
           {
             "OauthSecurity": [
-              "admin"
+              "management"
             ]
           }
         ],
@@ -82,6 +136,49 @@
             "schema": {
               "$ref": "#/definitions/User"
             }
+          },
+          "401": {
+            "$ref": "#/responses/Standard401ErrorMessage"
+          },
+          "403": {
+            "$ref": "#/responses/Standard403ErrorMessage"
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "$ref": "#/responses/Standard500ErrorMessage"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes a user by id",
+        "description": "Deletes a user together with all their skills",
+        "operationId": "removeUser",
+        "security": [
+          {
+            "OauthSecurity": [
+              "management"
+            ]
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "user deleted, returning NoContent response"
           },
           "401": {
             "$ref": "#/responses/Standard401ErrorMessage"
@@ -341,6 +438,101 @@
         }
       }
     },
+    "/alltech/{techId}": {
+      "put": {
+        "summary": "update tech name",
+        "produces": ["application/json"],
+        "security": [
+          {
+            "OauthSecurity": ["management"]
+          }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "techId",
+            "description": "the id of the tech to be updated",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "tech",
+            "description": "the new name and/or new type",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Tech"
+
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "updated",
+            "schema": {
+              "$ref": "#/definitions/Tech"
+            }
+          },
+          "401": {
+            "$ref": "#/responses/Standard401ErrorMessage"
+          },
+          "403": {
+            "$ref": "#/responses/Standard403ErrorMessage"
+          },
+          "404": {
+            "description": "Tech not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "409": {
+            "description": "Duplicate tech name: the tech name sent for update is already present in the database",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "$ref": "#/responses/Standard500ErrorMessage"
+          }
+        }
+      },
+      "delete": {
+        "summary": "delete tech",
+        "produces": ["application/json"],
+        "security": [
+          {
+            "OauthSecurity": ["management"]
+          }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "techId",
+            "description": "the id of the tech to be deleted",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "no content for successful operation"
+          },
+          "401": {
+            "$ref": "#/responses/Standard401ErrorMessage"
+          },
+          "403": {
+            "$ref": "#/responses/Standard403ErrorMessage"
+          },
+          "404": {
+            "description": "Tech not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "$ref": "#/responses/Standard500ErrorMessage"
+          }
+        }
+      }
+    },
     "/skillmatrix": {
       "get": {
         "summary": "get all skills entered by users together with info about users",
@@ -565,6 +757,26 @@
         }
       }
     },
+    "TechFilter": {
+      "type": "object",
+      "properties": {
+        "tech": {
+          "type": "string"
+        },
+        "operation": {
+          "type": "string",
+          "enum": [
+            "EQUAL",
+            "GT",
+            "LT",
+            "ANY"
+          ]
+        },
+        "level": {
+          "type": "string"
+        }
+      }
+    },
     "User": {
       "type": "object",
       "properties": {
@@ -583,6 +795,14 @@
         },
         "password": {
           "type": "string"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "Basic",
+            "Admin",
+            "Management"
+          ]
         }
       }
     },

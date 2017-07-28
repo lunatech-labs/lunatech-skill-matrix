@@ -56,4 +56,9 @@ object Techs extends LazyLogging {
 
     connection.db.run(action)
   }
+
+  def removeTech(techId: Int)(implicit connection: DBConnection): Future[Int] = {
+    val action = techTable.filter(_.id === techId).delete
+    connection.db.run(action)
+  }
 }

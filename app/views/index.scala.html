@@ -7,8 +7,8 @@
   <link rel="stylesheet" media="screen"
         href='@routes.Assets.versioned("javascripts/components/angular-material/angular-material.css")'>
   <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/main.css")'>
-  <link rel="shortcut icon" type="image/png" href='@routes.Assets.versioned("images/favicon.png")'>
-</head>
+  <link rel="shortcut icon" type="image/png" href='@routes.Assets.versioned("images/favicon.ico")'>
+ </head>
 <body data-ng-app="techmatrix" layout="column">
 
 <md-toolbar class="md-whiteframe-4dp">
@@ -33,25 +33,52 @@
           md-whiteframe="3"
           data-ng-if="auth">
     <md-toolbar class="md-primary">
-      <h1 class="md-toolbar-tools">Tech Matrix</h1>
+      <h1 class="md-toolbar-tools">
+        <div class="position-relative width-100">
+          <div class="profile-picture">
+            <img data-ng-src="{{details.avatar}}">
+          </div>
+          <div>
+            <span>{{details.name}}</span>
+          </div>
+        </div>
+      </h1>
     </md-toolbar>
     <md-content layout-padding ng-controller="MenuController">
       <md-list flex>
-        <md-list-item class="md-1-line" data-ng-click="goTo('/user/home')">
+        <md-list-item class="md-1-line" data-ng-click="goTo('/user/home')" data-ng-show="validateAccessLevel(details.accessLevel, accessLevel.Basic)">
           <div class="md-list-item-text" layout="row">
-            <md-icon md-font-set="fa fa-home" class="correct-icon"></md-icon>
+            <md-icon md-font-set="fa fa-home fa-2x"></md-icon>
             <span>My profile</span>
           </div>
         </md-list-item>
-        <md-list-item class="md-1-line" data-ng-click="goTo('/skillmatrix')">
+        <md-list-item class="md-1-line" data-ng-click="goTo('/user/profile')" data-ng-show="validateAccessLevel(details.accessLevel, accessLevel.Basic)">
           <div class="md-list-item-text" layout="row">
-            <md-icon md-font-set="fa fa-table" class="correct-icon"></md-icon>
+            <md-icon md-font-set="fa fa-search fa-2x"></md-icon>
+            <span>Profile Search</span>
+          </div>
+        </md-list-item>
+        <md-list-item class="md-1-line" data-ng-click="goTo('/user/list')" data-ng-show="validateAccessLevel(details.accessLevel, accessLevel.Management)">
+          <div class="md-list-item-text" layout="row">
+            <md-icon md-font-set="fa fa-users fa-2x"></md-icon>
+            <span>Users</span>
+          </div>
+        </md-list-item>
+        <md-list-item class="md-1-line" data-ng-click="goTo('/alltech/list')" data-ng-show="validateAccessLevel(details.accessLevel, accessLevel.Admin)">
+          <div class="md-list-item-text" layout="row">
+            <md-icon md-font-set="fa fa-book fa-2x"></md-icon>
+            <span>Tech</span>
+          </div>
+        </md-list-item>
+        <md-list-item class="md-1-line" data-ng-click="goTo('/skillmatrix')" data-ng-show="validateAccessLevel(details.accessLevel, accessLevel.Basic)">
+          <div class="md-list-item-text" layout="row">
+            <md-icon md-font-set="fa fa-table fa-2x"></md-icon>
             <span>Tech Matrix</span>
           </div>
         </md-list-item>
         <md-list-item class="md-1-line" data-ng-click="logout()">
           <div class="md-list-item-text" layout="row">
-            <md-icon md-font-set="fa fa-sign-out" class="correct-icon"></md-icon>
+            <md-icon md-font-set="fa fa-sign-out fa-2x"></md-icon>
             <span>Logout</span>
           </div>
         </md-list-item>
@@ -68,7 +95,6 @@
   </div>
 </div>
 </body>
-
 <script src='@routes.Assets.versioned("javascripts/components/angular/angular.min.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/components/angular-route/angular-route.min.js")'
         type="text/javascript"></script>
@@ -87,7 +113,9 @@
 <script src='@routes.Assets.versioned("javascripts/libs/focusMe.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/constants/level.constant.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/constants/tech.type.constant.js")' type="text/javascript"></script>
+<script src='@routes.Assets.versioned("javascripts/constants/operation.constant.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/constants/config.constant.js")' type="text/javascript"></script>
+<script src='@routes.Assets.versioned("javascripts/constants/access.level.constant.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/http/rest.url.service.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/http/rest.service.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/http/rest.error.service.js")' type="text/javascript"></script>
@@ -96,6 +124,9 @@
 <script src='@routes.Assets.versioned("javascripts/routes/auth.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/auth/auth.controller.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/user/user.home.controller.js")' type="text/javascript"></script>
+<script src='@routes.Assets.versioned("javascripts/user/user.list.controller.js")' type="text/javascript"></script>
+<script src='@routes.Assets.versioned("javascripts/user/user.profile.controller.js")' type="text/javascript"></script>
+<script src='@routes.Assets.versioned("javascripts/tech/tech.list.controller.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/skill/skill.controller.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/menu/menu.controller.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/menu/menu.toggle.run.js")' type="text/javascript"></script>
