@@ -24,7 +24,7 @@
                                 </md-input-container>
                             </div>
 
-                            <span class="text-transform-capitalize" data-ng-show="!tech.isUpdating" data-ng-click="beginUpdatingName(tech)">{{tech.name}}</span>
+                            <span class="text-transform-capitalize cursor-pointer" data-ng-show="!tech.isUpdating" data-ng-click="beginUpdatingName(tech)">{{tech.name}}</span>
 
                             <span flex></span>
                             <div data-ng-show="tech.isUpdating">
@@ -37,6 +37,10 @@
                                 </md-button>
                             </div>
                             <div data-ng-show="!tech.isUpdating">
+                                <md-button class="md-icon-button" aria-label="edit tech name" data-ng-click="beginUpdatingName(tech)">
+                                    <md-icon md-font-set="fa fa-refresh" class="correct-icon"></md-icon>
+                                </md-button>
+
                                 <md-button class="md-icon-button" aria-label="update tech" data-ng-click="updateTech(tech)">
                                     <md-icon md-font-set="fa fa-pencil" class="correct-icon"></md-icon>
                                 </md-button>

@@ -32,9 +32,9 @@ case class TechFilter(tech:String,operation:Operation,level:Option[SkillLevel]){
       this.operation match {
         case Operation.Equal => this.level.map( _ == skill.skillLevel).getOrElse(false)
         case Operation.GreaterThan =>
-          this.level.map(SkillLevel.orderingList.indexOf(_)  < SkillLevel.orderingList.indexOf(skill.skillLevel)).getOrElse(false)
+          this.level.map(SkillLevel.orderingList.indexOf(_)  <= SkillLevel.orderingList.indexOf(skill.skillLevel)).getOrElse(false)
         case Operation.LowerThan =>
-          this.level.map(SkillLevel.orderingList.indexOf(_)  > SkillLevel.orderingList.indexOf(skill.skillLevel)).getOrElse(false)
+          this.level.map(SkillLevel.orderingList.indexOf(_)  >= SkillLevel.orderingList.indexOf(skill.skillLevel)).getOrElse(false)
         case Operation.Any => true
       }
     }else{
