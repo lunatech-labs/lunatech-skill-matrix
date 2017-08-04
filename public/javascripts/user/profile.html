@@ -28,8 +28,10 @@
         <span class="md-headline">Users</span>
       </md-card-title-text>
     </md-card-title>
-    <md-card-content layout="row">
-      <md-card layout-padding layout="column" layout-align="center center" data-ng-repeat="user in data.users">
+    <md-card-content>
+
+      <div data-ng-repeat="user in data.users" flex class="display-inline-flex">
+      <md-card layout-padding layout="column" layout-align="center center">
         <md-icon md-font-set="fa fa-user-circle-o fa-4x" class="user-profile-icon no-margin"></md-icon>
         <div layout="column">
           <div class="user-profile-info" layout="column">
@@ -39,6 +41,9 @@
           </div>
         </div>
       </md-card>
+      </div>
+
+
     </md-card-content>
   </md-card>
 </div>

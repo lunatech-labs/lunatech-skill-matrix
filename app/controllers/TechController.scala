@@ -16,7 +16,7 @@ import ExecutionContext.Implicits.global
 @Singleton
 class TechController @Inject()(techService: TechService, auth: Authentication) extends Controller {
 
-  def getAllTech: Action[Unit] = auth.UserAction(AccessLevel.Management).async(BodyParsers.parse.empty) { _ =>
+  def getAllTech: Action[Unit] = auth.UserAction(AccessLevel.Basic).async(BodyParsers.parse.empty) { _ =>
     techService.getAllTech.map(m => Ok(Json.toJson(m)))
   }
 
