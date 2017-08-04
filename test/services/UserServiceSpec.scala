@@ -1,6 +1,6 @@
 package services
 
-import data.TestData.{ID_USER_SNAPE, nonExistentId}
+import data.TestData.{ID_USER_GANDALF, ID_USER_SNAPE, nonExistentId}
 import models._
 
 class UserServiceSpec extends UnitSpec {
@@ -70,6 +70,12 @@ class UserServiceSpec extends UnitSpec {
       val response = userService.getOrCreateUserByEmail("Minerva", "McGonagall", "minerva.mcgonagall@hogwarts.com").futureValue
 
       dataMap.values.exists(_ === response) mustBe false
+    }
+
+    "don't create user in the database if the user is already there" in {
+      val response: Option[User] = userService.getOrCreateUserByEmail("Gandalf", "YouShallPass", "gandalf@youshallpass.com").futureValue
+
+      response.get.id.get mustEqual dataMap(ID_USER_GANDALF)
     }
   }
 
