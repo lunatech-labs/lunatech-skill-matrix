@@ -287,3 +287,10 @@ body{
 .profile-picture img {
   width: 60px;
 }
+
+.select-search {
+  background:none;
+  margin: 12px;
+  outline:none;
+  border:none;
+}

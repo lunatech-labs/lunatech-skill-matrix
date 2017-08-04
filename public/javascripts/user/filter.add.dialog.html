@@ -13,8 +13,15 @@
     <div layout="row" layout-margin layout-padding>
       <md-input-container>
         <label>Tech</label>
-        <md-select ng-model="tech" class="text-transform-capitalize">
-          <md-option ng-repeat="tech in techs" ng-value="tech.name" class="text-transform-capitalize">
+        <md-select ng-model="tech" class="text-transform-capitalize" data-md-on-close="techFilter = ''">
+          <md-select-header>
+            <input ng-model="techFilter"
+                   type="search"
+                    placeholder="Filter tech"
+                    class="select-search"
+                    data-ng-keydown="$event.stopPropagation()">
+          </md-select-header>
+          <md-option ng-repeat="tech in techs | filter:{name:techFilter}" ng-value="tech.name" class="text-transform-capitalize">
             {{tech.name}}
           </md-option>
         </md-select>
