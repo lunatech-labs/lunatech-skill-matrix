@@ -182,3 +182,36 @@ object Operation {
     def writes(operation: Operation) = JsString(operation.toString)
   }
 }
+
+
+sealed trait Status {
+}
+object Status {
+  case object Active   extends Status
+  case object Inactive extends Status
+
+  def apply(value: String): Status = value match {
+    case "Active"  => Active
+    case "Inactive"=> Inactive
+  }
+
+  implicit val statusMappedColumn = MappedColumnType.base[Status, String](
+    e => e.toString,
+    s => Status(s)
+  )
+
+  implicit val statusFormat: Format[Status] = new Format[Status] {
+    def reads(json: JsValue): JsResult[Status] = json match {
+      case JsBoolean(_) =>
+        try {
+          JsSuccess(Status(json.as[String]))
+        } catch {
+          case _: scala.MatchError => JsError("Value is not in the list")
+        }
+      case _ => JsError("String values are expected")
+    }
+
+
+    def writes(status: Status) = JsString(status.toString)
+  }
+}

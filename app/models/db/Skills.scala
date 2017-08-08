@@ -18,7 +18,9 @@ class Skills(tag: Tag) extends Table[models.Skill](tag, "user_skills") {
 
   def skillLevel: Rep[SkillLevel] = column[SkillLevel]("skill_level")
 
-  def * : ProvenShape[Skill] = (id.?, userId, techId, skillLevel) <> ((models.Skill.apply _).tupled, models.Skill.unapply _)
+  def status: Rep[Status] = column[Status]("status")
+
+  def * : ProvenShape[Skill] = (id.?, userId, techId, skillLevel, status) <> ((models.Skill.apply _).tupled, models.Skill.unapply _)
 
   def user: ForeignKeyQuery[Users, User] = foreignKey("USER_FK", userId, TableQuery[Users])(_.id, onDelete = ForeignKeyAction.Cascade)
 
@@ -32,17 +34,18 @@ object Skills extends LazyLogging {
   def add(userId: Int, techId: Int, skillLevel: SkillLevel)(implicit connection: DBConnection): Future[Int] = {
     skillExistsByTechAndUserId(techId, userId).flatMap {
       case true =>
-          for {
-            skillId <- getSkillId(userId, techId)
-          } yield skillId.get
+        for {
+          skillId <- getSkillId(userId, techId)
+        } yield skillId.get
       case false =>
-          val userSkillObject = Skill(
-            userId = userId,
-            techId = techId,
-            skillLevel = skillLevel)
-          logger.info("adding new skill for userId {} and techId {} with skillLevel {}", userId.toString, techId.toString, skillLevel)
-          val addSkillToSkillMatrixQuery = skillTable returning skillTable.map(_.id) += userSkillObject
-          connection.db.run(addSkillToSkillMatrixQuery)
+        val userSkillObject = Skill(
+          userId = userId,
+          techId = techId,
+          skillLevel = skillLevel,
+          status = Status.Active)
+        logger.info("adding new skill for userId {} and techId {} with skillLevel {}", userId.toString, techId.toString, skillLevel)
+        val addSkillToSkillMatrixQuery = skillTable returning skillTable.map(_.id) += userSkillObject
+        connection.db.run(addSkillToSkillMatrixQuery)
     }
   }
 
@@ -74,9 +77,16 @@ object Skills extends LazyLogging {
     }
   }
 
+  def inactivateByUserId(userId: Int)(implicit connection: DBConnection): Future[Int] = {
+    val updateQuery = for {
+      skills <- skillTable.filter(_.userId === userId)
+    } yield skills.status
+    connection.db.run(updateQuery.update(Status.Inactive))
+  }
+
   def getAllSkills(implicit connection: DBConnection): Future[Seq[(Skill, User, Tech)]] = {
     val join = for {
-      skill <- skillTable
+      skill <- skillTable if skill.status === Status.Active.asInstanceOf[Status]
       user <- Users.userTable if skill.userId === user.id
       tech <- Techs.techTable if skill.techId === tech.id
     } yield {

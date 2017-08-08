@@ -2,10 +2,10 @@ package integration
 
 import common.DBConnection
 import data.TestData.{ID_USER_SNAPE, nonExistentId}
-import models.{AccessLevel, User}
+import models.{AccessLevel, Status, User}
 import models.db.Users._
 
-class UsersSpec extends IntegrationSpec  {
+class UsersSpec extends IntegrationSpec {
 
   var dataMap: Map[String, Int] = _
 
@@ -66,7 +66,7 @@ class UsersSpec extends IntegrationSpec  {
     }
 
     "add user to the database" in {
-      val newUser = User(None, "Joe", "Armstrong", "joe.armstrong@erlang.com",AccessLevel.Basic)
+      val newUser = User(None, "Joe", "Armstrong", "joe.armstrong@erlang.com", AccessLevel.Basic, Status.Active)
       val response = add(newUser)(dbConn).futureValue
 
       dataMap.values.exists(_ === response) mustBe false

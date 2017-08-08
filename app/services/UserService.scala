@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 import common.DBConnection
 import models._
-import models.db.Users
+import models.db.{Skills, Users}
 
 import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -16,7 +16,10 @@ class UserService @Inject() (implicit val connection: DBConnection) {
   }
 
   def removeUser(userId: Int): Future[Int] = {
-    Users.remove(userId)
+    for {
+      result <- Users.remove(userId)
+      _ <- Skills.inactivateByUserId(userId)
+    } yield result
   }
 
   def getUserByEmail(email: String): Future[Option[User]] = {
@@ -36,7 +39,7 @@ class UserService @Inject() (implicit val connection: DBConnection) {
       case Some(user: User) =>
         Future.successful(Some(user))
       case _ =>
-        val user = User(None, name, familyName, email, AccessLevel.Basic)
+        val user = User(None, name, familyName, email, AccessLevel.Basic,Status.Active)
         Users.add(user)
         Future.successful(Some(user))
     }

@@ -2,7 +2,7 @@ package models
 
 import play.api.libs.json.{Format, Json}
 
-case class User(id: Option[Int] = None, firstName: String, lastName: String, email: String, accessLevel: AccessLevel) {
+case class User(id: Option[Int] = None, firstName: String, lastName: String, email: String, accessLevel: AccessLevel, status:Status) {
   require(email != null && !email.isEmpty, "Email field shouldn't be empty")
 
   def fullName: String = {
@@ -16,7 +16,7 @@ case class User(id: Option[Int] = None, firstName: String, lastName: String, ema
 
 case class Tech(id: Option[Int], name: String, techType: TechType)
 
-case class Skill(id: Option[Int] = None, userId: Int, techId: Int, skillLevel: SkillLevel)
+case class Skill(id: Option[Int] = None, userId: Int, techId: Int, skillLevel: SkillLevel, status:Status)
 
 case class SkillMatrixItem(tech: Tech, skillLevel: SkillLevel, id: Option[Int])
 
