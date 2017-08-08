@@ -20,7 +20,9 @@ class Users(tag: Tag) extends Table[User](tag, "users") {
 
   def accessLevel: Rep[AccessLevel] = column[AccessLevel]("accesslevel")
 
-  def * : ProvenShape[User] = (id.?, firstName, lastName, email, accessLevel) <> ((User.apply _).tupled, User.unapply)
+  def status: Rep[Status] = column[Status]("status")
+
+  def * : ProvenShape[User] = (id.?, firstName, lastName, email, accessLevel, status) <> ((User.apply _).tupled, User.unapply)
 }
 
 object Users extends LazyLogging {
@@ -29,7 +31,7 @@ object Users extends LazyLogging {
   def getUserById(userId: Int)(implicit connection: DBConnection): Future[Option[User]] = {
     exists(userId).flatMap {
       case true =>
-        val query = userTable.filter(x => x.id === userId)
+        val query = userTable.filter(_.id === userId)
         connection.db.run(query.result.headOption)
       case false => Future(None)
     }
@@ -60,8 +62,11 @@ object Users extends LazyLogging {
   }
 
   def remove(userId:Int)(implicit connection: DBConnection): Future[Int] = {
-    val query = userTable.filter(_.id === userId)
-    connection.db.run(query.delete)
+    val query = for {
+      user <- userTable.filter(_.id === userId)
+    } yield user.status
+
+    connection.db.run(query.update(Status.Inactive))
   }
 
   def searchUsers(filters:Seq[TechFilter])(implicit connection: DBConnection):Future[Seq[User]] = {

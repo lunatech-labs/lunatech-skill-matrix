@@ -24,9 +24,9 @@ trait TestDatabaseProvider {
   }
 
   def insertUserData(): Map[String, Int] = {
-    val userOdersky = User(None, "Martin", "Odersky", "martin.odersky@gmail.com",AccessLevel.Basic)
-    val userSeverus = User(None, "Severus", "Snape", "severus.snape@hogwarts.com",AccessLevel.Management)
-    val userGandalf = User(None, "Gandalf", "YouShallPass", "gandalf@youshallpass.com", AccessLevel.Admin)
+    val userOdersky = User(None, "Martin", "Odersky", "martin.odersky@gmail.com",AccessLevel.Basic, Status.Active)
+    val userSeverus = User(None, "Severus", "Snape", "severus.snape@hogwarts.com",AccessLevel.Management, Status.Active)
+    val userGandalf = User(None, "Gandalf", "YouShallPass", "gandalf@youshallpass.com", AccessLevel.Admin, Status.Active)
 
     val idUserOdersky: Int = Await.result(db.run(userTable returning userTable.map(_.id) += userOdersky), Duration.Inf)
     val idUserSeverus: Int = Await.result(db.run(userTable returning userTable.map(_.id) += userSeverus), Duration.Inf)
@@ -53,10 +53,10 @@ trait TestDatabaseProvider {
     val userMap = insertUserData()
     val techMap = insertTechData()
 
-    val skillOderskyScala = Skill(None, userMap(ID_USER_ODERSKY), techMap(ID_TECH_SCALA), SkillLevel.EXPERT)
-    val skillOderskyFunctional = Skill(None, userMap(ID_USER_ODERSKY), techMap(ID_TECH_FUNCTIONAL), SkillLevel.EXPERT)
-    val skillSeverusDefense = Skill(None, userMap(ID_USER_SNAPE), techMap(ID_TECH_DEFENSE), SkillLevel.EXPERT)
-    val skillSeverusDarkArts = Skill(None, userMap(ID_USER_SNAPE), techMap(ID_TECH_DARK_ARTS), SkillLevel.EXPERT)
+    val skillOderskyScala = Skill(None, userMap(ID_USER_ODERSKY), techMap(ID_TECH_SCALA), SkillLevel.EXPERT, Status.Active)
+    val skillOderskyFunctional = Skill(None, userMap(ID_USER_ODERSKY), techMap(ID_TECH_FUNCTIONAL), SkillLevel.EXPERT, Status.Active)
+    val skillSeverusDefense = Skill(None, userMap(ID_USER_SNAPE), techMap(ID_TECH_DEFENSE), SkillLevel.EXPERT, Status.Active)
+    val skillSeverusDarkArts = Skill(None, userMap(ID_USER_SNAPE), techMap(ID_TECH_DARK_ARTS), SkillLevel.EXPERT, Status.Active)
 
     val idSkillOderskyScala: Int = Await.result(db.run(skillTable returning skillTable.map(_.id) += skillOderskyScala), Duration.Inf)
     val idSkillOderskyFunctional: Int = Await.result(db.run(skillTable returning skillTable.map(_.id) += skillOderskyFunctional), Duration.Inf)
