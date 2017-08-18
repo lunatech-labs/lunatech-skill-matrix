@@ -46,6 +46,17 @@ class SkillMatrixService @Inject()(techService: TechService,
     }
   }
 
+  def getUserSkills(email: String): Future[Option[UserSkillResponse]] = {
+    userService.getUserByEmail(email).flatMap {
+      case Some(user) =>
+        val result = Skills.getAllSkillMatrixByUser(user.id.get)
+        result.map { skills =>
+          computeUserSkillResponse(user, skills)
+        }
+      case None => Future(None)
+    }
+  }
+
   def getAllSkills: Future[Seq[SkillMatrixResponse]] = {
     val result: Future[Seq[(Skill, User, Tech)]] = Skills.getAllSkills
     result.map { matrix =>
