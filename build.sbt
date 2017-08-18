@@ -40,6 +40,8 @@ libraryDependencies ++= Seq(
   "org.scalaz"                 %% "scalaz-core"                   % "7.2.8",
   "io.kanaka"                  %% "play-monadic-actions"          % "2.0.0",
 
+  "joda-time"                  % "joda-time"                      % "2.9.9",
+
   "com.google.api-client"      % "google-api-client"              % "1.22.0",
   "com.google.http-client"     % "google-http-client-jackson"     % "1.22.0",
   "io.circe"                   %% "circe-core"                    % "0.7.0",

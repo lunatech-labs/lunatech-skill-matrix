@@ -1,5 +1,6 @@
 package models
 
+import org.joda.time.DateTime
 import play.api.libs.json.{Format, Json}
 
 case class User(id: Option[Int] = None, firstName: String, lastName: String, email: String, accessLevel: AccessLevel, status:Status) {
@@ -16,7 +17,9 @@ case class User(id: Option[Int] = None, firstName: String, lastName: String, ema
 
 case class Tech(id: Option[Int], name: String, techType: TechType)
 
-case class Skill(id: Option[Int] = None, userId: Int, techId: Int, skillLevel: SkillLevel, status:Status)
+case class Skill(id: Option[Int] = None, userId: Int, techId: Int, skillLevel: SkillLevel, status: Status)
+
+case class Entry(id: Option[Int] = None, userId: Int, skillId: Int, entryAction:EntryAction, occurrence: DateTime)
 
 case class SkillMatrixItem(tech: Tech, skillLevel: SkillLevel, id: Option[Int])
 
