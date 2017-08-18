@@ -13,6 +13,22 @@
       Admin:{
         text:"Admin",
         value:"Admin"
+      },
+      Developer:{
+        text:"Developer",
+        value:"Developer"
+      },
+      Administrative :{
+        text:"Administrative",
+        value:"Administrative"
+      },
+      Office:{
+        text:"Office",
+        value:"Office"
+      },
+      CEO:{
+        text:"CEO",
+        value:"CEO"
       }
   });
 })()

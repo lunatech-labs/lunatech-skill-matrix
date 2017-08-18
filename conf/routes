@@ -16,6 +16,7 @@ GET     /techs/:query                       controllers.TechController.search(qu
 GET     /skillmatrix                        controllers.SkillMatrixController.getSkillMatrix
 GET     /skillmatrix/:techId                controllers.SkillMatrixController.getSkillMatrixByTechId(techId: Int)
 POST    /google/auth                        controllers.GoogleSignInController.authenticate()
+GET     /user-audit/latest                  controllers.UserSchedulerAuditController.getPeopleApiProcessStatus()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)

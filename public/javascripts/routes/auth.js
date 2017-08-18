@@ -9,10 +9,11 @@
       'accessLevel',function($rootScope,$cookies,$location,GoogleApi,accessLevel) {
 
       $rootScope.accessLevel = accessLevel;
-      $rootScope.validateAccessLevel = function(userLevel, access){
-        if (userLevel === accessLevel.Admin.value){ return true }
-        else if (userLevel === accessLevel.Management.value) { return access === accessLevel.Management || access === accessLevel.Basic}
-        else if (userLevel === accessLevel.Basic.value) { return access === accessLevel.Basic}
+      $rootScope.validateAccessLevel = function(userLevels, access){
+        if (access === accessLevel.Basic) { return true }
+        else { return userLevels.includes(access.value) || userLevels.includes(accessLevel.Admin.value) }
+
+
       };
 
      $rootScope.$on('$locationChangeStart',function(event, next, current){

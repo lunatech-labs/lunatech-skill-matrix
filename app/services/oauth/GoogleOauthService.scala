@@ -1,12 +1,12 @@
 package services.oauth
 
 import javax.inject.Singleton
+import javax.inject.Inject
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload
 import com.google.api.client.googleapis.auth.oauth2.{GoogleIdTokenVerifier, GooglePublicKeysManager}
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.jackson.JacksonFactory
-import com.google.inject.Inject
 import com.typesafe.config.Config
 import play.api.inject.ApplicationLifecycle
 

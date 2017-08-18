@@ -25,7 +25,10 @@
       "scopes": {
         "admin": "Admin scope",
         "management": "Manager scope",
-        "basic": "User scope"
+        "basic": "User scope",
+        "administrative": "Administrative scope",
+        "office": "Office scope",
+        "ceo": "CEO scope"
       }
     }
   },
@@ -836,13 +839,16 @@
         "password": {
           "type": "string"
         },
-        "accessLevel": {
-          "type": "string",
-          "enum": [
-            "Basic",
-            "Admin",
-            "Management"
-          ]
+        "accessLevels": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Basic",
+              "Admin",
+              "Management"
+            ]
+          }
         },
         "status":{
           "type":"string",

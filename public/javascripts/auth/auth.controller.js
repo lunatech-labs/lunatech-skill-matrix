@@ -35,7 +35,7 @@
                 full_name: profile.getName(),
                 googleId: profile.getId(),
                 token:id_token,
-                accessLevel: response.data.user.accessLevel
+                accessLevel: response.data.user.accessLevels
               });
               $location.path('skillmatrix')
           },function(response){
@@ -55,7 +55,6 @@
       $scope.$on('event:google-plus-signin-failure', function (event,authResult) {
           // Auth failure or signout detected
           console.log("Authenticate failed");
-          console.log(authResult);
           $location.path('/auth')
       });
       onInit();

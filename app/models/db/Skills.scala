@@ -3,11 +3,12 @@ package models.db
 import com.typesafe.scalalogging.LazyLogging
 import common.DBConnection
 import models._
-import slick.driver.PostgresDriver.api._
 import slick.lifted.{ForeignKeyQuery, ProvenShape, TableQuery}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
+
+import CustomPostgresProfile.api._
 
 class Skills(tag: Tag) extends Table[models.Skill](tag, "user_skills") {
   def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
@@ -67,7 +68,7 @@ object Skills extends LazyLogging {
 
   def getAllSkillMatrixByUser(userId: Int)(implicit connection: DBConnection): Future[Seq[(Skill, Tech)]] = {
     val join = for {
-      skill <- skillTable.filter(_.userId === userId)
+      skill <- skillTable.filter(skill => skill.userId === userId && skill.status === Status.Active.asInstanceOf[Status])
       tech <- Techs.techTable if skill.techId === tech.id
     } yield {
       (skill, tech)
@@ -92,22 +93,21 @@ object Skills extends LazyLogging {
     skillExistsForUser(skillId, userId).flatMap {
       case false => Future(0)
       case true =>
-        logger.info("deleting skillId {} for userId {}", skillId.toString, userId.toString)
+        logger.info("deactivating skillId {} for userId {}", skillId.toString, userId.toString)
         val query = skillTable.filter(_.id === skillId).map(_.status).update(Status.Inactive)
-
         for {
           result <- connection.db.run(query)
           _ <- if (result > 0) Entries.add(userId, skillId, EntryAction.Remove) else Future(())
         } yield result
-
     }
   }
 
-  def inactivateByUserId(userId: Int)(implicit connection: DBConnection): Future[Int] = {
-    val updateQuery = for {
-      skills <- skillTable.filter(_.userId === userId)
-    } yield skills.status
-    connection.db.run(updateQuery.update(Status.Inactive))
+  def deactivateByUserId(userId: Int)(implicit connection: DBConnection): Future[Int] = {
+    updateSkillStatusByUserId(userId, Status.Inactive)
+  }
+
+  def activateByUserId(userId: Int)(implicit connection: DBConnection): Future[Int] = {
+    updateSkillStatusByUserId(userId, Status.Active)
   }
 
   def getAllSkills(implicit connection: DBConnection): Future[Seq[(Skill, User, Tech)]] = {
@@ -125,6 +125,14 @@ object Skills extends LazyLogging {
   def getSkillByTechId(techId: Int)(implicit connection: DBConnection): Future[Seq[Skill]] = {
     val query = skillTable.filter(skill => skill.techId === techId)
     connection.db.run(query.result)
+  }
+
+  private def updateSkillStatusByUserId(userId: Int, status: Status)(implicit connection: DBConnection): Future[Int] = {
+    val query = skillTable
+      .filter(_.userId === userId)
+      .map(_.status)
+      .update(status)
+    connection.db.run(query)
   }
 
   private def getSkillId(userId: Int, techId: Int)(implicit connection: DBConnection): Future[Option[Int]] = {

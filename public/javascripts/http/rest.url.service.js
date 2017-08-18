@@ -22,7 +22,7 @@
               return '/google/auth';
           },
           getTechs:function(params){
-            return '/alltech/' + encodeURIComponent(params);
+            return '/techs/' + encodeURIComponent(params);
           },
           removeUser:function(userId){
             return '/users/' + userId;

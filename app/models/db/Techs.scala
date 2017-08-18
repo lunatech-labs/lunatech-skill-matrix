@@ -3,10 +3,11 @@ package models.db
 import com.typesafe.scalalogging.LazyLogging
 import common.DBConnection
 import models.{Tech, TechType}
-import slick.driver.PostgresDriver.api._
 import slick.lifted.{ProvenShape, TableQuery}
 
 import scala.concurrent._
+
+import CustomPostgresProfile.api._
 
 class Techs(tag: Tag) extends Table[models.Tech](tag, "tech") {
   def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
