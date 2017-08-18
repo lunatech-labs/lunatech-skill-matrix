@@ -1,4 +1,4 @@
-# Lunatech Tech Matrix ![Build Status](http://jenkins.lunatech.com/job/TechMatrix/badge/icon)
+# Lunatech Tech Matrix ![Build Status](http://jenkins.lunatech.com/job/TechMatrix-Develop-branch/badge/icon)
 Tech Matrix - Who knows what in Lunatech!
 
 Tech Matrix allows users to set their level of knowledge on the technologies they know.

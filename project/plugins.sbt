@@ -1,5 +1,5 @@
 // The Play plugin
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.10")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.3")
 
 // web plugins
 
@@ -8,6 +8,7 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-coffeescript" % "1.0.0")
 addSbtPlugin("com.typesafe.sbt" % "sbt-less" % "1.1.0")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-jshint" % "1.0.4")
+
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-rjs" % "1.0.8")
 
@@ -18,3 +19,5 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.1.0")
 addSbtPlugin("org.irundaia.sbt" % "sbt-sassify" % "1.4.6")
 
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.0")
+
+addSbtPlugin("com.itv.plugins" % "scalapact-plugin" % "2.1.3")

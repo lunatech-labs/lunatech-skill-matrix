@@ -1,7 +1,6 @@
 package integration
 
-import common.DBConnection
-import data.TestData.{ID_USER_SNAPE,ID_USER_GANDALF,ID_USER_ODERSKY, nonExistentId}
+import data.TestData._
 import models.{AccessLevel, Status, User}
 import models.db.Users._
 
@@ -54,13 +53,7 @@ class UsersSpec extends IntegrationSpec {
     }
 
     "get all users" in {
-      val expectedResponse = Seq(
-        User(Some(dataMap(ID_USER_SNAPE)), "Severus", "Snape", "severus.snape@hogwarts.com", AccessLevel.Management, Status.Active),
-        User(Some(dataMap(ID_USER_GANDALF)), "Gandalf", "YouShallPass", "gandalf@youshallpass.com", AccessLevel.Admin, Status.Active),
-        User(Some(dataMap(ID_USER_ODERSKY)), "Martin","Odersky","martin.odersky@gmail.com", AccessLevel.Basic, Status.Active)
-      )
-      val result = getAllUsers(dbConn).futureValue
-      result must contain theSameElementsAs expectedResponse
+      getAllUsers(dbConn).futureValue.map(_.firstName) mustBe allUsersNames
     }
 
     "return true if user exists in the database" in {
@@ -72,7 +65,7 @@ class UsersSpec extends IntegrationSpec {
     }
 
     "add user to the database" in {
-      val newUser = User(None, "Joe", "Armstrong", "joe.armstrong@erlang.com", AccessLevel.Basic, Status.Active)
+      val newUser = User(None, "Joe", "Armstrong", "joe.armstrong@erlang.com", List(AccessLevel.Basic), Status.Active)
       val response = add(newUser)(dbConn).futureValue
 
       dataMap.values.exists(_ === response) mustBe false

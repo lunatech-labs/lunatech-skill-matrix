@@ -1,29 +1,33 @@
-package acceptance
+package pactdependent
 
+import com.typesafe.config.ConfigValueFactory
 import common.DBConnectionProvider
 import data.TestDatabaseProvider
+import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
-import org.scalatest.{BeforeAndAfter, BeforeAndAfterAll, FeatureSpec, MustMatchers}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
+import play.api.{Application, Configuration}
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import services.{FakeOauthService, PeopleAPIService}
-import services.oauth.OauthService
-import slick.jdbc.JdbcProfile
-import slick.jdbc.JdbcBackend
+import services.PeopleAPIService
+import slick.jdbc.{JdbcBackend, JdbcProfile}
 
-class AcceptanceSpec extends FeatureSpec
-  with MustMatchers
-  with ScalaFutures
-  with BeforeAndAfter
-  with BeforeAndAfterAll
-  with GuiceOneAppPerSuite
-  with DBConnectionProvider
-  with SwaggerValidator
-  with TestDatabaseProvider {
+
+/**
+  * This is for tests that need pact files in order to run.
+  * Before running these kind of tests always run 'sbt pact-test' or 'sbt clean test' before that.
+  */
+class PactDependentSpec
+  extends WordSpec
+    with MustMatchers
+    with DBConnectionProvider
+    with TestDatabaseProvider
+    with BeforeAndAfter
+    with BeforeAndAfterAll
+    with ScalaFutures
+    with GuiceOneAppPerSuite {
 
   implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
@@ -34,17 +38,8 @@ class AcceptanceSpec extends FeatureSpec
       "people-api.getAllPeoplePath" -> "/someapiname?apiKey=\"${people-api.key}",
       "people-api.getPersonByEmailPath" -> "/someapiname/$email?apiKey=\"${people-api.key}"
     ))
-    .overrides(bind[OauthService].to[FakeOauthService])
     .build
 
   override def profile: JdbcProfile = app.injector.instanceOf(classOf[DatabaseConfigProvider]).get[JdbcProfile].profile
   override def db: JdbcBackend#DatabaseDef = app.injector.instanceOf(classOf[DatabaseConfigProvider]).get[JdbcProfile].db
-
-  implicit lazy val portL: Int = 9000
-  lazy val authToken = "basic-xxx-xxx"
-  lazy val apiToken = "api-secret-test"
-  lazy val authTokenManagement = "management-xxx-xx"
-  lazy val authTokenAdmin = "admin-xxx-xx"
-  val baseUrl: String = "https://localhost:" + portL.toString
-  val swaggerPath: String = "resources/swagger.json"
 }

@@ -1,7 +1,7 @@
 package models
 
+import models.db.CustomPostgresProfile.api._
 import play.api.libs.json._
-import slick.driver.PostgresDriver.api._
 
 sealed trait SkillLevel
 
@@ -101,18 +101,23 @@ object TechType {
 sealed trait AccessLevel
 
 object AccessLevel {
-
-  case object Basic extends AccessLevel
-
-  case object Management extends AccessLevel
-
-  case object Admin extends AccessLevel
+  case object Basic               extends AccessLevel
+  case object Developer           extends AccessLevel
+  case object Management          extends AccessLevel
+  case object Admin               extends AccessLevel
+  case object Administrative      extends AccessLevel
+  case object Office              extends AccessLevel
+  case object CEO                 extends AccessLevel
 
   def apply(accessLevel: String): AccessLevel = accessLevel match {
-    case "Basic" => Basic
-    case "Management" => Management
-    case "Admin" => Admin
-    case _ => Basic
+    case "Basic"          => Basic
+    case "Management"     => Management
+    case "Developer"      => Developer
+    case "Admin"          => Admin
+    case "Administrative" => Administrative
+    case "Office"         => Office
+    case "CEO"            => CEO
+    case _                => Basic
   }
 
   implicit val accessLevelFormat: Format[AccessLevel] = new Format[AccessLevel] {
@@ -126,23 +131,12 @@ object AccessLevel {
       case _ => JsError("String values are expected")
     }
 
-
     def writes(accessLevel: AccessLevel) = JsString(accessLevel.toString)
-
   }
 
-  implicit val accessLevelMappedColumn = MappedColumnType.base[AccessLevel, String](
-    e => e.toString,
-    s => AccessLevel(s)
-  )
-
-  def isAccessible(userLevel: AccessLevel, accessLevel: AccessLevel): Boolean = {
-    userLevel match {
-      case Admin => true
-      case Management => accessLevel == Management || accessLevel == Basic
-      case Basic => accessLevel == Basic
-      case _ => false
-    }
+  def isAccessible(userLevels: List[AccessLevel],accessLevel:AccessLevel):Boolean = accessLevel match {
+    case AccessLevel.Basic => true
+    case _ => userLevels.contains(accessLevel) || userLevels.contains(Admin)
   }
 
 }
@@ -156,12 +150,12 @@ object Operation {
     override def toString = "EQUAL"
   }
 
-  case object GreaterThan extends Operation {
-    override def toString = "GT"
+  case object GreaterThanOrEqual extends Operation {
+    override def toString = "GTE"
   }
 
-  case object LowerThan extends Operation {
-    override def toString = "LT"
+  case object LowerThanOrEqual extends Operation {
+    override def toString = "LTE"
   }
 
   case object Any extends Operation {
@@ -170,8 +164,8 @@ object Operation {
 
   def apply(accessLevel: String): Operation = accessLevel match {
     case "EQUAL" => Equal
-    case "GT" => GreaterThan
-    case "LT" => LowerThan
+    case "GTE" => GreaterThanOrEqual
+    case "LTE" => LowerThanOrEqual
     case "ANY" => Any
   }
 

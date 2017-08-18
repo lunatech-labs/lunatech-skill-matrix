@@ -5,9 +5,8 @@ import com.typesafe.scalalogging.LazyLogging
 import common.DBConnection
 import models._
 import org.joda.time.DateTime
-import slick.driver.PostgresDriver.api._
 import slick.lifted.{ForeignKeyQuery, ProvenShape, TableQuery}
-import DBImplicits._
+import CustomPostgresProfile.api._
 
 import scala.concurrent.Future
 

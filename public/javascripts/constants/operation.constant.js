@@ -8,14 +8,14 @@
           value:"EQUAL"
       },
       GT:{
-          text:"greater than",
-          symbol:">",
-          value:"GT"
+          text:"greater than or equal",
+          symbol:">=",
+          value:"GTE"
       },
       LT:{
-          text:"lower than",
-          symbol:"<",
-          value:"LT"
+          text:"lower than or equal",
+          symbol:"<=",
+          value:"LTE"
       },
       ANY:{
         text:"Any",
