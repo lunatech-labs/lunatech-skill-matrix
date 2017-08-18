@@ -4,6 +4,7 @@ POST    /users/search                       controllers.UserController.searchUse
 GET     /users/:userId                      controllers.UserController.getUserById(userId: Int)
 DELETE  /users/:userId                      controllers.UserController.removeUser(userId: Int)
 GET     /users/:userId/skills               controllers.SkillMatrixController.getUserSkills(userId: Int)
+GET     /users/skills/:email                controllers.SkillMatrixController.getUserSkillsByEmail(email: String)
 GET     /users/me/skillmatrix               controllers.SkillMatrixController.getMySkills
 POST    /users/me/skillmatrix               controllers.SkillMatrixController.addSkill
 PUT     /users/me/skillmatrix/:skillId      controllers.SkillMatrixController.updateSkill(skillId: Int)

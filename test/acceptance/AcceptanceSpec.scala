@@ -35,6 +35,7 @@ class AcceptanceSpec extends FeatureSpec
 
   implicit lazy val portL = 9000
   lazy val authToken = "basic-xxx-xxx"
+  lazy val apiToken = "api-secret-test"
   lazy val authTokenManagement = "management-xxx-xx"
   lazy val authTokenAdmin = "admin-xxx-xx"
   val baseUrl: String = "https://localhost:" + portL.toString

@@ -302,6 +302,18 @@ class SkillMatrixControllerSpec extends AcceptanceSpec {
     }
   }
 
+
+  feature("The GET /users/skills/:email for getting the skills of a user") {
+    scenario("Everything is fine") {
+      val request = FakeRequest("GET", s"/users/skills/severus.snape@hogwarts.com").withHeaders("X-ID-TOKEN" -> apiToken)
+
+      val response = route(app, request).get
+
+      status(response) mustEqual 200
+      (request, response) must validateResponseAgainstSwagger(swaggerPath)
+    }
+  }
+
   info("The GET /skillmatrix for getting the info about all tech introduced by users")
   feature("It should return a list of SkillMatrixResponse object") {
     scenario("Everything is fine") {

@@ -49,6 +49,12 @@ class SkillMatrixController @Inject()(skillMatrixService: SkillMatrixService,
     } yield Ok(Json.toJson(userSkills))
   }
 
+  def getUserSkillsByEmail(email: String): Action[Unit] = auth.UserAction(AccessLevel.Management).async(BodyParsers.parse.empty) { _ =>
+    for {
+      userSkills <- skillMatrixService.getUserSkills(email) ?| ApiErrors.USER_NOT_FOUND
+    } yield Ok(Json.toJson(userSkills))
+  }
+
   def getSkillMatrix: Action[Unit] = auth.UserAction().async(BodyParsers.parse.empty) { _ =>
     skillMatrixService.getAllSkills.map( result => Ok(Json.toJson(result)))
   }
