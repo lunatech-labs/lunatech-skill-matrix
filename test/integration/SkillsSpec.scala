@@ -56,12 +56,12 @@ class SkillsSpec extends IntegrationSpec {
       val expectedResponse = Seq(
         (
           Skill(Some(dataMap(SKILL_SEVERUS_DEFENSE)), dataMap(ID_USER_SNAPE), dataMap(ID_TECH_DEFENSE), SkillLevel.EXPERT, Status.Active),
-          User(Some(dataMap(ID_USER_SNAPE)), "Severus", "Snape", "severus.snape@hogwarts.com", AccessLevel.Basic, Status.Active),
+          User(Some(dataMap(ID_USER_SNAPE)), "Severus", "Snape", "severus.snape@hogwarts.com", AccessLevel.Management, Status.Active),
           Tech(Some(dataMap(ID_TECH_DEFENSE)), "defense against the dark arts", TechType.CONCEPT)
         ),
         (
           Skill(Some(dataMap(SKILL_SEVERUS_DARK_ARTS)), dataMap(ID_USER_SNAPE), dataMap(ID_TECH_DARK_ARTS), SkillLevel.EXPERT, Status.Active),
-          User(Some(dataMap(ID_USER_SNAPE)), "Severus", "Snape", "severus.snape@hogwarts.com", AccessLevel.Basic, Status.Active),
+          User(Some(dataMap(ID_USER_SNAPE)), "Severus", "Snape", "severus.snape@hogwarts.com", AccessLevel.Management, Status.Active),
           Tech(Some(dataMap(ID_TECH_DARK_ARTS)), "dark arts", TechType.CONCEPT)
         ),
         (
@@ -81,6 +81,48 @@ class SkillsSpec extends IntegrationSpec {
     "return a list of skill by tech id" in {
       val expectedResponse = Seq(Skill(Some(dataMap(SKILL_SEVERUS_DEFENSE)), dataMap(ID_USER_SNAPE), dataMap(ID_TECH_DEFENSE), SkillLevel.EXPERT, Status.Active))
       getSkillByTechId(dataMap(ID_TECH_DEFENSE))(dbConn).futureValue mustBe expectedResponse
+    }
+
+    "deleted skill should be inactivated" in {
+      delete(dataMap(ID_USER_SNAPE), dataMap(SKILL_SEVERUS_DEFENSE))(dbConn)
+      val skills = getAllSkillMatrixByUser(dataMap(ID_USER_SNAPE))(dbConn).futureValue
+
+      val result = skills.filter {
+        case (skill, tech) =>
+          tech.id.getOrElse(0) == dataMap(SKILL_SEVERUS_DEFENSE) &&
+            skill.status == Status.Inactive
+      }
+
+      val expectedResponse = Seq((
+        Skill(Some(dataMap(SKILL_SEVERUS_DEFENSE)), dataMap(ID_USER_SNAPE), dataMap(ID_TECH_DEFENSE), SkillLevel.EXPERT, Status.Inactive),
+        Tech(Some(dataMap(ID_TECH_DEFENSE)), "defense against the dark arts", TechType.CONCEPT)
+      ))
+
+      result must contain theSameElementsAs expectedResponse
+    }
+
+    "add previous added skill should reactivate skill with new skill level" in {
+      import scala.concurrent.ExecutionContext.Implicits.global
+      val s = for {
+        _ <- delete(dataMap(ID_USER_SNAPE), dataMap(SKILL_SEVERUS_DEFENSE))(dbConn)
+        _ <- add(dataMap(ID_USER_SNAPE), dataMap(ID_TECH_DEFENSE), SkillLevel.NOVICE)(dbConn)
+        skills <- getAllSkillMatrixByUser(dataMap(ID_USER_SNAPE))(dbConn)
+      } yield skills
+
+
+
+      val result = s.futureValue.filter {
+        case (skill, tech) =>
+          tech.id.getOrElse(0) == dataMap(SKILL_SEVERUS_DEFENSE) &&
+            skill.status == Status.Active
+      }
+
+      val expectedResponse = Seq((
+        Skill(Some(dataMap(SKILL_SEVERUS_DEFENSE)), dataMap(ID_USER_SNAPE), dataMap(ID_TECH_DEFENSE), SkillLevel.NOVICE, Status.Active),
+        Tech(Some(dataMap(ID_TECH_DEFENSE)), "defense against the dark arts", TechType.CONCEPT)
+      ))
+
+      result must contain theSameElementsAs expectedResponse
     }
   }
 

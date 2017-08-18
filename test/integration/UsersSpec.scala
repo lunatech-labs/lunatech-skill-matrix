@@ -1,7 +1,7 @@
 package integration
 
 import common.DBConnection
-import data.TestData.{ID_USER_SNAPE, nonExistentId}
+import data.TestData.{ID_USER_SNAPE,ID_USER_GANDALF,ID_USER_ODERSKY, nonExistentId}
 import models.{AccessLevel, Status, User}
 import models.db.Users._
 
@@ -54,7 +54,13 @@ class UsersSpec extends IntegrationSpec {
     }
 
     "get all users" in {
-      getAllUsers(dbConn).futureValue.map(_.firstName) mustBe List("Martin", "Severus")
+      val expectedResponse = Seq(
+        User(Some(dataMap(ID_USER_SNAPE)), "Severus", "Snape", "severus.snape@hogwarts.com", AccessLevel.Management, Status.Active),
+        User(Some(dataMap(ID_USER_GANDALF)), "Gandalf", "YouShallPass", "gandalf@youshallpass.com", AccessLevel.Admin, Status.Active),
+        User(Some(dataMap(ID_USER_ODERSKY)), "Martin","Odersky","martin.odersky@gmail.com", AccessLevel.Basic, Status.Active)
+      )
+      val result = getAllUsers(dbConn).futureValue
+      result must contain theSameElementsAs expectedResponse
     }
 
     "return true if user exists in the database" in {

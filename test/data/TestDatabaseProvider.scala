@@ -5,7 +5,7 @@ import models._
 import slick.driver.PostgresDriver.api._
 import slick.lifted.TableQuery
 import data.TestData._
-import models.db.{Skills, Techs, Users}
+import models.db.{Entries, Skills, Techs, Users}
 
 import scala.concurrent._
 import scala.concurrent.duration.Duration
@@ -17,9 +17,10 @@ trait TestDatabaseProvider {
   val skillTable: TableQuery[Skills] = TableQuery[Skills]
   val techTable: TableQuery[Techs] = TableQuery[Techs]
   val userTable: TableQuery[Users] = TableQuery[Users]
+  val entriesTable: TableQuery[Entries] = TableQuery[Entries]
 
   def setupDatabase(): Unit = {
-    val setup = DBIO.seq((skillTable.schema ++ techTable.schema ++ userTable.schema).create)
+    val setup = DBIO.seq((skillTable.schema ++ techTable.schema ++ userTable.schema ++ entriesTable.schema).create)
     Await.result(db.run(setup), Duration.Inf)
   }
 
@@ -86,7 +87,7 @@ trait TestDatabaseProvider {
   }
 
   def dropDatabase(): Unit = {
-    val setup = DBIO.seq((skillTable.schema ++ techTable.schema ++ userTable.schema).drop)
+    val setup = DBIO.seq((skillTable.schema ++ techTable.schema ++ userTable.schema ++ entriesTable.schema).drop)
     Await.result(db.run(setup), Duration.Inf)
   }
 

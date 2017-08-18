@@ -35,8 +35,19 @@ object Skills extends LazyLogging {
     skillExistsByTechAndUserId(techId, userId).flatMap {
       case true =>
         for {
-          skillId <- getSkillId(userId, techId)
-        } yield skillId.get
+          skillOpt <- getSkill(userId, techId)
+          _ <- skillOpt match {
+            case Some(skill) => skill.status match {
+              case Status.Inactive =>
+                val queryActive = skillTable.filter(s => s.userId === userId && s.techId === techId).map(_.status).update(Status.Active)
+                val queryLevel = skillTable.filter(s => s.userId === userId && s.techId === techId).map(_.skillLevel).update(skillLevel)
+                connection.db.run(queryActive)
+                connection.db.run(queryLevel)
+              case Status.Active => Future(())
+            }
+            case None => Future(())
+          }
+        } yield skillOpt.get.id.get
       case false =>
         val userSkillObject = Skill(
           userId = userId,
@@ -45,7 +56,12 @@ object Skills extends LazyLogging {
           status = Status.Active)
         logger.info("adding new skill for userId {} and techId {} with skillLevel {}", userId.toString, techId.toString, skillLevel)
         val addSkillToSkillMatrixQuery = skillTable returning skillTable.map(_.id) += userSkillObject
-        connection.db.run(addSkillToSkillMatrixQuery)
+
+        for {
+          result <- connection.db.run(addSkillToSkillMatrixQuery)
+          skillOpt <- getSkill(userId, techId)
+          _ <- Entries.add(userId, skillOpt.get.id.get, EntryAction.Add)
+        } yield result
     }
   }
 
@@ -61,11 +77,15 @@ object Skills extends LazyLogging {
 
   def update(skillId: Int, userId: Int, techId: Int, skillLevel: SkillLevel)(implicit connection: DBConnection): Future[Int] = {
     logger.info("info updating skillId {} for user {} and techId {} with skillLevel {}", skillId.toString, userId.toString, techId.toString, skillLevel)
-    connection.db.run(
-      skillTable
-        .filter(skill => skill.id === skillId && skill.userId === userId && skill.techId === techId)
-        .map(skill => skill.skillLevel)
-        .update(skillLevel))
+
+    val query = skillTable
+      .filter(skill => skill.id === skillId && skill.userId === userId && skill.techId === techId)
+      .map(skill => skill.skillLevel)
+      .update(skillLevel)
+    for {
+      result <- connection.db.run(query)
+      _ <- if (result > 0) Entries.add(userId, skillId, EntryAction.Update) else Future(())
+    } yield result
   }
 
   def delete(userId: Int, skillId: Int)(implicit connection: DBConnection): Future[Int] = {
@@ -73,7 +93,13 @@ object Skills extends LazyLogging {
       case false => Future(0)
       case true =>
         logger.info("deleting skillId {} for userId {}", skillId.toString, userId.toString)
-        connection.db.run(skillTable.filter(_.id === skillId).delete)
+        val query = skillTable.filter(_.id === skillId).map(_.status).update(Status.Inactive)
+
+        for {
+          result <- connection.db.run(query)
+          _ <- if (result > 0) Entries.add(userId, skillId, EntryAction.Remove) else Future(())
+        } yield result
+
     }
   }
 
@@ -103,6 +129,11 @@ object Skills extends LazyLogging {
 
   private def getSkillId(userId: Int, techId: Int)(implicit connection: DBConnection): Future[Option[Int]] = {
     val query = skillTable.filter(x => x.userId === userId && x.techId === techId).map(_.id).take(1)
+    connection.db.run(query.result.headOption)
+  }
+
+  private def getSkill(userId: Int, techId: Int)(implicit connection: DBConnection): Future[Option[Skill]] = {
+    val query = skillTable.filter(x => x.userId === userId && x.techId === techId).take(1)
     connection.db.run(query.result.headOption)
   }
 
