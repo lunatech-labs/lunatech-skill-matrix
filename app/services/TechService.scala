@@ -30,6 +30,10 @@ class TechService @Inject() (implicit val connection: DBConnection)  {
     Techs.getTechIdByName(tech)
   }
 
+  def getTechByName(tech: Tech): Future[Option[Tech]] = {
+    Techs.getTechByName(tech)
+  }
+
   def getById(techId: Int): Future[Option[Tech]] = {
     Techs.getTechById(techId)
   }
