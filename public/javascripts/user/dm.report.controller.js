@@ -74,21 +74,13 @@
                   }
               };
               RestService.addSKill(data).then(function(response){
-                  var validAdd = response.data.tech.techType === $scope.data.skillForm.techType;
-
                   $scope.data.skillForm = getNewSkillForm();
                   $scope.data.selectedTech = undefined;
                   $scope.data.searchText = undefined;
                   var skillWithFilter = addSearchFilter(response.data);
                   $scope.data.user.skills.push(skillWithFilter);
                   $scope.data.groupedSkills[skillWithFilter.tech.techType].push(skillWithFilter);
-
-                  if (validAdd) {
-                    showMessage('Tech added',successAlert);
-                  } else {
-                    showMessage('Tech added, but changed to correct type',successAlert);
-                  }
-
+                  showMessage('Tech added',successAlert);
               },function(response){
                   RestErrorService.errorHandler(response)
                   showMessage('Error adding tech',failureAlert);
