@@ -64,6 +64,12 @@
             <span>Users</span>
           </div>
         </md-list-item>
+        <md-list-item class="md-1-line" data-ng-click="goTo('/user/report')" data-ng-show="validateAccessLevel(details.accessLevel, accessLevel.Management)">
+          <div class="md-list-item-text" layout="row">
+            <md-icon md-font-set="fa fa-briefcase fa-2x"></md-icon>
+            <span>Report</span>
+          </div>
+        </md-list-item>
         <md-list-item class="md-1-line" data-ng-click="goTo('/alltech/list')" data-ng-show="validateAccessLevel(details.accessLevel, accessLevel.Admin)">
           <div class="md-list-item-text" layout="row">
             <md-icon md-font-set="fa fa-book fa-2x"></md-icon>
@@ -126,6 +132,7 @@
 <script src='@routes.Assets.versioned("javascripts/user/user.home.controller.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/user/user.list.controller.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/user/user.profile.controller.js")' type="text/javascript"></script>
+<script src='@routes.Assets.versioned("javascripts/user/dm.report.controller.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/tech/tech.list.controller.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/skill/skill.controller.js")' type="text/javascript"></script>
 <script src='@routes.Assets.versioned("javascripts/menu/menu.controller.js")' type="text/javascript"></script>
