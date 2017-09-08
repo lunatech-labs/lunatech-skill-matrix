@@ -20,6 +20,7 @@ class UpdateUserRolesAndStatusScheduler @Inject()(actorSystem: ActorSystem, life
 
 
   val sa: ActorRef = actorSystem.actorOf(Props(new ScheduleActor), "scheduleActor")
+  actorSystem.scheduler.scheduleOnce(0.millis, sa, ScheduleActor.RunUser)
   actorSystem.scheduler.scheduleOnce(delay.millis, sa, ScheduleActor.RunUser)
 
   // This is necessary to avoid thread leaks, specially if you are

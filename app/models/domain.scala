@@ -3,6 +3,7 @@ package models
 import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import play.api.libs.json._
+import services.PeopleAPIService.Person
 
 case class User(id: Option[Int] = None, firstName: String, lastName: String, email: String, accessLevels: List[AccessLevel], status:Status) {
   require(email != null && !email.isEmpty, "Email field shouldn't be empty")
@@ -29,6 +30,10 @@ case class SkillMatrixUsersAndLevel(fullName: String, level: SkillLevel)
 case class SkillMatrixResponse(techId: Int, techName: String, techType: TechType, users: Seq[SkillMatrixUsersAndLevel])
 
 case class UserSkillResponse(userId: Int, firstName: String, lastName: String, skills: Seq[SkillMatrixItem])
+
+case class UserLastSkillUpdates(name:String,entries: Seq[LastUpdateSkill])
+
+case class LastUpdateSkill(tech:String,entryAction:EntryAction,occurrence: DateTime)
 
 case class TechFilter(tech:String,operation:Operation,level:Option[SkillLevel]){
   def validate(skill: Skill,tech: Tech):Boolean = {
@@ -71,6 +76,9 @@ object ImplicitFormats {
   implicit val userSkillResponseFormat: Format[UserSkillResponse] = Json.format[UserSkillResponse]
   implicit val techFilterFormat: Format[TechFilter] = Json.format[TechFilter]
   implicit val userSchedulerAuditFilterFormat: Format[UserSchedulerAudit] = Json.format[UserSchedulerAudit]
+  implicit val personFormat: Format[Person] = Json.format[Person]
+  implicit val lastUpdateSkillFormat: Format[LastUpdateSkill] = Json.format[LastUpdateSkill]
+  implicit val userLastSkillUpdatesFormat: Format[UserLastSkillUpdates] = Json.format[UserLastSkillUpdates]
 
 }
 

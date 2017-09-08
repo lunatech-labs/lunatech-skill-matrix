@@ -37,4 +37,9 @@ object Entries extends LazyLogging {
     val query = entryActionsTable returning entryActionsTable.map(_.id) += entry
     connection.db.run(query)
   }
+
+  def getByUser(userId: Option[Int])(implicit connection: DBConnection): Future[Seq[Entry]] = {
+    val query = entryActionsTable.filter(_.userId === userId)
+    connection.db.run(query.result)
+  }
 }

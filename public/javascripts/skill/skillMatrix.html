@@ -29,8 +29,16 @@
             <md-card-content layout="row">
               <div data-ng-repeat="level in data.level"  flex>
                 <div class="user-on-level">
-                  <div class="badge" data-ng-class="getLevelBadgeClass(level.value)">{{skill.users[level.value].length}}</div>
-                  <md-icon class="icon-3x" md-font-set="fa fa-user fa-3x" data-ng-class="getLevelClass(level.value)"></md-icon>
+                  <div class="badge" data-ng-class="getLevelBadgeClass(level.value)">
+                    {{skill.users[level.value].length}}
+
+                    <md-tooltip md-direction="bottom" data-ng-show="skill.userLevel === level.value">You current level</md-tooltip>
+
+                  </div>
+                  <md-icon class="icon-3x" md-font-set="fa fa-user fa-3x" data-ng-class="getLevelClass(level.value)" data-ng-show="skill.userLevel !== level.value"></md-icon>
+                  <md-icon class="icon-3x" md-font-set="fa fa-user-o fa-3x" data-ng-class="getLevelClass(level.value)" data-ng-show="skill.userLevel === level.value">
+                    <md-tooltip md-direction="top">You current level</md-tooltip>
+                  </md-icon>
                 </div>
               </div>
             </md-card-content>
