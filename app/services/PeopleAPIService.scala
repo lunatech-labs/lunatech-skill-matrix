@@ -4,8 +4,8 @@ import javax.inject.Inject
 
 import com.typesafe.config.Config
 import play.api.http.Status.OK
-import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSRequest}
+import models.ImplicitFormats._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
@@ -46,8 +46,6 @@ class PeopleAPIService @Inject()(ws: WSClient, config: Config)(implicit val ec: 
 
 object PeopleAPIService {
   final case class Person(email: String, managers: Seq[String], roles: Seq[String])
-
-  implicit val personFormat: Format[Person] = Json.format[Person]
 
   def wrapOnException[A](msg: Throwable => String)(fn: => A): A = {
     try {

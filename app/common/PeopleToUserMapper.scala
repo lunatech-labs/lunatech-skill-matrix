@@ -34,7 +34,7 @@ class PeopleToUserMapper {
   private def fromRolesToAccessLevels(roles: Seq[String]): Seq[AccessLevel] = {
     roles.map {
       case "developer" => AccessLevel.Developer
-      case "development manager" => AccessLevel.Management
+      case "development manager" | "development-manager" => AccessLevel.Management
       case "techmatrix-admin" => AccessLevel.Admin
       case "ceo" => AccessLevel.CEO
       case "administrative" => AccessLevel.Administrative
