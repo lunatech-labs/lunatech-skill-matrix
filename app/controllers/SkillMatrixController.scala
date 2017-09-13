@@ -24,8 +24,8 @@ class SkillMatrixController @Inject()(skillMatrixService: SkillMatrixService,
       for {
         skillMatrixItem: SkillMatrixItem <- request.body.validate[SkillMatrixItem]                                             ?| (err =>  ApiErrors.badRequest(JsError.toJson(err)))
         skillId <- skillMatrixService.addUserSkill(request.user.getUserId, skillMatrixItem.tech, skillMatrixItem.skillLevel)   ?| (err => ApiErrors.internalServerError(err.getMessage))
-        techId <- techService.getTechIdByName(skillMatrixItem.tech)                                                            ?| ApiErrors.INTERNAL_SERVER_ERROR
-      } yield Created(Json.toJson(constructSkillMatrixItem(techId, skillId, skillMatrixItem)))
+        tech <- techService.getTechByName(skillMatrixItem.tech)                                                                ?| ApiErrors.INTERNAL_SERVER_ERROR
+      } yield Created(Json.toJson(constructSkillMatrixItem(tech, skillId, skillMatrixItem)))
   }
 
   //TODO: rethink the update operation. In the body of the request we only need the new skill level
@@ -87,9 +87,9 @@ class SkillMatrixController @Inject()(skillMatrixService: SkillMatrixService,
     case None => Future(None)
     case id => Future(id)
   }
-  private def constructSkillMatrixItem(techId: Int, skillId: Int, skillMatrixItem: SkillMatrixItem) =
+  private def constructSkillMatrixItem(tech: Tech, skillId: Int, skillMatrixItem: SkillMatrixItem) =
     SkillMatrixItem(
-      Tech(Some(techId), skillMatrixItem.tech.name, skillMatrixItem.tech.techType),
+      tech,
       skillMatrixItem.skillLevel,
       Some(skillId)
     )

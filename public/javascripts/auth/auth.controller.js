@@ -35,7 +35,8 @@
                 full_name: profile.getName(),
                 googleId: profile.getId(),
                 token:id_token,
-                accessLevel: response.data.user.accessLevels
+                accessLevel: response.data.user.accessLevels,
+                id:response.data.user.id
               });
               $location.path('skillmatrix')
           },function(response){

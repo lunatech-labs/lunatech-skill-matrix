@@ -33,6 +33,9 @@
           updateTech:function(techId){
             return '/alltech/'+techId;
           },
+          dmReport:function(dmUserId){
+            return '/report/dm/'+dmUserId;
+          }
       };
 
       return api;

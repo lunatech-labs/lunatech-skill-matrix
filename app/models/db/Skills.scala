@@ -122,6 +122,18 @@ object Skills extends LazyLogging {
     connection.db.run(join.result)
   }
 
+  def getSkill(skillId:Int)(implicit connection: DBConnection): Future[Option[(Skill, User, Tech)]] = {
+    val join = for {
+      skill <- skillTable if skill.id === skillId
+      user <- Users.userTable if skill.userId === user.id
+      tech <- Techs.techTable if skill.techId === tech.id
+    } yield {
+      (skill, user, tech)
+    }
+
+    connection.db.run(join.result.headOption)
+  }
+
   def getSkillByTechId(techId: Int)(implicit connection: DBConnection): Future[Seq[Skill]] = {
     val query = skillTable.filter(skill => skill.techId === techId)
     connection.db.run(query.result)

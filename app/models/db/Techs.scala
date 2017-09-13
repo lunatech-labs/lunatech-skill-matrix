@@ -39,6 +39,11 @@ object Techs extends LazyLogging {
     connection.db.run(getTechIdQuery.result.headOption)
   }
 
+  def getTechByName(tech: Tech)(implicit connection: DBConnection): Future[Option[Tech]] = {
+    val getTechIdQuery = techTable.filter(t => t.name === tech.name.toLowerCase).take(1)
+    connection.db.run(getTechIdQuery.result.headOption)
+  }
+
   def getAllTech(implicit connection: DBConnection): Future[Seq[Tech]] = {
     connection.db.run(techTable.result)
   }
