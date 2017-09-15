@@ -35,10 +35,43 @@ class SkillMatrixService @Inject()(techService: TechService,
     }
   }
 
+  def deactivateUserSkill(userId: Int): Future[Int] = {
+    Skills.deactivateByUserId(userId)
+  }
+
+  def activateUserSkill(userId: Int): Future[Int] = {
+    Skills.activateByUserId(userId)
+  }
+
+  def batchActivateUserSkill(userIds: Seq[Int]): Future[Int] = {
+    Future.sequence(
+      userIds.map { userId=>
+        activateUserSkill(userId)
+    }).map{ list => list.sum }
+  }
+
+  def batchDeactivateUserSkill(userIds: Seq[Int]): Future[Int] = {
+    Future.sequence(
+      userIds.map { userId=>
+        deactivateUserSkill(userId)
+      }).map{ list => list.sum }
+  }
+
   def getUserSkills(userId: Int): Future[Option[UserSkillResponse]] = {
     userService.getUserById(userId).flatMap {
       case Some(user) =>
         val result = Skills.getAllSkillMatrixByUser(userId)
+        result.map { skills =>
+          computeUserSkillResponse(user, skills)
+        }
+      case None => Future(None)
+    }
+  }
+
+  def getUserSkills(email: String): Future[Option[UserSkillResponse]] = {
+    userService.getUserByEmail(email).flatMap {
+      case Some(user) =>
+        val result = Skills.getAllSkillMatrixByUser(user.id.get)
         result.map { skills =>
           computeUserSkillResponse(user, skills)
         }

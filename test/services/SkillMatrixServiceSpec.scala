@@ -29,7 +29,7 @@ class SkillMatrixServiceSpec extends UnitSpec {
       val newTech = Tech(None, "Sarcasm", TechType.CONCEPT)
       val response = skillMatrixService.addUserSkill(dataMap(ID_USER_SNAPE), newTech, SkillLevel.EXPERT).futureValue
 
-      dataMap.values.exists(_ === response) mustBe false
+      dataMap.filter { el => el._1.contains("Tech")}.values.exists(_ === response) mustBe false
     }
 
     "update a user skill and return its the number of rows updated" in {
@@ -95,6 +95,39 @@ class SkillMatrixServiceSpec extends UnitSpec {
       response mustBe None
     }
 
+    "deactivate a skill for a user" in {
+      val response = skillMatrixService.deactivateUserSkill(dataMap(ID_USER_SNAPE)).futureValue
+      val skills: Seq[SkillMatrixResponse] = skillMatrixService.getAllSkills.futureValue
+
+      response mustEqual 2
+      skills.flatMap(_.users.map(_.fullName)).contains(userSeverus.fullName) mustEqual false
+    }
+
+    "deactive skills for multiple users" in {
+      val response = skillMatrixService.batchDeactivateUserSkill(Seq(dataMap(ID_USER_SNAPE),dataMap(ID_USER_ODERSKY))).futureValue
+      val skills: Seq[SkillMatrixResponse] = skillMatrixService.getAllSkills.futureValue
+
+      response mustEqual 4
+      skills.flatMap(_.users.map(_.fullName)).contains(userSeverus.fullName) mustEqual false
+      skills.flatMap(_.users.map(_.fullName)).contains(userOdersky.fullName) mustEqual false
+    }
+
+    "activate skills for a user" in {
+      val response = skillMatrixService.activateUserSkill(dataMap(ID_USER_DUMBLEDORE)).futureValue
+      val skills: Seq[SkillMatrixResponse] = skillMatrixService.getAllSkills.futureValue
+
+      response mustEqual 1
+      skills.flatMap(_.users.map(_.fullName)).contains(userDumbledore.fullName) mustEqual true
+    }
+
+    "activate skills for multiple users" in {
+      val response = skillMatrixService.batchActivateUserSkill(Seq(dataMap(ID_USER_DUMBLEDORE),dataMap(ID_USER_VOLDEMORT))).futureValue
+      val skills: Seq[SkillMatrixResponse] = skillMatrixService.getAllSkills.futureValue
+
+      response mustEqual 2
+      skills.flatMap(_.users.map(_.fullName)).contains(userDumbledore.fullName) mustEqual true
+      skills.flatMap(_.users.map(_.fullName)).contains(userVoldemort.fullName) mustEqual true
+    }
   }
 
 }

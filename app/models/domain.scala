@@ -1,8 +1,10 @@
 package models
 
-import play.api.libs.json.{Format, Json}
+import org.joda.time.DateTime
+import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
+import play.api.libs.json._
 
-case class User(id: Option[Int] = None, firstName: String, lastName: String, email: String, accessLevel: AccessLevel) {
+case class User(id: Option[Int] = None, firstName: String, lastName: String, email: String, accessLevels: List[AccessLevel], status:Status) {
   require(email != null && !email.isEmpty, "Email field shouldn't be empty")
 
   def fullName: String = {
@@ -16,7 +18,9 @@ case class User(id: Option[Int] = None, firstName: String, lastName: String, ema
 
 case class Tech(id: Option[Int], name: String, techType: TechType)
 
-case class Skill(id: Option[Int] = None, userId: Int, techId: Int, skillLevel: SkillLevel)
+case class Skill(id: Option[Int] = None, userId: Int, techId: Int, skillLevel: SkillLevel, status: Status)
+
+case class Entry(id: Option[Int] = None, userId: Int, skillId: Int, entryAction:EntryAction, occurrence: DateTime)
 
 case class SkillMatrixItem(tech: Tech, skillLevel: SkillLevel, id: Option[Int])
 
@@ -26,14 +30,20 @@ case class SkillMatrixResponse(techId: Int, techName: String, techType: TechType
 
 case class UserSkillResponse(userId: Int, firstName: String, lastName: String, skills: Seq[SkillMatrixItem])
 
+case class UserLastSkillUpdates(name:String,entries: Seq[LastUpdateSkill])
+
+case class LastUpdateSkill(tech:String,entryAction:EntryAction,occurrence: DateTime)
+
+final case class Person(email: String, managers: Seq[String], roles: Seq[String])
+
 case class TechFilter(tech:String,operation:Operation,level:Option[SkillLevel]){
   def validate(skill: Skill,tech: Tech):Boolean = {
     if (this.tech == tech.name) {
       this.operation match {
         case Operation.Equal => this.level.map( _ == skill.skillLevel).getOrElse(false)
-        case Operation.GreaterThan =>
+        case Operation.GreaterThanOrEqual =>
           this.level.map(SkillLevel.orderingList.indexOf(_)  <= SkillLevel.orderingList.indexOf(skill.skillLevel)).getOrElse(false)
-        case Operation.LowerThan =>
+        case Operation.LowerThanOrEqual =>
           this.level.map(SkillLevel.orderingList.indexOf(_)  >= SkillLevel.orderingList.indexOf(skill.skillLevel)).getOrElse(false)
         case Operation.Any => true
       }
@@ -43,7 +53,20 @@ case class TechFilter(tech:String,operation:Operation,level:Option[SkillLevel]){
   }
 }
 
+case class UserSchedulerAudit(id: Option[Int] = None, createdAt: DateTime, status: String, body: JsValue)
+
 object ImplicitFormats {
+
+  val dateFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSSZ")
+
+  implicit val jodaDateWrites: Writes[DateTime] = new Writes[DateTime] {
+    def writes(date: DateTime): JsValue = JsString(date.toString(dateFormatter))
+  }
+
+  implicit val jodaDateReads: Reads[DateTime] = Reads[DateTime](js =>
+    js.validate[String].map[DateTime] { dtString =>
+      DateTime.parse(dtString, dateFormatter)
+    })
 
   implicit val userFormat: Format[User] = Json.format[User]
   implicit val techFormat: Format[Tech] = Json.format[Tech]
@@ -53,6 +76,10 @@ object ImplicitFormats {
   implicit val skillMatrixResponseFormat: Format[SkillMatrixResponse] = Json.format[SkillMatrixResponse]
   implicit val userSkillResponseFormat: Format[UserSkillResponse] = Json.format[UserSkillResponse]
   implicit val techFilterFormat: Format[TechFilter] = Json.format[TechFilter]
+  implicit val userSchedulerAuditFilterFormat: Format[UserSchedulerAudit] = Json.format[UserSchedulerAudit]
+  implicit val personFormat: Format[Person] = Json.format[Person]
+  implicit val lastUpdateSkillFormat: Format[LastUpdateSkill] = Json.format[LastUpdateSkill]
+  implicit val userLastSkillUpdatesFormat: Format[UserLastSkillUpdates] = Json.format[UserLastSkillUpdates]
 
 }
 

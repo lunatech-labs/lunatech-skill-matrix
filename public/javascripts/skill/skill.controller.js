@@ -39,16 +39,19 @@
               $scope.data.skills = $scope.data.skills.map(function(skill){
                 var users = {}
                 var isMissing = true;
+                var userLevel = undefined;
                 angular.forEach($scope.data.level, function(l){
                   users[l.value] = skill.users.filter(function(u){
                     if(u.fullName === $scope.data.user.full_name){
                       isMissing = false;
+                      userLevel = u.level;
                     }
                     return u.level === l.value;
                   });
                 });
                 skill.users = users;
                 skill.isMissing = isMissing;
+                skill.userLevel = userLevel;
                 return skill;
               });
               angular.forEach($scope.data.techType, function(techType){

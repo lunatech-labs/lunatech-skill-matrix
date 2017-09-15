@@ -3,13 +3,15 @@ package models.db
 import com.typesafe.scalalogging.LazyLogging
 import common.DBConnection
 import models._
-import slick.driver.PostgresDriver.api._
 import slick.lifted.{ProvenShape, TableQuery}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 
+import CustomPostgresProfile.api._
+
 class Users(tag: Tag) extends Table[User](tag, "users") {
+
   def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
 
   def firstName: Rep[String] = column[String]("firstname")
@@ -18,9 +20,11 @@ class Users(tag: Tag) extends Table[User](tag, "users") {
 
   def email: Rep[String] = column[String]("email")
 
-  def accessLevel: Rep[AccessLevel] = column[AccessLevel]("accesslevel")
+  def accessLevels: Rep[List[AccessLevel]] = column[List[AccessLevel]]("accesslevels")
 
-  def * : ProvenShape[User] = (id.?, firstName, lastName, email, accessLevel) <> ((User.apply _).tupled, User.unapply)
+  def status: Rep[Status] = column[Status]("status")
+
+  def * : ProvenShape[User] = (id.?, firstName, lastName, email, accessLevels, status) <> (User.tupled, User.unapply)
 }
 
 object Users extends LazyLogging {
@@ -29,7 +33,7 @@ object Users extends LazyLogging {
   def getUserById(userId: Int)(implicit connection: DBConnection): Future[Option[User]] = {
     exists(userId).flatMap {
       case true =>
-        val query = userTable.filter(x => x.id === userId)
+        val query = userTable.filter(_.id === userId)
         connection.db.run(query.result.headOption)
       case false => Future(None)
     }
@@ -60,8 +64,11 @@ object Users extends LazyLogging {
   }
 
   def remove(userId:Int)(implicit connection: DBConnection): Future[Int] = {
-    val query = userTable.filter(_.id === userId)
-    connection.db.run(query.delete)
+    val query = for {
+      user <- userTable.filter(_.id === userId)
+    } yield user.status
+
+    connection.db.run(query.update(Status.Inactive))
   }
 
   def searchUsers(filters:Seq[TechFilter])(implicit connection: DBConnection):Future[Seq[User]] = {
@@ -74,6 +81,36 @@ object Users extends LazyLogging {
         else None
       }).toSeq.flatten
     }
+  }
+
+  def updateAccessLevels(user: User)(implicit connection: DBConnection): Future[Int] = {
+    logger.info("updating user roles {} {}", user, user.accessLevels)
+    val action = userTable
+      .filter(_.id === user.id)
+      .map(_.accessLevels)
+      .update(user.accessLevels)
+
+    connection.db.run(action)
+  }
+
+  def updateStatus(user: User)(implicit connection: DBConnection): Future[Int] = {
+    logger.info("activating user {}", user)
+    val action = userTable
+      .filter(_.email === user.email)
+      .map(_.status)
+      .update(user.status)
+
+    connection.db.run(action)
+  }
+
+  def activateUser(user: User)(implicit connection: DBConnection): Future[Int] = {
+    logger.info("activating user {}", user)
+    updateStatus(user.copy(status = Status.Active))
+  }
+
+  def deactivateUser(user: User)(implicit connection: DBConnection): Future[Int] = {
+    logger.info("deactivating user {}", user)
+    updateStatus(user.copy(status = Status.Inactive))
   }
 
   private def validateFilters(filters:Seq[TechFilter], skills:Seq[(Skill,User,Tech)]):Boolean = {

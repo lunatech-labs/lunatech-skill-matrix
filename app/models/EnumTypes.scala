@@ -1,19 +1,19 @@
 package models
 
+import models.db.CustomPostgresProfile.api._
 import play.api.libs.json._
-import slick.driver.PostgresDriver.api._
 
 sealed trait SkillLevel
 
 
 object SkillLevel {
   def apply(skillLevel: String): SkillLevel = skillLevel match {
-      case "EXPERT" => EXPERT
-      case "PROFICIENT" => PROFICIENT
-      case "COMPETENT" => COMPETENT
-      case "ADVANCED_BEGINNER" => ADVANCED_BEGINNER
-      case "NOVICE" => NOVICE
-    }
+    case "EXPERT" => EXPERT
+    case "PROFICIENT" => PROFICIENT
+    case "COMPETENT" => COMPETENT
+    case "ADVANCED_BEGINNER" => ADVANCED_BEGINNER
+    case "NOVICE" => NOVICE
+  }
 
   implicit val skillLevelFormat: Format[SkillLevel] = new Format[SkillLevel] {
     def reads(json: JsValue): JsResult[SkillLevel] = json match {
@@ -46,7 +46,7 @@ object SkillLevel {
   case object NOVICE extends SkillLevel
 
 
-  val orderingList = List(NOVICE,ADVANCED_BEGINNER,COMPETENT,PROFICIENT,EXPERT)
+  val orderingList = List(NOVICE, ADVANCED_BEGINNER, COMPETENT, PROFICIENT, EXPERT)
 }
 
 
@@ -55,13 +55,13 @@ sealed trait TechType
 object TechType {
 
   def apply(techType: String): TechType = techType match {
-      case "LANGUAGE" => LANGUAGE
-      case "LIBRARY" => LIBRARY
-      case "FRAMEWORK" => FRAMEWORK
-      case "CONCEPT" => CONCEPT
-      case "DATABASE" => DATABASE
-      case "OTHER" => OTHER
-    }
+    case "LANGUAGE" => LANGUAGE
+    case "LIBRARY" => LIBRARY
+    case "FRAMEWORK" => FRAMEWORK
+    case "CONCEPT" => CONCEPT
+    case "DATABASE" => DATABASE
+    case "OTHER" => OTHER
+  }
 
   implicit val techTypeFormat: Format[TechType] = new Format[TechType] {
     def reads(json: JsValue): JsResult[TechType] = json match {
@@ -101,15 +101,23 @@ object TechType {
 sealed trait AccessLevel
 
 object AccessLevel {
-  case object Basic      extends AccessLevel
-  case object Management extends AccessLevel
-  case object Admin      extends AccessLevel
+  case object Basic               extends AccessLevel
+  case object Developer           extends AccessLevel
+  case object Management          extends AccessLevel
+  case object Admin               extends AccessLevel
+  case object Administrative      extends AccessLevel
+  case object Office              extends AccessLevel
+  case object CEO                 extends AccessLevel
 
   def apply(accessLevel: String): AccessLevel = accessLevel match {
-    case "Basic"      => Basic
-    case "Management" => Management
-    case "Admin"      => Admin
-    case _            => Basic
+    case "Basic"          => Basic
+    case "Management"     => Management
+    case "Developer"      => Developer
+    case "Admin"          => Admin
+    case "Administrative" => Administrative
+    case "Office"         => Office
+    case "CEO"            => CEO
+    case _                => Basic
   }
 
   implicit val accessLevelFormat: Format[AccessLevel] = new Format[AccessLevel] {
@@ -123,48 +131,42 @@ object AccessLevel {
       case _ => JsError("String values are expected")
     }
 
-
     def writes(accessLevel: AccessLevel) = JsString(accessLevel.toString)
-
   }
 
-  implicit val accessLevelMappedColumn = MappedColumnType.base[AccessLevel, String](
-    e => e.toString,
-    s => AccessLevel(s)
-  )
-
-  def isAccessible(userLevel:AccessLevel,accessLevel:AccessLevel):Boolean = {
-    userLevel match {
-      case Admin => true
-      case Management => accessLevel == Management || accessLevel == Basic
-      case Basic => accessLevel == Basic
-      case _ => false
-    }
+  def isAccessible(userLevels: List[AccessLevel],accessLevel:AccessLevel):Boolean = accessLevel match {
+    case AccessLevel.Basic => true
+    case _ => userLevels.contains(accessLevel) || userLevels.contains(Admin)
   }
 
 }
 
 
 sealed trait Operation
+
 object Operation {
-  case object Equal       extends Operation {
+
+  case object Equal extends Operation {
     override def toString = "EQUAL"
   }
-  case object GreaterThan extends Operation {
-    override def toString = "GT"
+
+  case object GreaterThanOrEqual extends Operation {
+    override def toString = "GTE"
   }
-  case object LowerThan   extends Operation {
-    override def toString = "LT"
+
+  case object LowerThanOrEqual extends Operation {
+    override def toString = "LTE"
   }
-  case object Any         extends Operation {
+
+  case object Any extends Operation {
     override def toString = "ANY"
   }
 
   def apply(accessLevel: String): Operation = accessLevel match {
-    case "EQUAL"      => Equal
-    case "GT"         => GreaterThan
-    case "LT"         => LowerThan
-    case "ANY"        => Any
+    case "EQUAL" => Equal
+    case "GTE" => GreaterThanOrEqual
+    case "LTE" => LowerThanOrEqual
+    case "ANY" => Any
   }
 
   implicit val operationFormat: Format[Operation] = new Format[Operation] {
@@ -180,5 +182,79 @@ object Operation {
 
 
     def writes(operation: Operation) = JsString(operation.toString)
+  }
+}
+
+
+sealed trait Status {
+}
+
+object Status {
+
+  case object Active extends Status
+
+  case object Inactive extends Status
+
+  def apply(value: String): Status = value match {
+    case "Active" => Active
+    case "Inactive" => Inactive
+  }
+
+  implicit val statusMappedColumn = MappedColumnType.base[Status, String](
+    e => e.toString,
+    s => Status(s)
+  )
+
+  implicit val statusFormat: Format[Status] = new Format[Status] {
+    def reads(json: JsValue): JsResult[Status] = json match {
+      case JsBoolean(_) =>
+        try {
+          JsSuccess(Status(json.as[String]))
+        } catch {
+          case _: scala.MatchError => JsError("Value is not in the list")
+        }
+      case _ => JsError("String values are expected")
+    }
+
+
+    def writes(status: Status) = JsString(status.toString)
+  }
+}
+
+
+sealed trait EntryAction
+
+object EntryAction {
+
+  case object Add extends EntryAction
+
+  case object Remove extends EntryAction
+
+  case object Update extends EntryAction
+
+  def apply(value: String): EntryAction = value match {
+    case "Add" => Add
+    case "Remove" => Remove
+    case "Update" => Update
+  }
+
+  implicit val statusMappedColumn = MappedColumnType.base[EntryAction, String](
+    e => e.toString,
+    s => EntryAction(s)
+  )
+
+  implicit val entryActionFormat: Format[EntryAction] = new Format[EntryAction] {
+    def reads(json: JsValue): JsResult[EntryAction] = json match {
+      case JsBoolean(_) =>
+        try {
+          JsSuccess(EntryAction(json.as[String]))
+        } catch {
+          case _: scala.MatchError => JsError("Value is not in the list")
+        }
+      case _ => JsError("String values are expected")
+    }
+
+
+    def writes(entryAction: EntryAction) = JsString(entryAction.toString)
   }
 }

@@ -2,15 +2,14 @@ package integration
 
 import common.{DBConnection, DBConnectionProvider}
 import data.TestDatabaseProvider
-import org.scalatest.{BeforeAndAfter, BeforeAndAfterAll, MustMatchers, WordSpec}
+import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.inject.guice.GuiceApplicationBuilder
-import slick.driver.JdbcProfile
-import slick.jdbc.JdbcBackend
+import slick.jdbc.{JdbcBackend, JdbcProfile}
 
 class IntegrationSpec
   extends WordSpec
@@ -20,7 +19,7 @@ class IntegrationSpec
     with BeforeAndAfter
     with BeforeAndAfterAll
     with ScalaFutures
-    with OneAppPerSuite{
+    with GuiceOneAppPerSuite {
 
   implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
@@ -34,5 +33,6 @@ class IntegrationSpec
 
   val dbConn: DBConnection = app.injector.instanceOf(classOf[DBConnection])
 
+  override def profile: JdbcProfile = app.injector.instanceOf(classOf[DatabaseConfigProvider]).get[JdbcProfile].profile
   override def db: JdbcBackend#DatabaseDef = app.injector.instanceOf(classOf[DatabaseConfigProvider]).get[JdbcProfile].db
 }

@@ -28,13 +28,12 @@ class UserControllerSpec extends AcceptanceSpec {
 
   info("The GET /users/4 for getting the info about an user")
   feature("It should return UserSkillResponse object") {
-    scenario("Everything is fine") {
+    scenario("Everything is fine for GET /users/4") {
       val request = FakeRequest("GET", s"/users/${dataMap(ID_USER_SNAPE)}").withHeaders(("X-AUTH-TOKEN", authToken))
       val response = route(app, request).get
 
       status(response) mustEqual 200
       (request, response) must validateAgainstSwagger(swaggerPath)
-
     }
   }
   feature("It should return 404 when user is not found"){
@@ -49,7 +48,7 @@ class UserControllerSpec extends AcceptanceSpec {
 
   info("The POST /users/search for getting the matching users")
   feature("It should return Array of User object") {
-    scenario("Everything is fine") {
+    scenario("Everything is fine for POST /users/search") {
       val request = FakeRequest("POST", s"/users/search").withBody(emptyTechFilter).withHeaders(("X-AUTH-TOKEN", authTokenManagement))
       val response = route(app, request).get
 

@@ -25,7 +25,10 @@
       "scopes": {
         "admin": "Admin scope",
         "management": "Manager scope",
-        "basic": "User scope"
+        "basic": "User scope",
+        "administrative": "Administrative scope",
+        "office": "Office scope",
+        "ceo": "CEO scope"
       }
     }
   },
@@ -221,6 +224,46 @@
               "items": {
                 "$ref": "#/definitions/UserSkillResponse"
               }
+            }
+          },
+          "401": {
+            "$ref": "#/responses/Standard401ErrorMessage"
+          },
+          "403": {
+            "$ref": "#/responses/Standard403ErrorMessage"
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "$ref": "#/responses/Standard500ErrorMessage"
+          }
+        }
+      }
+    },
+    "/users/skills/{email}": {
+      "get": {
+        "summary": "get all skills entered by user",
+        "operationId": "getUserSkillsByEmail",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "email",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of products",
+            "schema": {
+              "$ref": "#/definitions/UserSkillResponse"
             }
           },
           "401": {
@@ -643,6 +686,54 @@
           }
         }
       }
+    },
+    "/report/dm/{dmUserId}": {
+      "get": {
+        "summary": "get report for that dm",
+        "operationId": "getDMReport",
+        "produces": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "OauthSecurity": ["management"]
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "dmUserId",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of products",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/UserLastSkillUpdates"
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/responses/Standard401ErrorMessage"
+          },
+          "403": {
+            "$ref": "#/responses/Standard403ErrorMessage"
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "$ref": "#/responses/Standard500ErrorMessage"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -740,7 +831,7 @@
     "UserSkillResponse": {
       "type": "object",
       "properties": {
-        "id": {
+        "userId": {
           "type": "integer"
         },
         "firstName": {
@@ -796,12 +887,55 @@
         "password": {
           "type": "string"
         },
-        "accessLevel": {
-          "type": "string",
+        "accessLevels": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Basic",
+              "Admin",
+              "Management"
+            ]
+          }
+        },
+        "status":{
+          "type":"string",
           "enum": [
-            "Basic",
-            "Admin",
-            "Management"
+            "Active",
+            "Inactive"
+          ]
+        }
+      }
+    },
+    "UserLastSkillUpdates": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LastUpdateSkill"
+          }
+        }
+      }
+    },
+    "LastUpdateSkill": {
+      "type": "object",
+      "properties": {
+        "tech": {
+          "type": "string"
+        },
+        "occurrence": {
+          "type": "string"
+        },
+        "entryAction": {
+          "type": "string",
+          "enum":[
+            "Add",
+            "Remove",
+            "Update"
           ]
         }
       }

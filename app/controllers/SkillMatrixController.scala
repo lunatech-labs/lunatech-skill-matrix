@@ -16,19 +16,20 @@ import scala.concurrent._
 @Singleton
 class SkillMatrixController @Inject()(skillMatrixService: SkillMatrixService,
                                       techService: TechService,
-                                      auth: Authentication
-                                     ) extends Controller {
+                                      auth: Authentication,
+                                      components: ControllerComponents
+                                     ) extends AbstractController(components) {
 
-  def addSkill(): Action[JsValue] = auth.UserAction().async(BodyParsers.parse.json) { request =>
+  def addSkill(): Action[JsValue] = auth.UserAction().async(components.parsers.json) { request =>
       for {
         skillMatrixItem: SkillMatrixItem <- request.body.validate[SkillMatrixItem]                                             ?| (err =>  ApiErrors.badRequest(JsError.toJson(err)))
         skillId <- skillMatrixService.addUserSkill(request.user.getUserId, skillMatrixItem.tech, skillMatrixItem.skillLevel)   ?| (err => ApiErrors.internalServerError(err.getMessage))
-        techId <- techService.getTechIdByName(skillMatrixItem.tech)                                                            ?| ApiErrors.INTERNAL_SERVER_ERROR
-      } yield Created(Json.toJson(constructSkillMatrixItem(techId, skillId, skillMatrixItem)))
+        tech <- techService.getTechByName(skillMatrixItem.tech)                                                                ?| ApiErrors.INTERNAL_SERVER_ERROR
+      } yield Created(Json.toJson(constructSkillMatrixItem(tech, skillId, skillMatrixItem)))
   }
 
   //TODO: rethink the update operation. In the body of the request we only need the new skill level
-  def updateSkill(skillId: Int): Action[JsValue] = auth.UserAction().async(BodyParsers.parse.json) { implicit request =>
+  def updateSkill(skillId: Int): Action[JsValue] = auth.UserAction().async(components.parsers.json) { implicit request =>
     for {
       skillMatrixItem: SkillMatrixItem <- request.body.validate[SkillMatrixItem]                                                        ?| (err =>  ApiErrors.badRequest(JsError.toJson(err)))
       _ <- validateTechIdPresentForUpdateOperation(skillMatrixItem)                                                                     ?| ApiErrors.badRequest(getBadRequestResponseForUpdateOperation)
@@ -37,23 +38,29 @@ class SkillMatrixController @Inject()(skillMatrixService: SkillMatrixService,
       yield Ok(Json.toJson(SkillMatrixItem(skillMatrixItem.tech, skillMatrixItem.skillLevel, Some(skillId))))
   }
 
-  def deleteSkill(skillId: Int): Action[Unit] = auth.UserAction().async(BodyParsers.parse.empty) { implicit request =>
+  def deleteSkill(skillId: Int): Action[Unit] = auth.UserAction().async(components.parsers.empty) { implicit request =>
     for {
       _ <- skillMatrixService.deleteUserSkill(request.user.getUserId, skillId) ?| ApiErrors.SKILL_NOT_FOUND
     } yield NoContent
   }
 
-  def getUserSkills(userId: Int): Action[Unit] = auth.UserAction().async(BodyParsers.parse.empty) { _ =>
+  def getUserSkills(userId: Int): Action[Unit] = auth.UserAction().async(components.parsers.empty) { _ =>
     for {
       userSkills <- skillMatrixService.getUserSkills(userId) ?| ApiErrors.USER_NOT_FOUND
     } yield Ok(Json.toJson(userSkills))
   }
 
-  def getSkillMatrix: Action[Unit] = auth.UserAction().async(BodyParsers.parse.empty) { _ =>
+  def getUserSkillsByEmail(email: String): Action[Unit] = auth.UserAction(AccessLevel.Management).async(components.parsers.empty) { _ =>
+    for {
+      userSkills <- skillMatrixService.getUserSkills(email) ?| ApiErrors.USER_NOT_FOUND
+    } yield Ok(Json.toJson(userSkills))
+  }
+
+  def getSkillMatrix: Action[Unit] = auth.UserAction().async(components.parsers.empty) { _ =>
     skillMatrixService.getAllSkills.map( result => Ok(Json.toJson(result)))
   }
 
-  def getSkillMatrixByTechId(techId: Int): Action[Unit] = auth.UserAction().async(BodyParsers.parse.empty) { _ =>
+  def getSkillMatrixByTechId(techId: Int): Action[Unit] = auth.UserAction().async(components.parsers.empty) { _ =>
     for {
       skillMatrixForTech <- skillMatrixService.getSkillMatrixByTechId(techId) ?| ApiErrors.TECH_NOT_FOUND
     } yield Ok(Json.toJson(skillMatrixForTech))
@@ -80,9 +87,9 @@ class SkillMatrixController @Inject()(skillMatrixService: SkillMatrixService,
     case None => Future(None)
     case id => Future(id)
   }
-  private def constructSkillMatrixItem(techId: Int, skillId: Int, skillMatrixItem: SkillMatrixItem) =
+  private def constructSkillMatrixItem(tech: Tech, skillId: Int, skillMatrixItem: SkillMatrixItem) =
     SkillMatrixItem(
-      Tech(Some(techId), skillMatrixItem.tech.name, skillMatrixItem.tech.techType),
+      tech,
       skillMatrixItem.skillLevel,
       Some(skillId)
     )

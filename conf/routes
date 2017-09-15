@@ -4,6 +4,7 @@ POST    /users/search                       controllers.UserController.searchUse
 GET     /users/:userId                      controllers.UserController.getUserById(userId: Int)
 DELETE  /users/:userId                      controllers.UserController.removeUser(userId: Int)
 GET     /users/:userId/skills               controllers.SkillMatrixController.getUserSkills(userId: Int)
+GET     /users/skills/:email                controllers.SkillMatrixController.getUserSkillsByEmail(email: String)
 GET     /users/me/skillmatrix               controllers.SkillMatrixController.getMySkills
 POST    /users/me/skillmatrix               controllers.SkillMatrixController.addSkill
 PUT     /users/me/skillmatrix/:skillId      controllers.SkillMatrixController.updateSkill(skillId: Int)
@@ -15,6 +16,8 @@ GET     /techs/:query                       controllers.TechController.search(qu
 GET     /skillmatrix                        controllers.SkillMatrixController.getSkillMatrix
 GET     /skillmatrix/:techId                controllers.SkillMatrixController.getSkillMatrixByTechId(techId: Int)
 POST    /google/auth                        controllers.GoogleSignInController.authenticate()
+GET     /user-audit/latest                  controllers.UserSchedulerAuditController.getPeopleApiProcessStatus()
+GET     /report/dm/:dmUserId                controllers.ReportController.getDMReport(dmUserId: Int)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
