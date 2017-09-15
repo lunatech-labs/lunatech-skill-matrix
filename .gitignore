@@ -11,3 +11,4 @@ logs
 *.iml
 /test/environment-specific-test.conf
 /conf/environment-specific.conf
+public/javascripts/components

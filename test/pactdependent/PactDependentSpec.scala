@@ -36,7 +36,7 @@ class PactDependentSpec
       "people-api.key" -> "awesome-key",
       "people-api.host" -> "http://localhost:1234",
       "people-api.getAllPeoplePath" -> "/someapiname?apiKey=\"${people-api.key}",
-      "people-api.getPersonByEmailPath" -> "/someapiname/$email?apiKey=\"${people-api.key}"
+      "people-api.getPersonByEmailPath" -> "/someapiname/email?apiKey=\"${people-api.key}"
     ))
     .build
 

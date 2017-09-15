@@ -20,7 +20,7 @@ class UpdateUserRolesAndStatusScheduler @Inject()(actorSystem: ActorSystem, life
 
 
   val sa: ActorRef = actorSystem.actorOf(Props(new ScheduleActor), "scheduleActor")
-  actorSystem.scheduler.scheduleOnce(0.millis, sa, ScheduleActor.RunUser)
+  actorSystem.scheduler.scheduleOnce(0.millis, sa, ScheduleActor.RunOnStart)
   actorSystem.scheduler.scheduleOnce(delay.millis, sa, ScheduleActor.RunUser)
 
   // This is necessary to avoid thread leaks, specially if you are
@@ -31,22 +31,28 @@ class UpdateUserRolesAndStatusScheduler @Inject()(actorSystem: ActorSystem, life
 
   class ScheduleActor extends Actor with ActorLogging {
     override def receive: Receive = {
+      case ScheduleActor.RunOnStart =>
+        updateUsers()
       case ScheduleActor.RunUser =>
-        for {
-          userWithUpdatedRoles <- peopleAPIProcessor.updateAccessLevels()
-          (usersToActivate, usersToDeactivate) <- peopleAPIProcessor.updateUsersStatus()
-          jsonbody: JsValue = Json.obj("usersWithUpdatedRoles" -> Json.toJson(userWithUpdatedRoles), "usersToActivate" -> Json.toJson(usersToActivate), "usersToDeactivate" -> Json.toJson(usersToDeactivate))
-          _ <- userSchedulerAuditService.addLog("Success", jsonbody)
-          _ = log.info("Processed changes from People API. Response is {}", jsonbody)
-        } yield jsonbody
-
+        updateUsers()
         context.system.scheduler.scheduleOnce(1.day,self,ScheduleActor.RunUser)
       case unknown => log.error(s"Received unknown message: $unknown")
+    }
+
+    private def updateUsers() = {
+      for {
+        userWithUpdatedRoles <- peopleAPIProcessor.updateAccessLevels()
+        (usersToActivate, usersToDeactivate) <- peopleAPIProcessor.updateUsersStatus()
+        jsonbody: JsValue = Json.obj("usersWithUpdatedRoles" -> Json.toJson(userWithUpdatedRoles), "usersToActivate" -> Json.toJson(usersToActivate), "usersToDeactivate" -> Json.toJson(usersToDeactivate))
+        _ <- userSchedulerAuditService.addLog("Success", jsonbody)
+        _ = log.info("Processed changes from People API. Response is {}", jsonbody)
+      } yield jsonbody
     }
   }
 
   object ScheduleActor {
     sealed trait ScheduleActorMessage
     case object RunUser extends ScheduleActorMessage
+    case object RunOnStart extends ScheduleActorMessage
   }
 }
