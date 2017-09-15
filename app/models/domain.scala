@@ -3,7 +3,6 @@ package models
 import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import play.api.libs.json._
-import services.PeopleAPIService.Person
 
 case class User(id: Option[Int] = None, firstName: String, lastName: String, email: String, accessLevels: List[AccessLevel], status:Status) {
   require(email != null && !email.isEmpty, "Email field shouldn't be empty")
@@ -34,6 +33,8 @@ case class UserSkillResponse(userId: Int, firstName: String, lastName: String, s
 case class UserLastSkillUpdates(name:String,entries: Seq[LastUpdateSkill])
 
 case class LastUpdateSkill(tech:String,entryAction:EntryAction,occurrence: DateTime)
+
+final case class Person(email: String, managers: Seq[String], roles: Seq[String])
 
 case class TechFilter(tech:String,operation:Operation,level:Option[SkillLevel]){
   def validate(skill: Skill,tech: Tech):Boolean = {

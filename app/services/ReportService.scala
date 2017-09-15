@@ -20,10 +20,10 @@ class ReportService @Inject()(
       _ <- if (user.isDefined) Future(()) else Future.failed(ReportService.MissingUser)
       u = user.get
       people <- peopleAPIService.getAllPeople
-      supervisees <- Future(people.filter { p =>
+      supervisees = people.filter { p =>
         p.managers.contains(u.email)
-      })
-      updates <- Future(supervisees.map(_.email).map(lastSkillUpdate))
+      }
+      updates = supervisees.map(_.email).map(lastSkillUpdate)
       report <- Future.sequence(updates)
     } yield report
   }
@@ -35,18 +35,14 @@ class ReportService @Inject()(
         case Some(u) =>
           for {
             entriesDB <- Entries.getByUser(u.id)
-            grouped <- Future(entriesDB.groupBy(_.skillId))
-            latest <- Future {
-              grouped.values.map { seq =>
-                seq.sortWith((e1, e2) => e1.occurrence.isAfter(e2.occurrence)).head
-              }.toSeq
-            }
-            entriesWithTech <- Future {
-              latest.map { e =>
-                Skills.getSkill(e.skillId).map {
-                  case Some((_, _, tech: Tech)) => (e, tech.name)
-                  case None => (e, "Tech not found")
-                }
+            grouped = entriesDB.groupBy(_.skillId)
+            latest = grouped.values.map { seq =>
+              seq.sortWith((e1, e2) => e1.occurrence.isAfter(e2.occurrence)).head
+            }.toSeq
+            entriesWithTech = latest.map { e =>
+              Skills.getSkill(e.skillId).map {
+                case Some((_, _, tech: Tech)) => (e, tech.name)
+                case None => (e, "Tech not found")
               }
             }
             correctedEntriesWithTech <- Future.sequence(entriesWithTech)

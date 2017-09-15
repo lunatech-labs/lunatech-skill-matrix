@@ -2,9 +2,9 @@ package services
 
 import com.itv.scalapact.ScalaPactForger.{forgePact, interaction}
 import com.typesafe.config.{Config, ConfigFactory, ConfigValueFactory}
+import models.Person
 import play.api.libs.ws.WSClient
 import play.api.libs.ws.ahc.AhcWSClient
-import services.PeopleAPIService.Person
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -16,7 +16,7 @@ class PeopleAPIServiceSpec  extends UnitSpec {
   val config: Config = app.injector.instanceOf(classOf[Config])
   val email: String = "tanya.moldovan@lunatech.com"
   val getAllPeoplePath: String = config.getString("people-api.getAllPeoplePath")
-  val getPersonPath: String= config.getString("people-api.getPersonByEmailPath").replace("$email",email)
+  val getPersonPath: String= config.getString("people-api.getPersonByEmailPath").replace("email",email)
 
   override def  beforeAll { wsClient = AhcWSClient() }
 

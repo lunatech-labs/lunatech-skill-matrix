@@ -1,7 +1,6 @@
 package common
 
-import models.{AccessLevel, Status, User}
-import services.PeopleAPIService.Person
+import models.{AccessLevel, Person, Status, User}
 import data.TestData._
 import services.UnitSpec
 

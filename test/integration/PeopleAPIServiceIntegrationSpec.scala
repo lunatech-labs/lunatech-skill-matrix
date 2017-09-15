@@ -1,10 +1,11 @@
 package integration
 
 import com.typesafe.config.ConfigFactory
+import models.Person
 import play.api.libs.ws.WSClient
 import play.api.libs.ws.ahc.AhcWSClient
 import services.PeopleAPIService
-import services.PeopleAPIService.Person
+import models.ImplicitFormats.personFormat
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
