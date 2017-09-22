@@ -2,9 +2,6 @@ body{
   overflow: auto;
 }
 
-.layout-row.layout-wrap > * { flex: 1 1 50%; }
-.safari-100 > * { flex: 1 1 100%!important; }
-
 .main-content {
   padding: 15px 30px;
 }
@@ -197,8 +194,9 @@ body{
   position: absolute;
   padding: 1px 5px;
   border-radius: 25%;
-  right: 1em;
   bottom: -3px;
+  left:50%;
+  transform: translateX(-50%);
   box-shadow: 0 0 1px rgba(0,0,0,0.5);
 }
 
@@ -214,18 +212,45 @@ body{
 
 .add-skill-from-matrix {
   position: absolute;
-  right:  0;
+  left:  0;
+  top: -28px;
+}
+
+.tech-type-matrix {
+  position: absolute;
+  right: 0px;
   top: -24px;
+  min-width: auto;
+  min-height: auto;
+  font-size: 12px;
+  line-height: normal;
+}
+
+.skill-matrix-card {
+  min-width: 200px;
 }
 
 .user-on-level {
   position: relative;
   text-align: center;
   outline: none;
+  margin-right: 5px;
 }
 
 .mb20 {
   margin-bottom: 20px;
+}
+
+.mb30 {
+  margin-bottom: 30px;
+}
+
+.mt20 {
+  margin-top: 20px;
+}
+
+.mt30 {
+  margin-top: 30px;
 }
 
 .icon-input {
