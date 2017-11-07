@@ -12,7 +12,8 @@
         <md-icon md-font-set="fa fa-plus fa-2x"></md-icon>
       </md-button>
 
-      <md-button class="md-primary md-raised tech-type-matrix" aria-label="tech type">
+      <md-button class="md-primary md-raised tech-type-matrix" aria-label="tech type"
+                  data-ng-click="data.skillFilter = skill.techType; $event.stopPropagation();">
         {{skill.techType}}
       </md-button>
       <md-card-title>

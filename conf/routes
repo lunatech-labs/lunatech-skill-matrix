@@ -17,7 +17,7 @@ GET     /skillmatrix                        controllers.SkillMatrixController.ge
 GET     /skillmatrix/:techId                controllers.SkillMatrixController.getSkillMatrixByTechId(techId: Int)
 POST    /google/auth                        controllers.GoogleSignInController.authenticate()
 GET     /user-audit/latest                  controllers.UserSchedulerAuditController.getPeopleApiProcessStatus()
-GET     /report/dm/:dmUserId                controllers.ReportController.getDMReport(dmUserId: Int)
+GET     /report/lastupdate                  controllers.ReportController.getLastUpdateReport
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)

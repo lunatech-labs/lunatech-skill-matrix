@@ -14,16 +14,10 @@ class ReportService @Inject()(
                                peopleAPIService: PeopleAPIService,
                                userService: UserService)(implicit val connection: DBConnection) {
 
-  def dmReport(dmUserId: Int): Future[Seq[UserLastSkillUpdates]] = {
+  def lastUpdateReport: Future[Seq[UserLastSkillUpdates]] = {
     for {
-      user <- userService.getUserById(dmUserId)
-      _ <- if (user.isDefined) Future(()) else Future.failed(ReportService.MissingUser)
-      u = user.get
       people <- peopleAPIService.getAllPeople
-      supervisees = people.filter { p =>
-        p.managers.contains(u.email)
-      }
-      updates = supervisees.map(_.email).map(lastSkillUpdate)
+      updates = people.map(_.email).map(lastSkillUpdate)
       report <- Future.sequence(updates)
     } yield report
   }
