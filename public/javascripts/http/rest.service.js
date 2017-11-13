@@ -77,8 +77,8 @@
              var url = RestUrlService.updateTech(data.techId);
              return AuthenticatedRequest('PUT',url,data.body);
           },
-          dmReport:function(data){
-             var url = RestUrlService.dmReport(data);
+          lastUpdateReport:function(){
+             var url = RestUrlService.lastUpdateReport();
              return AuthenticatedRequest('GET', url);
           }
       };

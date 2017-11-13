@@ -32,8 +32,8 @@
         controller: 'UserProfileController'
       })
       .when('/user/report', {
-        templateUrl: '/assets/javascripts/user/dm.report.html',
-        controller: 'DMReportController'
+        templateUrl: '/assets/javascripts/user/lastupdate.report.html',
+        controller: 'LastUpdateReportController'
       })
       .when('/help', {
        templateUrl: '/assets/javascripts/help/help.html',
