@@ -17,9 +17,9 @@ import ExecutionContext.Implicits.global
 class ReportController @Inject()(reportService: ReportService, auth: Authentication, components: ControllerComponents) extends AbstractController(components) {
 
 
-  def getDMReport(dmUserId: Int): Action[Unit] = auth.UserAction(AccessLevel.Management).async(components.parsers.empty) { _ =>
+  def getLastUpdateReport: Action[Unit] = auth.UserAction(AccessLevel.Management).async(components.parsers.empty) { _ =>
     for {
-      user <- reportService.dmReport(dmUserId) ?| ApiErrors.USER_NOT_FOUND
+      user <- reportService.lastUpdateReport ?| ApiErrors.USER_NOT_FOUND
     } yield Ok(Json.toJson(user))
   }
 

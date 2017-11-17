@@ -31,7 +31,7 @@ class ReportControllerSpec extends AcceptanceSpec {
   info("The GET /report/dm/dmUserId for getting the report if manager")
   feature("It should return 200 when user a manager") {
     scenario("User is a manager") {
-      val request = FakeRequest("GET", s"/report/dm/${dataMap(ID_USER_SNAPE)}").withHeaders(("X-AUTH-TOKEN", authTokenManagement))
+      val request = FakeRequest("GET", s"/report/lastupdate").withHeaders(("X-AUTH-TOKEN", authTokenManagement))
       val response = route(app, request).get
 
       status(response) mustEqual OK
@@ -39,7 +39,7 @@ class ReportControllerSpec extends AcceptanceSpec {
   }
   feature("It should return 403 when user is not manager"){
     scenario("user is not manager") {
-      val request = FakeRequest("GET", s"/report/dm/${dataMap(ID_USER_ODERSKY)}").withHeaders(("X-AUTH-TOKEN", authToken))
+      val request = FakeRequest("GET", s"/report/lastupdate").withHeaders(("X-AUTH-TOKEN", authToken))
       val response = route(app, request).get
 
       status(response) mustEqual FORBIDDEN

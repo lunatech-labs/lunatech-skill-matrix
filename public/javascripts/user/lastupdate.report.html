@@ -1,5 +1,13 @@
+<div class="mb20">
+  <md-button
+          data-ng-repeat="letter in data.letters"
+          class="md-raised {{selected(letter)}}"
+          data-ng-click="toggle(letter)">{{letter}}</md-button>
+</div>
+
+
 <md-tabs md-dynamic-height md-border-bottom>
-  <md-tab label="{{user.name}}" data-ng-repeat="user in data.users">
+  <md-tab label="{{user.name}}" data-ng-repeat="user in data.selectedUsers">
     <md-content class="md-padding">
       <md-list flex>
         <md-list-item class="md-1-line" ng-click="null">

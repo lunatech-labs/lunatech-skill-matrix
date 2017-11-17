@@ -33,8 +33,8 @@
           updateTech:function(techId){
             return '/alltech/'+techId;
           },
-          dmReport:function(dmUserId){
-            return '/report/dm/'+dmUserId;
+          lastUpdateReport:function(){
+            return '/report/lastupdate';
           }
       };
 
