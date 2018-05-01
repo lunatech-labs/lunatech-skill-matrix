@@ -1,0 +1,3 @@
+public/javascripts/components/**/*.js linguist-vendored
+public/javascripts/components/**/*.css linguist-vendored
+public/javascripts/components/**/*.json linguist-vendored
