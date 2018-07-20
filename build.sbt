@@ -49,6 +49,7 @@ libraryDependencies ++= Seq(
   "com.github.julien-truffaut" %% "monocle-core"                  % "1.4.0-M1",
   "com.github.julien-truffaut" %% "monocle-macro"                 % "1.4.0-M1",
   "com.typesafe.slick"         %% "slick"                         % "3.2.1",
+  "com.typesafe.slick"         %% "slick-hikaricp"                % "3.2.1",
   "com.typesafe.play"          %% "play-slick"                    % playSlickEvolutions,
   "com.typesafe.play"          %% "play-slick-evolutions"         % playSlickEvolutions,
   "com.github.tminglei"        %% "slick-pg"                      % slickPgVersion,
