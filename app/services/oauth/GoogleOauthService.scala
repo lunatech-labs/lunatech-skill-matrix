@@ -14,9 +14,10 @@ import scala.collection.JavaConverters._
 import scala.util.Try
 
 
-
 @Singleton
 class GoogleOauthService @Inject()(lifecycle: ApplicationLifecycle, config: Config) extends OauthService {
+
+  private val validDomains = config.getString("oauth.google.domain").split(",").toList
 
   def verifyToken(idTokenString: String): Option[GoogleUser] = {
 
@@ -31,20 +32,21 @@ class GoogleOauthService @Inject()(lifecycle: ApplicationLifecycle, config: Conf
     Try(verifier.verify(idTokenString)).toOption
       .flatMap {
         case null => None
-        case idToken => verifyUserDomain(idToken.getPayload, config.getString("oauth.google.domain"))
+        case idToken => verifyUserDomain(idToken.getPayload, validDomains)
       }
   }
 
-  private def verifyUserDomain(payload: Payload, domain: String) = payload.getHostedDomain  match {
-    case `domain` =>
-      // Get profile information from payload
-      Some(GoogleUser(
-        payload.getSubject,
-        payload.getEmail,
-        payload.get("name").asInstanceOf[String],
-        payload.get("family_name").asInstanceOf[String],
-        payload.get("given_name").asInstanceOf[String]
-      ))
-    case _ => None
+  private def verifyUserDomain(payload: Payload, domains: List[String]) = if (domains.contains(payload.getHostedDomain)) {
+    // Get profile information from payload
+    Some(GoogleUser(
+      payload.getSubject,
+      payload.getEmail,
+      payload.get("name").asInstanceOf[String],
+      payload.get("family_name").asInstanceOf[String],
+      payload.get("given_name").asInstanceOf[String]
+    ))
+  } else {
+    None
   }
+
 }
