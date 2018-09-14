@@ -8,7 +8,7 @@
   <div data-ng-repeat="skill in data.skills | filter:{searchFilter:data.skillFilter}" class="skill-matrix-card">
     <md-card layout-padding class="position-relative mt30 cursor-pointer" data-ng-click="showUsers(skill.users)">
       <md-button class="md-fab md-mini md-primary add-skill-from-matrix" aria-label="add skill"
-                 data-ng-click="addSkillToUser(skill);$event.stopPropagation();" data-ng-show="skill.isMissing">
+                 data-ng-click="addSkillToUser(skill);$event.stopPropagation();" data-ng-show="skill.isMissing && validateAccessLevel(details.accessLevel, accessLevel.Developer)">
         <md-icon md-font-set="fa fa-plus fa-2x"></md-icon>
       </md-button>
 
