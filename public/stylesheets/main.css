@@ -319,3 +319,12 @@ body{
   outline:none;
   border:none;
 }
+
+.button-like {
+  outline: none;
+  cursor: pointer;
+}
+
+.icon-in-button {
+  vertical-align: baseline;
+}
