@@ -20,9 +20,12 @@
 
     <h2 flex>Tech Matrix</h2>
 
-    <md-button class="md-icon-button" aria-label="help" ng-href="#/help" data-ng-if="auth">
-      <md-icon md-font-set="fa fa-info-circle fa-2x"></md-icon>
-    </md-button>
+    <div data-ng-controller="HelpController" data-ng-click="goTo('/help')" class="button-like">
+      <md-button aria-label="help" data-ng-if="auth">
+        <md-icon md-font-set="fa fa-info-circle" class="icon-in-button"></md-icon>
+        <span>Help</span>
+      </md-button>
+    </div>
   </div>
 </md-toolbar>
 
@@ -44,7 +47,7 @@
         </div>
       </h1>
     </md-toolbar>
-    <md-content layout-padding ng-controller="MenuController">
+    <md-content layout-padding data-ng-controller="MenuController">
       <md-list flex>
         <md-list-item class="md-1-line" data-ng-click="goTo('/user/home')" data-ng-show="validateAccessLevel(details.accessLevel, accessLevel.Developer)">
           <div class="md-list-item-text" layout="row">

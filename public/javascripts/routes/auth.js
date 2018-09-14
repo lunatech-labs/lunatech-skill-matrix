@@ -11,7 +11,7 @@
       $rootScope.accessLevel = accessLevel;
       $rootScope.validateAccessLevel = function(userLevels, access){
         if (access === accessLevel.Basic) { return true }
-        else { return userLevels.includes(access.value) || userLevels.includes(accessLevel.Admin.value) }
+        else { return userLevels.includes(access.value) || userLevels.includes(accessLevel.Admin.value) || userLevels.includes(accessLevel.CEO.value) }
 
 
       };
