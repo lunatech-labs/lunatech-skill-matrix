@@ -19,7 +19,13 @@ class ReportController @Inject()(reportService: ReportService, auth: Authenticat
 
   def getLastUpdateReport: Action[Unit] = auth.UserAction(AccessLevel.Management).async(components.parsers.empty) { _ =>
     for {
-      user <- reportService.lastUpdateReport ?| ApiErrors.USER_NOT_FOUND
+      users <- reportService.lastUpdateReport ?| ApiErrors.USER_NOT_FOUND
+    } yield Ok(Json.toJson(users))
+  }
+
+  def getDMReport: Action[Unit] = auth.UserAction(AccessLevel.Management).async(components.parsers.empty) { req =>
+    for {
+      user <- reportService.dmReport(req.user.email) ?| ApiErrors.USER_NOT_FOUND
     } yield Ok(Json.toJson(user))
   }
 

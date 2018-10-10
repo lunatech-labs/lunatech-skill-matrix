@@ -80,6 +80,10 @@
           lastUpdateReport:function(){
              var url = RestUrlService.lastUpdateReport();
              return AuthenticatedRequest('GET', url);
+          },
+          dmReport:function(){
+             var url = RestUrlService.dmReport();
+             return AuthenticatedRequest('GET', url);
           }
       };
 
