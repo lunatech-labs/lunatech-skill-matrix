@@ -22,6 +22,15 @@ class ReportService @Inject()(
     } yield report
   }
 
+  def dmReport(email: String): Future[Seq[UserLastSkillUpdates]] = {
+    for {
+      people <- peopleAPIService.getAllPeople
+      filteredPeople = people.filter(_.managers.contains(email))
+      updates = filteredPeople.map(_.email).map(lastSkillUpdate)
+      report <- Future.sequence(updates)
+    } yield report
+  }
+
   def lastSkillUpdate(email: String): Future[UserLastSkillUpdates] = {
     for {
       user <- userService.getUserByEmail(email)

@@ -35,6 +35,9 @@
           },
           lastUpdateReport:function(){
             return '/report/lastupdate';
+          },
+          dmReport:function(){
+            return '/report/dm';
           }
       };
 
