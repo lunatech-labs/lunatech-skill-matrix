@@ -67,7 +67,8 @@
                   userId:$scope.data.user.id,
                   body:{
                       tech:{
-                          name:$scope.data.skillForm.name,
+                          label:$scope.data.skillForm.name,
+                          name:$scope.data.skillForm.name.toLowerCase(),
                           techType:$scope.data.skillForm.techType
                       },
                       skillLevel:$scope.data.skillForm.skillLevel

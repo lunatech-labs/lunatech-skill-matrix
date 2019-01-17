@@ -3,6 +3,7 @@ package models
 import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import play.api.libs.json._
+import play.api.libs.functional.syntax._
 
 case class User(id: Option[Int] = None, firstName: String, lastName: String, email: String, accessLevels: List[AccessLevel], status:Status) {
   require(email != null && !email.isEmpty, "Email field shouldn't be empty")
@@ -16,7 +17,7 @@ case class User(id: Option[Int] = None, firstName: String, lastName: String, ema
   }
 }
 
-case class Tech(id: Option[Int], name: String, techType: TechType)
+case class Tech(id: Option[Int], name: String, label: String, techType: TechType)
 
 case class Skill(id: Option[Int] = None, userId: Int, techId: Int, skillLevel: SkillLevel, status: Status)
 
@@ -69,7 +70,7 @@ object ImplicitFormats {
     })
 
   implicit val userFormat: Format[User] = Json.format[User]
-  implicit val techFormat: Format[Tech] = Json.format[Tech]
+  implicit val skillFormat :Format[Tech] = Json.format[Tech]
   implicit val userSkillFormat: Format[Skill] = Json.format[Skill]
   implicit val skillMatrixItemFormat: Format[SkillMatrixItem] = Json.format[SkillMatrixItem]
   implicit val skillMatrixUsersAndLevelFormat: Format[SkillMatrixUsersAndLevel] = Json.format[SkillMatrixUsersAndLevel]

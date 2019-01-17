@@ -12,11 +12,13 @@ import CustomPostgresProfile.api._
 class Techs(tag: Tag) extends Table[models.Tech](tag, "tech") {
   def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
 
-  def name: Rep[String] = column[String]("tech_name")
+  def name: Rep[String] = column[String]("tech_name") // label in lowercase
+
+  def label: Rep[String] = column[String]("tech_label")
 
   def techType: Rep[TechType] = column[TechType]("tech_type")
 
-  def * : ProvenShape[Tech] = (id.?, name, techType) <> ((models.Tech.apply _).tupled, models.Tech.unapply)
+  def * : ProvenShape[Tech] = (id.?, name, label, techType) <> ((models.Tech.apply _).tupled, models.Tech.unapply)
 }
 
 object Techs extends LazyLogging {
@@ -24,13 +26,13 @@ object Techs extends LazyLogging {
 
   def add(tech: Tech)(implicit connection: DBConnection): Future[Int] = {
     logger.info("adding new tech {}", tech)
-    val normalizedTech = tech.copy(name = tech.name.toLowerCase)
+    val normalizedTech = tech.copy(name = tech.name.toLowerCase) // fornt-end does the same, here is second line of defence
     connection.db.run((techTable returning techTable.map(_.id)) += normalizedTech)
   }
 
   def search(query: String)(implicit connection: DBConnection): Future[Seq[Tech]] = {
     val likeQuery = "%" + query + "%"
-    val searchQuery = techTable.filter(_.name.toLowerCase like likeQuery.toLowerCase)
+    val searchQuery = techTable.filter(_.name like likeQuery.toLowerCase)
     connection.db.run(searchQuery.result)
   }
 
@@ -57,8 +59,8 @@ object Techs extends LazyLogging {
     logger.info("updating tech {}", tech)
     val action = techTable
       .filter(_.id === techId)
-      .map(t => (t.name, t.techType))
-      .update((tech.name, tech.techType))
+      .map(t => (t.name, t.label, t.techType))
+      .update((tech.name.toLowerCase, tech.label, tech.techType)) // update name to be lowercase of label
 
     connection.db.run(action)
   }

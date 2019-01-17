@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS user_skills (
 CREATE TABLE entries(
     id SERIAL PRIMARY KEY,
     user_id   integer REFERENCES users (id) ON DELETE CASCADE,
-    skill_id  integer REFERENCES skill (id) ON DELETE CASCADE,
+    skill_id  integer REFERENCES user_skills (id) ON DELETE CASCADE,
     entry_action   VARCHAR(50),
     occurrence     VARCHAR(100)
 );
@@ -35,3 +35,4 @@ CREATE TABLE users_scheduler_audit (
 ALTER TABLE users ALTER COLUMN accesslevel TYPE text[] USING array[accessLevel];
 ALTER TABLE users RENAME COLUMN accesslevel TO accesslevels;
 ALTER TABLE entries ALTER COLUMN occurrence TYPE timestamp with time zone USING occurrence::timestamp with time zone;
+ALTER TABLE tech ADD COLUMN tech_label varchar(255);
