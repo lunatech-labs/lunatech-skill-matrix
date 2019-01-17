@@ -33,7 +33,7 @@ class SkillsSpec extends IntegrationSpec {
     }
 
     "add skill to database when tech exists" in {
-      val newTechId = Techs.add(Tech(None, "new tech", TechType.OTHER))(dbConn).futureValue
+      val newTechId = Techs.add(Tech(None, "new tech", "New Tech", TechType.OTHER))(dbConn).futureValue
       val response = add(dataMap(ID_USER_SNAPE), newTechId, SkillLevel.EXPERT)(dbConn).futureValue
       dataMap.filter { el => el._1.contains("Tech")}.values.exists(_ === response) mustBe false
     }
@@ -42,11 +42,11 @@ class SkillsSpec extends IntegrationSpec {
       val expectedResponse = Seq(
         (
           Skill(Some(dataMap(SKILL_SEVERUS_DEFENSE)), dataMap(ID_USER_SNAPE), dataMap(ID_TECH_DEFENSE), SkillLevel.EXPERT, Status.Active),
-          Tech(Some(dataMap(ID_TECH_DEFENSE)), "defense against the dark arts", TechType.CONCEPT)
+          Tech(Some(dataMap(ID_TECH_DEFENSE)), "defense against the dark arts", "Defense Against the Dark Arts", TechType.CONCEPT)
         ),
         (
           Skill(Some(dataMap(SKILL_SEVERUS_DARK_ARTS)), dataMap(ID_USER_SNAPE), dataMap(ID_TECH_DARK_ARTS), SkillLevel.EXPERT, Status.Active),
-          Tech(Some(dataMap(ID_TECH_DARK_ARTS)), "dark arts", TechType.CONCEPT)
+          Tech(Some(dataMap(ID_TECH_DARK_ARTS)), "dark arts", "Dark Arts", TechType.CONCEPT)
         ))
       val response = getAllSkillMatrixByUser(dataMap(ID_USER_SNAPE))(dbConn).futureValue
       response must contain theSameElementsAs expectedResponse
@@ -57,22 +57,22 @@ class SkillsSpec extends IntegrationSpec {
         (
           Skill(Some(dataMap(SKILL_SEVERUS_DEFENSE)), dataMap(ID_USER_SNAPE), dataMap(ID_TECH_DEFENSE), SkillLevel.EXPERT, Status.Active),
           User(Some(dataMap(ID_USER_SNAPE)), "Severus", "Snape", "severus.snape@hogwarts.com", List(AccessLevel.Management), Status.Active),
-          Tech(Some(dataMap(ID_TECH_DEFENSE)), "defense against the dark arts", TechType.CONCEPT)
+          Tech(Some(dataMap(ID_TECH_DEFENSE)), "defense against the dark arts", "Defense Against the Dark Arts", TechType.CONCEPT)
         ),
         (
           Skill(Some(dataMap(SKILL_SEVERUS_DARK_ARTS)), dataMap(ID_USER_SNAPE), dataMap(ID_TECH_DARK_ARTS), SkillLevel.EXPERT, Status.Active),
           User(Some(dataMap(ID_USER_SNAPE)), "Severus", "Snape", "severus.snape@hogwarts.com", List(AccessLevel.Management), Status.Active),
-          Tech(Some(dataMap(ID_TECH_DARK_ARTS)), "dark arts", TechType.CONCEPT)
+          Tech(Some(dataMap(ID_TECH_DARK_ARTS)), "dark arts", "Dark Arts", TechType.CONCEPT)
         ),
         (
           Skill(Some(dataMap(SKILL_ODERSKY_SCALA)), dataMap(ID_USER_ODERSKY), dataMap(ID_TECH_SCALA), SkillLevel.EXPERT, Status.Active),
           User(Some(dataMap(ID_USER_ODERSKY)), "Martin", "Odersky", "martin.odersky@gmail.com", List(AccessLevel.Basic), Status.Active),
-          Tech(Some(dataMap(ID_TECH_SCALA)), "scala", TechType.LANGUAGE)
+          Tech(Some(dataMap(ID_TECH_SCALA)), "scala", "Scala", TechType.LANGUAGE)
         ),
         (
           Skill(Some(dataMap(SKILL_ODERSKY_FUNCTIONAL)), dataMap(ID_USER_ODERSKY), dataMap(ID_TECH_FUNCTIONAL), SkillLevel.EXPERT, Status.Active),
           User(Some(dataMap(ID_USER_ODERSKY)), "Martin", "Odersky", "martin.odersky@gmail.com", List(AccessLevel.Basic), Status.Active),
-          Tech(Some(dataMap(ID_TECH_FUNCTIONAL)), "functional programming", TechType.CONCEPT)
+          Tech(Some(dataMap(ID_TECH_FUNCTIONAL)), "functional programming", "Functional Programming", TechType.CONCEPT)
         ))
       val response = getAllSkills(dbConn).futureValue
       response must contain theSameElementsAs expectedResponse
@@ -89,7 +89,7 @@ class SkillsSpec extends IntegrationSpec {
 
       val expectedResponse = Seq((
         Skill(Some(dataMap(SKILL_SEVERUS_DARK_ARTS)), dataMap(ID_USER_SNAPE),dataMap(ID_TECH_DARK_ARTS),SkillLevel.EXPERT, Status.Active),
-        Tech(Some(dataMap(ID_TECH_DARK_ARTS)),"dark arts", TechType.CONCEPT)
+        Tech(Some(dataMap(ID_TECH_DARK_ARTS)), "dark arts", "Dark Arts", TechType.CONCEPT)
         ))
 
       number mustEqual 1
@@ -114,7 +114,7 @@ class SkillsSpec extends IntegrationSpec {
 
       val expectedResponse = Seq((
         Skill(Some(dataMap(SKILL_SEVERUS_DEFENSE)), dataMap(ID_USER_SNAPE), dataMap(ID_TECH_DEFENSE), SkillLevel.NOVICE, Status.Active),
-        Tech(Some(dataMap(ID_TECH_DEFENSE)), "defense against the dark arts", TechType.CONCEPT)
+        Tech(Some(dataMap(ID_TECH_DEFENSE)), "defense against the dark arts", "Defense Against the Dark Arts", TechType.CONCEPT)
       ))
 
       result must contain theSameElementsAs expectedResponse

@@ -26,7 +26,7 @@ class SkillMatrixServiceSpec extends UnitSpec {
 
   "SkillMatrixService" should {
     "add user skill to the database and return its id" in {
-      val newTech = Tech(None, "Sarcasm", TechType.CONCEPT)
+      val newTech = Tech(None, "Sarcasm", "sarcasm", TechType.CONCEPT)
       val response = skillMatrixService.addUserSkill(dataMap(ID_USER_SNAPE), newTech, SkillLevel.EXPERT).futureValue
 
       dataMap.filter { el => el._1.contains("Tech")}.values.exists(_ === response) mustBe false
@@ -59,8 +59,8 @@ class SkillMatrixServiceSpec extends UnitSpec {
         "Severus",
         "Snape",
         Seq(
-          SkillMatrixItem(Tech(Some(dataMap(ID_TECH_DEFENSE)), "defense against the dark arts", TechType.CONCEPT), SkillLevel.EXPERT, Some(dataMap(SKILL_SEVERUS_DEFENSE))),
-          SkillMatrixItem(Tech(Some(dataMap(ID_TECH_DARK_ARTS)), "dark arts", TechType.CONCEPT), SkillLevel.EXPERT, Some(dataMap(SKILL_SEVERUS_DARK_ARTS)))
+          SkillMatrixItem(Tech(Some(dataMap(ID_TECH_DEFENSE)), "defense against the dark arts", "Defense Against the Dark Arts", TechType.CONCEPT), SkillLevel.EXPERT, Some(dataMap(SKILL_SEVERUS_DEFENSE))),
+          SkillMatrixItem(Tech(Some(dataMap(ID_TECH_DARK_ARTS)), "dark arts", "Dark Arts", TechType.CONCEPT), SkillLevel.EXPERT, Some(dataMap(SKILL_SEVERUS_DARK_ARTS)))
         )
       )
       response.get mustBe expectedResponse

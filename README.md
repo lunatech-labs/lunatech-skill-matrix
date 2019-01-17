@@ -26,7 +26,7 @@ In the application there are a few entities we use:
 
 In our database we have 3 main tables: *users*, *tech* and *user_skills*.
 The third table is just a holder of userId, techId and the level.
-When the users introduces a skill to his list, the properties of the skill (the name and type) are stored in the *Tech* table, and therefore form the tech body.
+When the users introduces a skill to his list, the properties of the skill (the name, label and type) are stored in the *Tech* table, and therefore form the tech body.
 We store it in the *Tech* table so that this particular skill will be available for other users as well (autocomplete)
 
 So the difference between the *Tech* and *Skill* is that the tech represents the technical knowledge a user has, and the skill is just a holder of the techId & userId and the level that user has about that skill.
@@ -36,15 +36,15 @@ So the difference between the *Tech* and *Skill* is that the tech represents the
 
 |id      | firstName | lastName  | email                       |
 |--------|-----------|-----------|-----------------------------|
-|1       | Martin     | Odersky  | martin.odersky@scala.com |
+|1       | Martin    |  Odersky  | martin.odersky@scala.com    |
 |2       | Severus   | Snape     | severus.snape@hogwarts.com  |
 
 **Tech**:  
 
-|id      | name      | type       |
-|--------|-----------|------------|
-|1       | Scala     | LANGUAGE   |
-|2       | Dark Arts | CONCEPT |
+|id      | name      | label     | type       |
+|--------|-----------|-----------|------------|
+|1       | scala     | Scala     | LANGUAGE   |
+|2       | dark arts | Dark Arts | CONCEPT |
 
 **Skill**:  
 
@@ -62,11 +62,12 @@ We also have intermediate models that help to either intercept correctly the par
 This is used in the POST a users makes in order to add a skill to his list. It looks like this:
 ```json 
 {
-	"tech": {
-		"name": "Prolog",
-		"techType": "LANGUAGE"
-	},
-	"skillLevel": "NOVICE"
+    "tech": {
+        "name": "prolog",
+        "label": "Prolog",
+        "techType": "LANGUAGE"
+    },
+    "skillLevel": "NOVICE"
 }
 ```
 
@@ -118,7 +119,8 @@ UserSkillResponse:
       {
         "tech": {
           "id": 7,
-          "name": "Dark Arts",
+          "name": "dark arts",
+          "label": "Dark Arts",
           "techType": "CONCEPT"
         },
         "skillLevel": "EXPERT"
@@ -126,7 +128,8 @@ UserSkillResponse:
       {
         "tech": {
           "id": 8,
-          "name": "Defense against the Dark Arts",
+          "name": "defense against the dark arts",
+          "label": "Defense against the Dark Arts",
           "techType": "CONCEPT"
         },
         "skillLevel": "EXPERT"

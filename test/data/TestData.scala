@@ -45,7 +45,8 @@ object TestData {
   val updateTechJson: JsValue = Json.parse(
     """
        {
-        "name": "New updated name",
+        "name": "new updated name",
+        "label": "New updated name",
         "techType": "LANGUAGE"
        }
     """.stripMargin
@@ -55,6 +56,7 @@ object TestData {
     """
        {
         "name": "scala",
+        "label": "SCALA",
         "techType": "LANGUAGE"
        }
     """.stripMargin
@@ -71,7 +73,7 @@ object TestData {
   val updateTechJsonWithMissingType: JsValue = Json.parse(
     """
        {
-        "name": "New updated name"
+        "label": "New updated name"
        }
     """.stripMargin
   )
@@ -80,7 +82,8 @@ object TestData {
     """
       |{
       |	"tech": {
-      |		"name": "brainfuck",
+      |   "name": "brainfuck",
+      |   "label": "Brainfuck",
       |		"techType": "LANGUAGE"
       |	},
       |	"skillLevel": "NOVICE"
@@ -98,7 +101,7 @@ object TestData {
     """
       |{
       |	"tech": {
-      |		"name": "brainfuck",
+      |		"label": "brainfuck",
       |		"techType": "LANGUAGE"
       |	}
       |}
@@ -118,7 +121,7 @@ object TestData {
     """
       |{
       |	"tech": {
-      |		"name": "brainfuck"
+      |		"label": "brainfuck"
       |	},
       |	"skillLevel": "NOVICE"
       |}
@@ -129,7 +132,8 @@ object TestData {
       |{
       |	"tech": {
       |		"id": 5,
-      |		"name": "scala",
+      |   "name": "scala",
+      |		"label": "Scala",
       |		"techType": "LANGUAGE"
       |		},
       |	"skillLevel": "NOVICE"
@@ -148,7 +152,8 @@ object TestData {
       |{
       |	"tech": {
       |		"id": 5,
-      |		"name": "scala",
+      |   "name": "scala",
+      |		"label": "Scala",
       |		"techType": "LANGUAGE"
       |		}
       |}
@@ -170,7 +175,7 @@ object TestData {
       |{
       |	"tech": {
       |		"id": 5,
-      |		"name": "scala"
+      |		"label": "scala"
       |		},
       |	"skillLevel": "NOVICE"
       |}
@@ -180,7 +185,7 @@ object TestData {
     """
       |{
       |	"tech": {
-      |		"name": "scala",
+      |		"label": "scala",
       |		"techType": "LANGUAGE"
       |		},
       |	"skillLevel": "NOVICE"

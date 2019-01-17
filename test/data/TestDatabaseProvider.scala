@@ -12,7 +12,6 @@ import org.joda.time.DateTime
 import play.api.libs.json.Json
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres.cachedRuntimeConfig
-
 import scala.concurrent.{Await, _}
 import scala.concurrent.duration.Duration
 
@@ -46,7 +45,7 @@ trait TestDatabaseProvider {
   def setupH2Database(): Unit = {
     val setup = DBIO.seq(
       sqlu"""CREATE TABLE IF NOT EXISTS users (id SERIAL NOT NULL PRIMARY KEY, firstName VARCHAR NOT NULL, lastName VARCHAR NOT NULL, email VARCHAR NOT NULL,accesslevels ARRAY,status VARCHAR NOT NULL);""",
-      sqlu"""CREATE TABLE IF NOT EXISTS tech(id SERIAL NOT NULL PRIMARY KEY, tech_name VARCHAR NOT NULL, tech_type VARCHAR NOT NULL);""",
+      sqlu"""CREATE TABLE IF NOT EXISTS tech(id SERIAL NOT NULL PRIMARY KEY, tech_name VARCHAR NOT NULL, tech_label VARCHAR NOT NULL, tech_type VARCHAR NOT NULL);""",
       sqlu"""CREATE TABLE IF NOT EXISTS user_skills (id SERIAL NOT NULL PRIMARY KEY,user_id integer REFERENCES users (id) ON DELETE CASCADE,tech_id integer REFERENCES tech (id) ON DELETE CASCADE,skill_level varchar(255),status varchar(30));""",
       sqlu"""CREATE TABLE IF NOT EXISTS entries(id SERIAL NOT NULL PRIMARY KEY, user_id   integer REFERENCES users (id) ON DELETE CASCADE, skill_id  integer REFERENCES user_skills (id) ON DELETE CASCADE, entry_action VARCHAR NOT NULL, occurrence VARCHAR NOT NULL);"""
     )
@@ -72,10 +71,10 @@ trait TestDatabaseProvider {
   }
 
   def insertTechData(): Map[String, Int] = {
-    val techScala = Tech(None, "scala", TechType.LANGUAGE)
-    val techFunctional = Tech(None, "functional programming", TechType.CONCEPT)
-    val techDefense = Tech(None, "defense against the dark arts", TechType.CONCEPT)
-    val techDarkArts = Tech(None, "dark arts", TechType.CONCEPT)
+    val techScala = Tech(None, "scala", "Scala", TechType.LANGUAGE)
+    val techFunctional = Tech(None,"functional programming", "Functional Programming", TechType.CONCEPT)
+    val techDefense = Tech(None, "defense against the dark arts", "Defense Against the Dark Arts", TechType.CONCEPT)
+    val techDarkArts = Tech(None, "dark arts", "Dark Arts", TechType.CONCEPT)
 
     val idTechScala: Int = Await.result(db.run(techTable returning techTable.map(_.id) += techScala), Duration.Inf)
     val idTechFunctional: Int = Await.result(db.run(techTable returning techTable.map(_.id) += techFunctional), Duration.Inf)
