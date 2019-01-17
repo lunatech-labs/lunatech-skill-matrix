@@ -734,6 +734,7 @@
       "type": "object",
       "required": [
         "name",
+        "label",
         "techType"
       ],
       "properties": {
@@ -741,6 +742,10 @@
           "type": "integer"
         },
         "name": {
+          "type": "string",
+          "example": "erlang"
+        },
+        "label": {
           "type": "string",
           "example": "Erlang"
         },

@@ -30,22 +30,22 @@ class TechServiceSpec extends UnitSpec {
     }
 
     "return existing techId when tech name is found in the database even when type is different" in {
-      val response: Int = techService.getTechIdOrInsert(Tech(None, "scala", TechType.FRAMEWORK)).futureValue
+      val response: Int = techService.getTechIdOrInsert(Tech(None, "scala", "Scala", TechType.FRAMEWORK)).futureValue
       response mustBe dataMap(ID_TECH_SCALA)
     }
 
     "return the id of the newly created tech when tech not found in the database" in {
-      val response: Int = techService.getTechIdOrInsert(Tech(None, "brand new skill", TechType.CONCEPT)).futureValue
+      val response: Int = techService.getTechIdOrInsert(Tech(None, "Brand New Skill","brand new skill", TechType.CONCEPT)).futureValue
       dataMap.values.exists(_ === response) mustBe false
     }
 
     "return the id of tech by name and type" in {
-      val response: Option[Int] = techService.getTechIdByName(Tech(None, "scala", TechType.LANGUAGE)).futureValue
+      val response: Option[Int] = techService.getTechIdByName(Tech(None, "scala", "Scala", TechType.LANGUAGE)).futureValue
       response.get mustBe dataMap(ID_TECH_SCALA)
     }
 
     "return none when tech is not found by name and type" in {
-      val response: Option[Int] = techService.getTechIdByName(Tech(None, "brand new skill", TechType.CONCEPT)).futureValue
+      val response: Option[Int] = techService.getTechIdByName(Tech(None, "Brans New Skill", "brand new skill", TechType.CONCEPT)).futureValue
       response mustBe None
     }
 
