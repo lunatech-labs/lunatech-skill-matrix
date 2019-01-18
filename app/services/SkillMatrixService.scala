@@ -102,7 +102,7 @@ class SkillMatrixService @Inject()(techService: TechService,
 
 
   private def computeSkillMatrixByTechId(tech: Tech, skillList: Seq[Skill], userList: Seq[User]): Option[SkillMatrixResponse] = {
-    Some(SkillMatrixResponse(tech.id.get, tech.name, tech.techType, getAllUsersAndLevelInfo(tech.id.get, skillList, userList)))
+    Some(SkillMatrixResponse(tech.id.get, tech.name, tech.label, tech.techType, getAllUsersAndLevelInfo(tech.id.get, skillList, userList)))
   }
 
   private def getAllUsersAndLevelInfo(techId: Int, skillList: Seq[Skill], userList: Seq[User]) = {
@@ -117,6 +117,7 @@ class SkillMatrixService @Inject()(techService: TechService,
       SkillMatrixResponse(
         techKey.id.get,
         techKey.name,
+        techKey.label,
         techKey.techType,
         items.map { case (skill, user, _) => SkillMatrixUsersAndLevel(user.fullName, skill.skillLevel) }
       )

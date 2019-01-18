@@ -59,8 +59,8 @@ object Techs extends LazyLogging {
     logger.info("updating tech {}", tech)
     val action = techTable
       .filter(_.id === techId)
-      .map(t => (t.name, t.label, t.techType))
-      .update((tech.name.toLowerCase, tech.label, tech.techType)) // update name to be lowercase of label
+      .map(t => (t.label, t.techType))
+      .update((tech.label, tech.techType))
 
     connection.db.run(action)
   }

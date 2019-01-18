@@ -26,7 +26,7 @@ class SkillMatrixServiceSpec extends UnitSpec {
 
   "SkillMatrixService" should {
     "add user skill to the database and return its id" in {
-      val newTech = Tech(None, "Sarcasm", "sarcasm", TechType.CONCEPT)
+      val newTech = Tech(None, "sarcasm", "Sarcasm", TechType.CONCEPT)
       val response = skillMatrixService.addUserSkill(dataMap(ID_USER_SNAPE), newTech, SkillLevel.EXPERT).futureValue
 
       dataMap.filter { el => el._1.contains("Tech")}.values.exists(_ === response) mustBe false
@@ -74,10 +74,10 @@ class SkillMatrixServiceSpec extends UnitSpec {
     "return all skill matrix when calling getAllSkills" in {
       val response = skillMatrixService.getAllSkills.futureValue
       val expectedResponse = Seq(
-        SkillMatrixResponse(dataMap(ID_TECH_SCALA), "scala", TechType.LANGUAGE, Seq(SkillMatrixUsersAndLevel("Martin Odersky", SkillLevel.EXPERT))),
-        SkillMatrixResponse(dataMap(ID_TECH_FUNCTIONAL), "functional programming", TechType.CONCEPT, Seq(SkillMatrixUsersAndLevel("Martin Odersky", SkillLevel.EXPERT))),
-        SkillMatrixResponse(dataMap(ID_TECH_DEFENSE), "defense against the dark arts", TechType.CONCEPT, Seq(SkillMatrixUsersAndLevel("Severus Snape", SkillLevel.EXPERT))),
-        SkillMatrixResponse(dataMap(ID_TECH_DARK_ARTS), "dark arts", TechType.CONCEPT, Seq(SkillMatrixUsersAndLevel("Severus Snape", SkillLevel.EXPERT)))
+        SkillMatrixResponse(dataMap(ID_TECH_SCALA), "scala", "Scala", TechType.LANGUAGE, Seq(SkillMatrixUsersAndLevel("Martin Odersky", SkillLevel.EXPERT))),
+        SkillMatrixResponse(dataMap(ID_TECH_FUNCTIONAL), "functional programming", "Functional Programming", TechType.CONCEPT, Seq(SkillMatrixUsersAndLevel("Martin Odersky", SkillLevel.EXPERT))),
+        SkillMatrixResponse(dataMap(ID_TECH_DEFENSE), "defense against the dark arts", "Defense Against the Dark Arts", TechType.CONCEPT, Seq(SkillMatrixUsersAndLevel("Severus Snape", SkillLevel.EXPERT))),
+        SkillMatrixResponse(dataMap(ID_TECH_DARK_ARTS), "dark arts", "Dark Arts", TechType.CONCEPT, Seq(SkillMatrixUsersAndLevel("Severus Snape", SkillLevel.EXPERT)))
       )
 
       response must contain theSameElementsAs expectedResponse
@@ -85,7 +85,7 @@ class SkillMatrixServiceSpec extends UnitSpec {
 
     "return SkillMatrixResponse when techId is found in the skill matrix" in {
       val response = skillMatrixService.getSkillMatrixByTechId(dataMap(ID_TECH_SCALA)).futureValue
-      val expectedResponse = SkillMatrixResponse(dataMap(ID_TECH_SCALA), "scala", TechType.LANGUAGE, Seq(SkillMatrixUsersAndLevel("Martin Odersky", SkillLevel.EXPERT)))
+      val expectedResponse = SkillMatrixResponse(dataMap(ID_TECH_SCALA), "scala", "Scala", TechType.LANGUAGE, Seq(SkillMatrixUsersAndLevel("Martin Odersky", SkillLevel.EXPERT)))
 
       response.get mustBe expectedResponse
     }

@@ -20,15 +20,15 @@
 
                             <div data-ng-show="tech.isUpdating" layout-align="end center">
                                 <md-input-container class="text-transform-capitalize no-margin"  flex-gt-sm>
-                                    <input data-ng-model="tech.name">
+                                    <input data-ng-model="tech.label">
                                 </md-input-container>
                             </div>
 
-                            <span class="text-transform-capitalize cursor-pointer" data-ng-show="!tech.isUpdating" data-ng-click="beginUpdatingName(tech)">{{tech.name}}</span>
+                            <span class="cursor-pointer" data-ng-show="!tech.isUpdating" data-ng-click="beginUpdatingName(tech)">{{tech.label}}</span>
 
                             <span flex></span>
                             <div data-ng-show="tech.isUpdating">
-                                <md-button class="md-icon-button" aria-label="update tech name" data-ng-click="editTechName(tech.name, tech)">
+                                <md-button class="md-icon-button" aria-label="update tech name" data-ng-click="editTechName(tech.label, tech)">
                                     <md-icon md-font-set="fa fa-check" class="correct-icon"></md-icon>
                                 </md-button>
 
