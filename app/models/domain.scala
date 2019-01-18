@@ -27,7 +27,7 @@ case class SkillMatrixItem(tech: Tech, skillLevel: SkillLevel, id: Option[Int])
 
 case class SkillMatrixUsersAndLevel(fullName: String, level: SkillLevel)
 
-case class SkillMatrixResponse(techId: Int, techName: String, techType: TechType, users: Seq[SkillMatrixUsersAndLevel])
+case class SkillMatrixResponse(techId: Int, techName: String, labelName: String, techType: TechType, users: Seq[SkillMatrixUsersAndLevel])
 
 case class UserSkillResponse(userId: Int, firstName: String, lastName: String, skills: Seq[SkillMatrixItem])
 

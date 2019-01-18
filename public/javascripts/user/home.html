@@ -65,7 +65,7 @@
         <div layout="column"  flex="100" data-ng-repeat="skill in data.groupedSkills[techType.value] | filter:{searchFilter:data.skillFilter}">
           <md-card class="{{getLevelClass(skill)}}" flex>
             <div layout="row" layout-align="end end" layout-padding>
-              <span class="md-headline text-transform-capitalize">{{skill.tech.name}}</span>
+              <span class="md-headline">{{skill.tech.label}}</span>
               <span flex></span>
               <md-button class="md-icon-button" aria-label="update skill" data-ng-click="updateSkill(skill)">
                 <md-icon md-font-set="fa fa-pencil" class="correct-icon" data-ng-class="skill.updating ? 'color-white' : ''"></md-icon>

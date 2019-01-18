@@ -169,6 +169,7 @@
                   tech:{
                       id:skill.tech.id,
                       name:skill.tech.name,
+                      label:skill.tech.label,
                       techType:skill.tech.techType
                   },
                   skillLevel:level.value
