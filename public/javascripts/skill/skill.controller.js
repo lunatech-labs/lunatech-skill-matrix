@@ -107,6 +107,7 @@
             body:{
               tech:{
                 name:skill.techName,
+                label:skill.labelName,
                 techType:skill.techType
               },
               skillLevel:levelSelected.value

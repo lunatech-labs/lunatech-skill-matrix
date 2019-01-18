@@ -27,22 +27,22 @@ class TechsSpec extends IntegrationSpec {
 
   "Techs" should {
     "add tech to database" in {
-      val newTech = Tech(None, "Brand new skill", "brand new skill", TechType.CONCEPT)
+      val newTech = Tech(None, "brand new skill", "Brand new skill", TechType.CONCEPT)
       val response = add(newTech)(dbConn).futureValue
       dataMap.values.exists(_ === response) mustBe false
     }
 
     "get techId by name and type" in {
-      val response = getTechIdByName(Tech(None, "Dark Arts", "dark arts", TechType.CONCEPT))(dbConn).futureValue
+      val response = getTechIdByName(Tech(None, "dark arts", "Dark Arts", TechType.CONCEPT))(dbConn).futureValue
       response.get mustEqual dataMap(ID_TECH_DARK_ARTS)
     }
 
     "get all tech" in {
       val expectedResponse = Seq(
-        Tech(Some(dataMap(ID_TECH_SCALA)), "Scala", "scala", TechType.LANGUAGE),
-        Tech(Some(dataMap(ID_TECH_FUNCTIONAL)), "Functional Programming", "functional programming", TechType.CONCEPT),
-        Tech(Some(dataMap(ID_TECH_DEFENSE)), "Defense Against the Dark Arts", "defense against the dark arts", TechType.CONCEPT),
-        Tech(Some(dataMap(ID_TECH_DARK_ARTS)), "Dark Arts", "dark arts", TechType.CONCEPT)
+        Tech(Some(dataMap(ID_TECH_SCALA)), "scala",  "Scala", TechType.LANGUAGE),
+        Tech(Some(dataMap(ID_TECH_FUNCTIONAL)), "functional programming", "Functional Programming", TechType.CONCEPT),
+        Tech(Some(dataMap(ID_TECH_DEFENSE)), "defense against the dark arts", "Defense Against the Dark Arts", TechType.CONCEPT),
+        Tech(Some(dataMap(ID_TECH_DARK_ARTS)), "dark arts", "Dark Arts", TechType.CONCEPT)
       )
       val response = getAllTech(dbConn).futureValue
 
@@ -50,7 +50,7 @@ class TechsSpec extends IntegrationSpec {
     }
 
     "get tech by id" in {
-      getTechById(dataMap(ID_TECH_DARK_ARTS))(dbConn).futureValue.get mustEqual Tech(Some(dataMap(ID_TECH_DARK_ARTS)), "Dark Arts", "dark arts", TechType.CONCEPT)
+      getTechById(dataMap(ID_TECH_DARK_ARTS))(dbConn).futureValue.get mustEqual Tech(Some(dataMap(ID_TECH_DARK_ARTS)), "dark arts", "Dark Arts", TechType.CONCEPT)
     }
 
     "return None when tech not found in getTechById" in {
@@ -58,7 +58,7 @@ class TechsSpec extends IntegrationSpec {
     }
 
     "update tech" in {
-      val response = updateTech(dataMap(ID_TECH_DARK_ARTS), Tech(None, "DARK ARTS", "dark arts", TechType.CONCEPT))(dbConn).futureValue
+      val response = updateTech(dataMap(ID_TECH_DARK_ARTS), Tech(None, "dark arts", "DARK ARTS", TechType.CONCEPT))(dbConn).futureValue
       response mustBe 1
     }
 

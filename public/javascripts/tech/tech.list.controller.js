@@ -76,11 +76,12 @@
                 tech.updating = !tech.updating;
             };
 
-      $scope.editTechName = function(techName, tech) {
+      $scope.editTechName = function(techLabel, tech) {
         var data = {
                      techId:tech.id,
                      body:{
-                        name:techName,
+                        label:techLabel,
+                        name:tech.name,
                         techType:tech.techType
                      }
                      };

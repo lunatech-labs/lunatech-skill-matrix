@@ -802,6 +802,9 @@
         "techName": {
           "type": "string"
         },
+        "labelName": {
+          "type": "string"
+        },
         "techType": {
           "$ref": "#/definitions/TechType"
         },
