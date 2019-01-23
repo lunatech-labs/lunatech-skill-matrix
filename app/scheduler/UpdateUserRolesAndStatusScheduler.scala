@@ -1,10 +1,8 @@
 package scheduler
 
 import javax.inject.Inject
-
-import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props, Timers}
 import models.ImplicitFormats._
-import models.User
 import org.joda.time.DateTime
 import play.api.inject.ApplicationLifecycle
 import play.api.libs.json.{JsValue, Json}
@@ -20,8 +18,7 @@ class UpdateUserRolesAndStatusScheduler @Inject()(actorSystem: ActorSystem, life
 
 
   val sa: ActorRef = actorSystem.actorOf(Props(new ScheduleActor), "scheduleActor")
-  actorSystem.scheduler.scheduleOnce(0.millis, sa, ScheduleActor.RunOnStart)
-  actorSystem.scheduler.scheduleOnce(delay.millis, sa, ScheduleActor.RunUser)
+  sa ! ScheduleActor.RunOnStart
 
   // This is necessary to avoid thread leaks, specially if you are
   // using a custom ExecutionContext
@@ -29,13 +26,17 @@ class UpdateUserRolesAndStatusScheduler @Inject()(actorSystem: ActorSystem, life
     Future.successful(actorSystem.terminate())
   }
 
-  class ScheduleActor extends Actor with ActorLogging {
+  class ScheduleActor extends Actor with ActorLogging with Timers {
+    import ScheduleActor._
     override def receive: Receive = {
       case ScheduleActor.RunOnStart =>
+        log.debug("SchedulerActor received RunOnStart message.")
         updateUsers()
+        timers.startSingleTimer(RunOnStart, RunUser, FiniteDuration(delay, java.util.concurrent.TimeUnit.MILLISECONDS))
       case ScheduleActor.RunUser =>
+        log.debug("SchedulerActor received RunUser message.")
         updateUsers()
-        context.system.scheduler.scheduleOnce(1.day,self,ScheduleActor.RunUser)
+        timers.startSingleTimer(RunUser, RunUser, FiniteDuration(1.day.toMillis, java.util.concurrent.TimeUnit.MILLISECONDS))
       case unknown => log.error(s"Received unknown message: $unknown")
     }
 

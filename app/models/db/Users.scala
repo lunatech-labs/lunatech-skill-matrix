@@ -7,7 +7,6 @@ import slick.lifted.{ProvenShape, TableQuery}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
-
 import CustomPostgresProfile.api._
 
 class Users(tag: Tag) extends Table[User](tag, "users") {
