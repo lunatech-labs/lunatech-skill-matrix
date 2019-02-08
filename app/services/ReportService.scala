@@ -49,7 +49,7 @@ class ReportService @Inject()(
               }
             }
             correctedEntriesWithTech <- Future.sequence(entriesWithTech)
-            entriesReport <- Future(correctedEntriesWithTech.map(e => LastUpdateSkill(e._2, e._1.entryAction, e._1.occurrence)))
+            entriesReport <- Future(correctedEntriesWithTech.map(e => LastUpdateSkill(e._2, e._1.entryAction, e._1.occurrence, e._1.info)))
           } yield UserLastSkillUpdates(u.fullName, entriesReport)
         case None => Future(UserLastSkillUpdates(email, Nil))
       }
