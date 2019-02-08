@@ -21,7 +21,9 @@ class Entries(tag: Tag) extends Table[models.Entry](tag, "entries") {
 
   def occurrence: Rep[DateTime] = column[DateTime]("occurrence")
 
-  def * : ProvenShape[Entry] = (id.?, userId, skillId, entryAction, occurrence) <> ((models.Entry.apply _).tupled, models.Entry.unapply _)
+  def info: Rep[String] = column[String]("info")
+
+  def * : ProvenShape[Entry] = (id.?, userId, skillId, entryAction, occurrence, info) <> ((models.Entry.apply _).tupled, models.Entry.unapply _)
 
   def user: ForeignKeyQuery[Users, User] = foreignKey("ENTRY_USER_FK", userId, TableQuery[Users])(_.id, onDelete = ForeignKeyAction.Cascade)
 
@@ -32,8 +34,8 @@ class Entries(tag: Tag) extends Table[models.Entry](tag, "entries") {
 object Entries extends LazyLogging {
   val entryActionsTable: TableQuery[Entries] = TableQuery[Entries]
 
-  def add(userId: Int, skillId: Int, entryAction: EntryAction)(implicit connection: DBConnection): Future[Int] = {
-    val entry = Entry(userId = userId, skillId = skillId, entryAction = entryAction, occurrence = DateTime.now())
+  def add(userId: Int, skillId: Int, entryAction: EntryAction, info: String)(implicit connection: DBConnection): Future[Int] = {
+    val entry = Entry(userId = userId, skillId = skillId, entryAction = entryAction, occurrence = DateTime.now(), info = info)
     val query = entryActionsTable returning entryActionsTable.map(_.id) += entry
     connection.db.run(query)
   }

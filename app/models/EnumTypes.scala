@@ -101,6 +101,7 @@ object TechType {
 sealed trait AccessLevel
 
 object AccessLevel {
+
   case object Basic               extends AccessLevel
   case object Developer           extends AccessLevel
   case object Management          extends AccessLevel
@@ -134,7 +135,7 @@ object AccessLevel {
     def writes(accessLevel: AccessLevel) = JsString(accessLevel.toString)
   }
 
-  def isAccessible(userLevels: List[AccessLevel],accessLevel:AccessLevel):Boolean = accessLevel match {
+  def isAccessible(userLevels: List[AccessLevel], accessLevel: AccessLevel): Boolean = accessLevel match {
     case AccessLevel.Basic => true
     case _ => userLevels.contains(accessLevel) || userLevels.contains(Admin)
   }
@@ -225,6 +226,12 @@ object Status {
 sealed trait EntryAction
 
 object EntryAction {
+
+  def addInfo(skillLevel: SkillLevel): String = s"Skill added with level $skillLevel"
+
+  def updateInfo(oldSkillLevel: Option[SkillLevel], newSkillLevel: SkillLevel): String = oldSkillLevel.fold("")(osk => s"Skill updated from level $osk to $newSkillLevel")
+
+  def removeInfo(skillLevel: Option[SkillLevel]): String = skillLevel.fold("Unable to find skill when creating entry")(sk => s"Skill removed with level $sk")
 
   case object Add extends EntryAction
 
