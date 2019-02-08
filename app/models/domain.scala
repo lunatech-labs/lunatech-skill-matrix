@@ -33,7 +33,7 @@ case class UserSkillResponse(userId: Int, firstName: String, lastName: String, s
 
 case class UserLastSkillUpdates(name:String,entries: Seq[LastUpdateSkill])
 
-case class LastUpdateSkill(tech:String,entryAction:EntryAction,occurrence: DateTime)
+case class LastUpdateSkill(tech: String, entryAction: EntryAction, occurrence: DateTime, info: String)
 
 final case class Person(email: String, managers: Seq[String], roles: Seq[String])
 

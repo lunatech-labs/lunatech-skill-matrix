@@ -6,12 +6,14 @@
           <span flex><strong>Tech</strong></span>
           <span flex><strong>Action</strong></span>
           <span flex><strong>Occurrence</strong></span>
+          <span flex><strong>Info</strong></span>
           <md-divider ></md-divider>
         </md-list-item>
         <md-list-item class="md-1-line" ng-repeat="entry in user.entries" ng-click="null">
           <span flex>{{entry.tech}}</span>
           <span flex>{{entry.entryAction}}</span>
           <span flex>{{entry.occurrence}}</span>
+          <span flex>{{entry.info}}</span>
           <md-divider ></md-divider>
         </md-list-item>
       </md-list>
