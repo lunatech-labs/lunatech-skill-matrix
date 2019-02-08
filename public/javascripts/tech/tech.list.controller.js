@@ -131,6 +131,7 @@
                     techId:tech.id,
                     body:{
                         name:tech.name,
+                        label:tech.label,
                         techType:techType.value
                     }
                 };
