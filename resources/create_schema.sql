@@ -36,3 +36,8 @@ ALTER TABLE users ALTER COLUMN accesslevel TYPE text[] USING array[accessLevel];
 ALTER TABLE users RENAME COLUMN accesslevel TO accesslevels;
 ALTER TABLE entries ALTER COLUMN occurrence TYPE timestamp with time zone USING occurrence::timestamp with time zone;
 ALTER TABLE tech ADD COLUMN tech_label varchar(255);
+ALTER TABLE entries ADD COLUMN info varchar(255);
+UPDATE entries SET info = '';
+UPDATE tech SET tech_label =
+(SELECT tech_name FROM tech AS t2
+WHERE t2.id = tech.id);

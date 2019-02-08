@@ -21,7 +21,7 @@ case class Tech(id: Option[Int], name: String, label: String, techType: TechType
 
 case class Skill(id: Option[Int] = None, userId: Int, techId: Int, skillLevel: SkillLevel, status: Status)
 
-case class Entry(id: Option[Int] = None, userId: Int, skillId: Int, entryAction:EntryAction, occurrence: DateTime)
+case class Entry(id: Option[Int] = None, userId: Int, skillId: Int, entryAction:EntryAction, occurrence: DateTime, info: String)
 
 case class SkillMatrixItem(tech: Tech, skillLevel: SkillLevel, id: Option[Int])
 
